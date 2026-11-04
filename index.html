@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Centre pédagogique régional de l’ICESCO au Tchad — formation, innovation et coopération éducative.">
+  <meta name="theme-color" content="#087b4b">
+  <title>CPRIT — Centre pédagogique régional de l’ICESCO au Tchad</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="#accueil" aria-label="Accueil CPRIT">
+    <img src="assets/logo-cprit.png" alt="Logo du Centre pédagogique régional de l’ICESCO au Tchad">
+    <span><strong>CPRIT</strong><small>Centre pédagogique régional<br>de l’ICESCO au Tchad</small></span>
+  </a>
+  <button class="menu-toggle" id="menuToggle" aria-label="Ouvrir le menu">☰</button>
+  <nav id="mainNav">
+    <a href="#accueil" data-i18n="navHome">Accueil</a>
+    <a href="#centre" data-i18n="navCenter">Le Centre</a>
+    <a href="#domaines" data-i18n="navAreas">Domaines</a>
+    <a href="#formations" data-i18n="navTraining">Formations</a>
+    <a href="#actualites" data-i18n="navNews">Actualités</a>
+    <a href="#contact" data-i18n="navContact">Contact</a>
+    <select id="language" aria-label="Langue">
+      <option value="fr">FR</option><option value="ar">AR</option><option value="en">EN</option>
+    </select>
+  </nav>
+</header>
+
+<main>
+<section class="hero" id="accueil">
+  <div class="hero-shade"></div>
+  <div class="hero-content">
+    <p class="eyebrow" data-i18n="heroEyebrow">ÉDUCATION • FORMATION • INNOVATION</p>
+    <h1 data-i18n="heroTitle">Former aujourd’hui,<br>construire l’éducation de demain.</h1>
+    <p class="hero-text" data-i18n="heroText">Un espace régional de coopération, de développement des compétences et d’innovation pédagogique au service de l’éducation au Tchad.</p>
+    <a class="button" href="#centre" data-i18n="discover">Découvrir le Centre</a>
+  </div>
+  <a class="scroll-cue" href="#domaines" aria-label="Défiler vers le bas">↓</a>
+</section>
+
+<section class="intro section" id="centre">
+  <div class="section-kicker" data-i18n="aboutKicker">QUI SOMMES-NOUS ?</div>
+  <div class="intro-grid">
+    <div><h2 data-i18n="aboutTitle">Un centre au service du développement pédagogique</h2></div>
+    <div><p data-i18n="aboutText">Le Centre pédagogique régional de l’ICESCO au Tchad œuvre au renforcement des capacités, à l’accompagnement des acteurs éducatifs et à la promotion de pratiques pédagogiques adaptées aux besoins de la région.</p><a class="text-link" href="#contact" data-i18n="learnMore">En savoir plus →</a></div>
+  </div>
+</section>
+
+<section class="domains section" id="domaines">
+  <div class="section-heading"><div class="section-kicker" data-i18n="domainsKicker">NOS PRIORITÉS</div><h2 data-i18n="domainsTitle">Domaines d’intervention</h2></div>
+  <div class="card-grid">
+    <article class="feature-card card-education"><div class="card-icon">✦</div><h3 data-i18n="domain1">Formation et éducation</h3><p data-i18n="domain1Text">Renforcement des compétences et accompagnement des professionnels de l’éducation.</p><a href="#formations" data-i18n="explore">Explorer</a></article>
+    <article class="feature-card card-teachers"><div class="card-icon">⌂</div><h3 data-i18n="domain2">Développement professionnel</h3><p data-i18n="domain2Text">Formation continue, partage d’expériences et perfectionnement pédagogique.</p><a href="#formations" data-i18n="explore">Explorer</a></article>
+    <article class="feature-card card-innovation"><div class="card-icon">◎</div><h3 data-i18n="domain3">Innovation pédagogique</h3><p data-i18n="domain3Text">Approches innovantes, ressources éducatives et transformation des pratiques.</p><a href="#formations" data-i18n="explore">Explorer</a></article>
+    <article class="feature-card card-cooperation"><div class="card-icon">◇</div><h3 data-i18n="domain4">Coopération régionale</h3><p data-i18n="domain4Text">Dialogue, partenariats et initiatives au bénéfice des communautés éducatives.</p><a href="#contact" data-i18n="explore">Explorer</a></article>
+  </div>
+</section>
+
+<section class="training section" id="formations">
+  <div class="training-copy"><div class="section-kicker" data-i18n="trainingKicker">APPRENDRE ET PROGRESSER</div><h2 data-i18n="trainingTitle">La formation au cœur de notre action</h2><p data-i18n="trainingText">Retrouvez ici les programmes, ateliers, séminaires et activités de renforcement des capacités organisés par le Centre.</p><a class="button button-green" href="#contact" data-i18n="trainingContact">Se renseigner</a></div>
+  <div class="training-panel"><span class="panel-number">01</span><h3 data-i18n="trainingPanelTitle">Des compétences pour transformer l’éducation</h3><p data-i18n="trainingPanelText">Des parcours adaptés aux besoins des enseignants, formateurs et responsables éducatifs.</p></div>
+</section>
+
+<section class="news section" id="actualites">
+  <div class="section-heading"><div class="section-kicker" data-i18n="newsKicker">LA VIE DU CENTRE</div><h2 data-i18n="newsTitle">Actualités et événements</h2><p data-i18n="newsText">Les nouvelles, annonces et temps forts du Centre seront publiés dans cet espace.</p></div>
+  <div class="news-placeholder"><span>CPRIT</span><div><strong data-i18n="newsPlaceholderTitle">Prochainement, retrouvez nos actualités</strong><p data-i18n="newsPlaceholderText">Les annonces de formations, événements et publications seront disponibles ici.</p></div></div>
+</section>
+
+<section class="contact section" id="contact">
+  <div><div class="section-kicker" data-i18n="contactKicker">RESTONS EN CONTACT</div><h2 data-i18n="contactTitle">Contactez le Centre</h2><p data-i18n="contactText">Pour toute information sur les activités, les formations ou les partenariats, contactez le Centre pédagogique régional de l’ICESCO au Tchad.</p></div>
+  <div class="contact-box"><strong>Centre pédagogique régional de l’ICESCO au Tchad</strong><p>N’Djamena, République du Tchad</p><p class="muted" data-i18n="contactDetails">Les coordonnées téléphoniques et l’adresse électronique officielles seront ajoutées après validation par le Centre.</p></div>
+</section>
+</main>
+
+<footer><div class="footer-brand"><img src="assets/logo-cprit.png" alt=""><strong>CPRIT</strong></div><p data-i18n="footer">Centre pédagogique régional de l’ICESCO au Tchad</p><small>© <span id="year"></span> CPRIT — <span data-i18n="rights">Tous droits réservés</span></small></footer>
+<script src="script.js"></script>
+</body>
+</html>
