@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inscription – CPRIT Formation</title>
+  <link rel="stylesheet" href="inscription.css">
+</head>
+<body>
+  <header>
+    <img src="assets/logo-cprit.png" alt="Logo CPRIT">
+    <div>
+      <h1>CPRIT</h1>
+      <p>Plateforme de formation en ligne</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="form-card">
+      <h2>Créer un compte apprenant</h2>
+      <p class="intro">Inscrivez-vous pour accéder aux formations du CPRIT.</p>
+
+      <form id="registerForm">
+        <label>Nom complet</label>
+        <input id="fullName" type="text" required placeholder="Votre nom complet">
+
+        <label>Adresse e-mail</label>
+        <input id="email" type="email" required placeholder="Votre adresse e-mail">
+
+        <label>Téléphone</label>
+        <input id="phone" type="tel" required placeholder="Votre numéro de téléphone">
+
+        <label>Mot de passe</label>
+        <input id="password" type="password" required minlength="8" placeholder="8 caractères minimum">
+
+        <label>Confirmer le mot de passe</label>
+        <input id="confirmPassword" type="password" required minlength="8" placeholder="Confirmez votre mot de passe">
+
+        <button type="submit" id="submitButton">Envoyer ma demande</button>
+      </form>
+
+      <div id="message" role="status"></div>
+      <p class="login-link">Déjà inscrit ? <a href="connexion.html">Se connecter</a></p>
+      <a class="back-link" href="index.html">Retour au site CPRIT</a>
+    </section>
+  </main>
+
+  <footer>© CPRIT – Centre pédagogique régional de l’ICESCO au Tchad</footer>
+
+  <script type="module" src="inscription.js"></script>
+</body>
+</html>
