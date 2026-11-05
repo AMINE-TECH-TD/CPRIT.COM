@@ -1,0 +1,114 @@
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f2f5f1;
+  color: #183526;
+}
+
+header {
+  background: #075b36;
+  color: white;
+  padding: 25px 20px;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 30px;
+  letter-spacing: 2px;
+}
+
+header p {
+  margin-bottom: 0;
+}
+
+main {
+  width: 92%;
+  max-width: 900px;
+  margin: 30px auto;
+}
+
+section {
+  background: white;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px #00000010;
+}
+
+h2 {
+  color: #075b36;
+}
+
+input {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  margin: 15px 0;
+  border: 1px solid #ccd8cf;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+button {
+  background: #087844;
+  color: white;
+  border: 0;
+  padding: 13px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background: #064d2c;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+#logoutBtn {
+  background: #a52c2c;
+}
+
+.learner-card {
+  border: 1px solid #dce7df;
+  border-radius: 10px;
+  padding: 18px;
+  margin-top: 15px;
+}
+
+.learner-card h3 {
+  margin-top: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.approve {
+  background: #087844;
+}
+
+.reject {
+  background: #b52d2d;
+}
+
+#message {
+  font-weight: bold;
+}
+
+[hidden] {
+  display: none !important;
+}
