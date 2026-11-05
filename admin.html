@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administration CPRIT</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <header>
+    <h1>CPRIT</h1>
+    <p>Administration pédagogique</p>
+  </header>
+
+  <main>
+    <section id="loginSection">
+      <h2>Connexion administrateur</h2>
+      <form id="loginForm">
+        <input id="email" type="email" placeholder="Adresse e-mail" required>
+        <input id="password" type="password" placeholder="Mot de passe" required>
+        <button type="submit">Se connecter</button>
+      </form>
+    </section>
+
+    <section id="dashboard" hidden>
+      <div class="top">
+        <h2>Demandes d'inscription</h2>
+        <button id="logoutBtn">Déconnexion</button>
+      </div>
+      <p id="message"></p>
+      <div id="learners"></div>
+    </section>
+  </main>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
+
