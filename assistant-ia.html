@@ -16,7 +16,11 @@
   --muted:#718078;
 }
 
-* {box-sizing:border-box;margin:0;padding:0}
+* {
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
 
 body {
   font-family:"Segoe UI",Arial,sans-serif;
@@ -38,6 +42,7 @@ header {
   display:flex;
   align-items:center;
   gap:12px;
+  text-decoration:none;
 }
 
 .brand img {
@@ -109,6 +114,7 @@ main {
   display:flex;
   justify-content:space-between;
   align-items:center;
+  gap:12px;
 }
 
 .chat-title strong {
@@ -190,8 +196,9 @@ main {
 .composer textarea {
   flex:1;
   min-width:0;
-  resize:none;
-  height:52px;
+  resize:vertical;
+  min-height:52px;
+  max-height:140px;
   border:1px solid #dce7df;
   border-radius:7px;
   padding:14px;
@@ -243,11 +250,47 @@ footer {
 }
 
 @media(max-width:600px) {
-  main {margin:28px auto}
-  .messages {height:400px;padding:16px}
-  .message {max-width:95%}
-  .composer {padding:11px}
-  .send {padding:0 15px}
+  header {
+    padding:12px 4%;
+  }
+
+  .brand img {
+    width:43px;
+    height:43px;
+  }
+
+  .brand strong {
+    font-size:17px;
+  }
+
+  .brand small {
+    font-size:9px;
+  }
+
+  main {
+    margin:28px auto;
+  }
+
+  .messages {
+    height:400px;
+    padding:16px;
+  }
+
+  .message {
+    max-width:95%;
+  }
+
+  .composer {
+    padding:11px;
+  }
+
+  .send {
+    padding:0 15px;
+  }
+
+  .chat-header {
+    padding:15px;
+  }
 }
 </style>
 </head>
@@ -262,67 +305,86 @@ footer {
       <small>Centre pédagogique régional de l'ICESCO au Tchad</small>
     </span>
   </a>
+
   <a class="back" href="index.html">← Accueil</a>
 </header>
 
 <main>
 
-<div class="heading">
-  <span>INTELLIGENCE ARTIFICIELLE ÉDUCATIVE</span>
-  <h1>Votre assistant pédagogique intelligent</h1>
-  <p>Un accompagnement pédagogique pour les futurs enseignants.</p>
-</div>
+  <div class="heading">
+    <span>INTELLIGENCE ARTIFICIELLE ÉDUCATIVE</span>
+    <h1>Votre assistant pédagogique intelligent</h1>
+    <p>Un accompagnement pédagogique pour les futurs enseignants.</p>
+  </div>
 
-<section class="chat">
+  <section class="chat">
 
-  <div class="chat-header">
-    <div class="chat-title">
-      <strong>Assistant pédagogique CPRIT</strong>
-      <small>Sciences de l'éducation • Pédagogie • Formation</small>
+    <div class="chat-header">
+      <div class="chat-title">
+        <strong>Assistant pédagogique CPRIT</strong>
+        <small>Sciences de l'éducation • Pédagogie • Formation</small>
+      </div>
+
+      <select class="language" id="language">
+        <option value="fr">Français</option>
+        <option value="en">English</option>
+        <option value="ar">العربية</option>
+      </select>
     </div>
-    <select class="language" id="language">
-      <option value="fr">Français</option>
-      <option value="en">English</option>
-      <option value="ar">العربية</option>
-    </select>
-  </div>
 
-  <div class="messages" id="messages">
-    <div class="message bot" id="welcome">
-      Bonjour et bienvenue sur l'assistant pédagogique du CPRIT.
+    <div class="messages" id="messages">
+      <div class="message bot">
+        Bonjour et bienvenue sur l'assistant pédagogique du CPRIT.
 
-      Je suis conçu pour vous accompagner dans vos études, comprendre vos cours, préparer vos leçons et approfondir vos connaissances.
+        Je suis conçu pour vous accompagner dans vos études, comprendre vos cours, préparer vos leçons et approfondir vos connaissances.
 
-      Quelle est votre question aujourd'hui ?
+        Quelle est votre question aujourd'hui ?
+      </div>
     </div>
-  </div>
 
-  <div class="suggestions">
-    <button onclick="suggest('Explique-moi les sciences de l’éducation.')">Sciences de l'éducation</button>
-    <button onclick="suggest('Comment préparer une bonne leçon ?')">Préparer une leçon</button>
-    <button onclick="suggest('Donne-moi un exercice de pédagogie.')">Exercices</button>
-    <button onclick="suggest('Quelles sont les méthodes pédagogiques ?')">Méthodes pédagogiques</button>
-  </div>
+    <div class="suggestions">
+      <button type="button" onclick="suggest('Explique-moi les sciences de l’éducation.')">
+        Sciences de l'éducation
+      </button>
 
-  <form class="composer" id="chatForm">
-    <textarea id="question"
-      placeholder="Écrivez votre question ici..."
-      required></textarea>
-    <button class="send" id="send" type="submit">Envoyer ↑</button>
-  </form>
+      <button type="button" onclick="suggest('Comment préparer une bonne leçon ?')">
+        Préparer une leçon
+      </button>
 
-  <div class="chat-footer">
-    Assistant pédagogique du Centre pédagogique régional de l'ICESCO au Tchad.
-  </div>
+      <button type="button" onclick="suggest('Donne-moi un exercice de pédagogie.')">
+        Exercices
+      </button>
 
-</section>
+      <button type="button" onclick="suggest('Quelles sont les méthodes pédagogiques ?')">
+        Méthodes pédagogiques
+      </button>
+    </div>
+
+    <form class="composer" id="chatForm">
+      <textarea
+        id="question"
+        placeholder="Écrivez votre question ici..."
+        required
+      ></textarea>
+
+      <button class="send" id="send" type="submit">
+        Envoyer ↑
+      </button>
+    </form>
+
+    <div class="chat-footer">
+      Assistant pédagogique du Centre pédagogique régional de l'ICESCO au Tchad.
+    </div>
+
+  </section>
 </main>
 
 <footer>
-© <span id="year"></span> CPRIT — Tous droits réservés.
+  © <span id="year"></span> CPRIT — Tous droits réservés.
 </footer>
 
 <script type="module">
+
 import { supabase } from "./supabase-config.js";
 
 const messages = document.getElementById("messages");
@@ -336,8 +398,10 @@ document.getElementById("year").textContent =
 
 function addMessage(content, type) {
   const div = document.createElement("div");
+
   div.className = "message " + type;
   div.textContent = content;
+
   messages.appendChild(div);
   messages.scrollTop = messages.scrollHeight;
 }
@@ -347,23 +411,52 @@ window.suggest = function(value) {
   question.focus();
 };
 
+async function getErrorDetails(error) {
+
+  let details = error?.message || "Erreur inconnue";
+
+  if (error?.context instanceof Response) {
+
+    try {
+      const result = await error.context.clone().json();
+
+      details =
+        result.error ||
+        result.message ||
+        details;
+
+    } catch (_) {
+      details = `Erreur HTTP ${error.context.status}`;
+    }
+  }
+
+  return details;
+}
+
 form.addEventListener("submit", async function(e) {
+
   e.preventDefault();
 
   const text = question.value.trim();
+
   if (!text || send.disabled) return;
 
   addMessage(text, "user");
+
   question.value = "";
   send.disabled = true;
   send.textContent = "...";
 
   const loading = document.createElement("div");
+
   loading.className = "message bot";
   loading.textContent = "L'assistant prépare votre réponse...";
+
   messages.appendChild(loading);
+  messages.scrollTop = messages.scrollHeight;
 
   try {
+
     const { data, error } = await supabase.functions.invoke(
       "cprit-assistant",
       {
@@ -374,36 +467,55 @@ form.addEventListener("submit", async function(e) {
       }
     );
 
-    loading.remove();
-
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
     if (!data || !data.reply) {
-      throw new Error("Réponse indisponible.");
+      throw new Error(
+        data?.error || "Aucune réponse reçue du serveur."
+      );
     }
+
+    loading.remove();
 
     addMessage(data.reply, "bot");
 
   } catch (error) {
+
     loading.remove();
+
+    const details = await getErrorDetails(error);
+
+    console.error("Erreur CPRIT IA :", error);
+
     addMessage(
-      "Le service d'intelligence artificielle n'est pas encore activé ou votre accès n'est pas autorisé. Veuillez réessayer ultérieurement.",
+      "Impossible de contacter l'assistant pédagogique.\n\nDétail technique : " + details,
       "bot"
     );
-    console.error(error);
+
+  } finally {
+
+    send.disabled = false;
+    send.textContent = "Envoyer ↑";
+
+    question.focus();
   }
 
-  send.disabled = false;
-  send.textContent = "Envoyer ↑";
 });
 
 question.addEventListener("keydown", function(e) {
+
   if (e.key === "Enter" && !e.shiftKey) {
+
     e.preventDefault();
+
     form.requestSubmit();
   }
+
 });
+
 </script>
 
 </body>
-  </html>
+</html>
