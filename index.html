@@ -1,18 +1,18 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#064B35">
-  <meta name="description" content="CPRIT — Centre pédagogique régional de l'ICESCO au Tchad. Formation professionnelle des futurs enseignants du primaire.">
+  <meta name="description" content="CPRIT — Centre pédagogique régional de l’ICESCO au Tchad. Formation professionnelle des futurs enseignants du primaire.">
   <title>CPRIT | Centre pédagogique régional de l'ICESCO au Tchad</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
 
-<header class="header" id="accueil">
-  <a class="brand" href="#accueil">
+<header class="header">
+  <a class="brand" href="#accueil" aria-label="Accueil CPRIT">
     <img src="assets/logo-cprit.png" alt="Logo officiel du CPRIT">
     <span class="brand-text">
       <strong>CPRIT</strong>
@@ -27,12 +27,12 @@
     <a href="#centre">Le Centre</a>
     <a href="#formation">Formation</a>
     <a href="#espaces">Plateforme</a>
-    <a href="#assistant">Assistant IA</a>
+    <a href="#assistant-ia">Assistant IA</a>
     <a href="#admission">Admission</a>
     <a href="#contact">Contact</a>
 
     <select id="language" aria-label="Choisir la langue">
-      <option value="fr" selected>FR</option>
+      <option value="fr">FR</option>
       <option value="en">EN</option>
       <option value="ar">AR</option>
     </select>
@@ -43,11 +43,8 @@
 
 <main>
 
-<!-- ACCUEIL -->
-
-<section class="hero">
+<section class="hero" id="accueil">
   <div class="hero-inner">
-
     <div class="hero-copy">
       <span class="eyebrow">FORMATION • PÉDAGOGIE • EXCELLENCE</span>
 
@@ -65,9 +62,8 @@
 
       <div class="hero-actions">
         <a href="inscription.html" class="primary-button">
-          Déposer une candidature <span>→</span>
+          Déposer une candidature →
         </a>
-
         <a href="#formation" class="secondary-button">
           Découvrir la formation
         </a>
@@ -80,112 +76,74 @@
     </div>
 
     <div class="hero-visual">
-      <div class="visual-frame">
-
-        <div class="visual-top">
-          <span>CPRIT</span>
-          <span>FORMATION DES ENSEIGNANTS</span>
-        </div>
-
-        <div class="visual-emblem">
-          <div class="emblem-ring">
-            <div class="emblem-book">✦</div>
-          </div>
-        </div>
-
-        <div class="visual-bottom">
-          <strong>Le savoir transmet l'avenir.</strong>
-          <span>Deux années pour préparer les éducateurs de demain.</span>
-        </div>
-
-        <div class="visual-caption">
-          <span class="caption-number">02</span>
+      <div class="hero-visual-content">
+        <span class="visual-label">NOTRE ENGAGEMENT</span>
+        <div class="visual-line"></div>
+        <strong>Le savoir transmet l'avenir.</strong>
+        <p>Préparer aujourd'hui les éducateurs de demain.</p>
+        <div class="visual-stat">
+          <strong>02</strong>
           <span>ANNÉES DE FORMATION</span>
         </div>
-
       </div>
     </div>
-
   </div>
 </section>
-
-<!-- CHIFFRES CLÉS -->
 
 <div class="trust-strip">
   <div class="trust-item">
     <strong>01</strong>
     <span>Formation initiale</span>
   </div>
-
   <div class="trust-item">
     <strong>02</strong>
     <span>Années de préparation</span>
   </div>
-
   <div class="trust-item">
     <strong>03</strong>
     <span>Apprentissage numérique</span>
   </div>
 </div>
 
-<!-- PRÉSENTATION -->
-
 <section class="section about" id="centre">
-
   <div class="section-heading">
     <span class="section-label">PRÉSENTATION INSTITUTIONNELLE</span>
     <h2>Un centre engagé pour l'avenir de l'éducation</h2>
   </div>
 
   <div class="about-layout">
-
     <div class="about-statement">
       <span class="statement-mark">“</span>
-
-      <h3>
-        La qualité de l'éducation commence par la qualité
-        de la formation des enseignants.
-      </h3>
-
+      <h3>La qualité de l'éducation commence par la qualité de la formation des enseignants.</h3>
       <div class="statement-line"></div>
-
-      <span class="statement-caption">NOTRE VOCATION</span>
+      <span class="statement-caption">LA VOCATION DU CPRIT</span>
     </div>
 
     <div class="about-description">
-
       <p>
         Le Centre pédagogique régional de l'ICESCO au Tchad
         a pour vocation de contribuer à la préparation
         professionnelle des futurs enseignants du primaire.
       </p>
-
       <p>
         À travers une formation structurée sur deux années,
         le Centre accompagne les apprenants dans l'acquisition
         des connaissances, des compétences pédagogiques et
         des pratiques nécessaires à l'exercice du métier.
       </p>
-
       <p>
-        Le numérique vient compléter cet accompagnement
-        grâce à une plateforme dédiée aux cours, aux ressources
+        Le numérique complète cet accompagnement grâce à
+        une plateforme dédiée aux cours, aux ressources
         pédagogiques et au suivi des apprentissages.
       </p>
-
     </div>
   </div>
 </section>
 
-<!-- FORMATION -->
-
 <section class="section formation-section" id="formation">
-
   <div class="section-heading centered">
     <span class="section-label">PARCOURS DE FORMATION</span>
-
     <h2>Deux années pour devenir enseignant</h2>
-
     <p>
       Un parcours destiné aux titulaires du baccalauréat
       qui souhaitent exercer dans l'enseignement primaire.
@@ -193,52 +151,37 @@
   </div>
 
   <div class="formation-grid">
-
     <article class="formation-card">
       <div class="formation-number">01</div>
-
       <span class="formation-tag">PREMIÈRE ANNÉE</span>
-
       <h3>Construire les fondamentaux</h3>
-
       <p>
         Acquisition des connaissances générales,
         découverte des sciences de l'éducation,
         apprentissage des principes pédagogiques
         et initiation aux pratiques d'enseignement.
       </p>
-
       <div class="formation-footer">ANNÉE DE FONDATION</div>
     </article>
 
     <article class="formation-card featured">
       <div class="formation-number">02</div>
-
       <span class="formation-tag">DEUXIÈME ANNÉE</span>
-
       <h3>Maîtriser les pratiques pédagogiques</h3>
-
       <p>
         Approfondissement des méthodes d'enseignement,
         préparation des leçons, évaluation des apprentissages
         et développement des compétences professionnelles.
       </p>
-
       <div class="formation-footer">ANNÉE DE PROFESSIONNALISATION</div>
     </article>
-
   </div>
 </section>
 
-<!-- PLATEFORME NUMÉRIQUE -->
-
 <section class="section platform-section" id="espaces">
-
   <div class="section-heading centered">
     <span class="section-label">ENVIRONNEMENT NUMÉRIQUE</span>
-
     <h2>Une plateforme au service de la formation</h2>
-
     <p>
       Des espaces numériques organisés pour accompagner
       les formateurs et les futurs enseignants du CPRIT.
@@ -249,119 +192,91 @@
 
     <article class="platform-card">
       <div class="platform-icon">01</div>
-
       <h3>Espace Formateurs</h3>
-
       <p>
         Publier les cours, partager les supports pédagogiques,
         organiser les exercices et suivre les résultats.
       </p>
-
       <span class="access-label">ACCÈS PROFESSIONNEL</span>
     </article>
 
     <article class="platform-card">
       <div class="platform-icon">02</div>
-
       <h3>Espace Futurs enseignants</h3>
-
       <p>
         Consulter les leçons, télécharger les documents,
         effectuer les exercices et suivre sa progression.
       </p>
-
       <span class="access-label">ACCÈS APPRENANT</span>
     </article>
 
     <article class="platform-card">
       <div class="platform-icon">03</div>
-
       <h3>Formation en ligne</h3>
-
       <p>
         Accéder à distance aux cours, vidéos,
         ressources pédagogiques et activités de formation.
       </p>
-
       <span class="access-label">APPRENTISSAGE NUMÉRIQUE</span>
     </article>
 
     <article class="platform-card ai-platform">
       <div class="platform-icon">04</div>
-
       <h3>Assistant pédagogique IA</h3>
-
       <p>
-        Poser des questions sur les cours, demander
-        des explications et recevoir une assistance
-        pédagogique pour mieux apprendre.
+        Poser des questions, demander des explications
+        et obtenir une assistance pour comprendre
+        les notions étudiées.
       </p>
-
-      <a href="#assistant" class="access-label">
-        DÉCOUVRIR L'ASSISTANT IA →
-      </a>
+      <a href="#assistant-ia" class="platform-link">Découvrir l'assistant →</a>
+      <span class="access-label">ASSISTANCE INTELLIGENTE</span>
     </article>
 
   </div>
 
   <p class="platform-notice">
-    Les espaces pédagogiques sont réservés aux apprenants inscrits
-    et validés ainsi qu'aux formateurs autorisés par le CPRIT.
+    Les espaces pédagogiques sont réservés aux apprenants
+    inscrits et validés ainsi qu'aux formateurs autorisés par le CPRIT.
   </p>
-
 </section>
 
-<!-- ASSISTANT IA -->
-
-<section class="section platform-section ai-section" id="assistant">
-
-  <div class="section-heading centered">
-    <span class="section-label">INTELLIGENCE ARTIFICIELLE ÉDUCATIVE</span>
-
-    <h2>Votre assistant pédagogique intelligent</h2>
-
+<section class="ai-section" id="assistant-ia">
+  <div class="ai-content">
+    <span class="section-label light-label">INTELLIGENCE ARTIFICIELLE ÉDUCATIVE</span>
+    <h2>Un assistant pédagogique intelligent</h2>
     <p>
-      Un espace d'accompagnement pour aider les futurs enseignants
-      à comprendre leurs cours, approfondir leurs connaissances
-      et préparer leurs activités pédagogiques.
-    </p>
-  </div>
-
-  <div class="ai-introduction">
-
-    <div class="ai-symbol">✦</div>
-
-    <h3>Apprendre avec l'intelligence artificielle</h3>
-
-    <p>
-      Posez vos questions sur les sciences de l'éducation,
-      la pédagogie, les méthodes d'enseignement,
-      la préparation des leçons et les matières étudiées.
+      Un espace d'accompagnement pour aider les futurs
+      enseignants à comprendre leurs cours, approfondir
+      leurs connaissances et préparer leurs activités pédagogiques.
     </p>
 
-    <p class="platform-notice">
-      L'assistant sera accessible depuis l'espace apprenant
-      après activation du service d'intelligence artificielle.
-    </p>
+    <div class="ai-description">
+      <div class="ai-symbol">✦</div>
+      <div>
+        <h3>Apprendre avec l'intelligence artificielle</h3>
+        <p>
+          Posez vos questions sur les sciences de l'éducation,
+          la pédagogie, les méthodes d'enseignement,
+          la préparation des leçons et les matières étudiées.
+        </p>
+      </div>
+    </div>
 
-    <a href="inscription.html" class="primary-button">
-      Accéder à la plateforme →
+    <a href="espace-etudiant.html" class="ai-button">
+      Accéder à mon espace apprenant →
     </a>
 
+    <small>
+      L'assistant sera accessible aux apprenants autorisés
+      après activation du service d'intelligence artificielle.
+    </small>
   </div>
-
 </section>
 
-<!-- ADMISSION -->
-
 <section class="admission-section" id="admission">
-
   <div class="admission-content">
-
     <span class="section-label light-label">ADMISSIONS AU CPRIT</span>
-
     <h2>Votre avenir dans l'enseignement commence ici.</h2>
-
     <p>
       Vous êtes titulaire du baccalauréat et souhaitez
       devenir enseignant dans une école primaire ?
@@ -375,21 +290,14 @@
     <small>
       Chaque demande est soumise à l'examen et à la validation du CPRIT.
     </small>
-
   </div>
 </section>
 
-<!-- CONTACT -->
-
 <section class="section contact-section" id="contact">
-
   <div class="contact-layout">
-
     <div>
       <span class="section-label">NOUS CONTACTER</span>
-
-      <h2>Le CPRIT à votre écoute</h2>
-
+      <h2>Le Centre à votre écoute</h2>
       <p>
         Pour toute information concernant les admissions,
         le parcours de formation ou les activités du Centre,
@@ -398,45 +306,29 @@
     </div>
 
     <div class="contact-card">
-
-      <div class="contact-logo">
-        <img src="assets/logo-cprit.png" alt="Logo officiel du Centre">
-      </div>
-
       <h3>Centre pédagogique régional de l'ICESCO au Tchad</h3>
-
       <p>N'Djamena, République du Tchad</p>
-
       <span>
         Les coordonnées officielles seront publiées après validation.
       </span>
-
     </div>
-
   </div>
 </section>
 
 </main>
 
-<!-- PIED DE PAGE -->
-
 <footer class="footer">
-
   <div class="footer-main">
 
     <div class="footer-brand">
-      <img src="assets/logo-cprit.png" alt="Logo officiel CPRIT">
-
-      <div>
-        <strong>CPRIT</strong>
-        <span>
-          Centre pédagogique régional<br>
-          de l'ICESCO au Tchad
-        </span>
-      </div>
+      <img src="assets/logo-cprit.png" alt="Logo officiel du CPRIT">
+      <p>
+        Centre pédagogique régional<br>
+        de l'ICESCO au Tchad
+      </p>
     </div>
 
-    <p>
+    <p class="footer-motto">
       Former aujourd'hui les enseignants qui construiront l'école de demain.
     </p>
 
@@ -445,37 +337,27 @@
   </div>
 
   <div class="footer-bottom">
-
     <span>© <span id="year"></span> CPRIT. Tous droits réservés.</span>
-
     <span>Centre pédagogique régional de l'ICESCO au Tchad</span>
-
   </div>
-
 </footer>
 
 <script src="script.js"></script>
 
 <script>
-document.getElementById("year").textContent =
-  new Date().getFullYear();
+document.getElementById("year").textContent = new Date().getFullYear();
 
 const toggle = document.getElementById("menuToggle");
 const nav = document.getElementById("mainNav");
 
-toggle.addEventListener("click", function() {
+toggle.addEventListener("click", function () {
   nav.classList.toggle("open");
 });
 
-nav.querySelectorAll("a").forEach(function(link) {
-  link.addEventListener("click", function() {
+nav.querySelectorAll("a").forEach(function (link) {
+  link.addEventListener("click", function () {
     nav.classList.remove("open");
   });
-});
-
-// Fermeture du menu après sélection de la langue
-document.getElementById("language").addEventListener("change", function() {
-  nav.classList.remove("open");
 });
 </script>
 
