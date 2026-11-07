@@ -36,8 +36,8 @@ a {
 /* HEADER */
 
 .header {
-  height: 94px;
-  padding: 0 6%;
+  min-height: 94px;
+  padding: 12px 6%;
   background: white;
   display: flex;
   justify-content: space-between;
@@ -234,7 +234,11 @@ a {
 .visual-frame {
   min-height: 410px;
   border: 1px solid rgba(255,255,255,.3);
-  background: linear-gradient(145deg,rgba(255,255,255,.15),rgba(255,255,255,.035));
+  background: linear-gradient(
+    145deg,
+    rgba(255,255,255,.15),
+    rgba(255,255,255,.035)
+  );
   border-radius: 7px;
   padding: 25px;
   display: flex;
@@ -266,6 +270,7 @@ a {
 .visual-top {
   display: flex;
   justify-content: space-between;
+  gap: 10px;
   font-size: 10px;
   letter-spacing: 1.5px;
   font-weight: bold;
@@ -276,6 +281,7 @@ a {
   position: relative;
   display: grid;
   place-items: center;
+  margin: 20px 0;
 }
 
 .emblem-ring {
@@ -285,8 +291,9 @@ a {
   border-radius: 50%;
   display: grid;
   place-items: center;
-  box-shadow: 0 0 0 17px rgba(255,255,255,.035),
-              0 0 0 35px rgba(255,255,255,.025);
+  box-shadow:
+    0 0 0 17px rgba(255,255,255,.035),
+    0 0 0 35px rgba(255,255,255,.025);
 }
 
 .emblem-book {
@@ -295,34 +302,51 @@ a {
   text-shadow: 0 10px 30px #002C20;
 }
 
+.visual-bottom {
+  margin-top: 10px;
+  padding-bottom: 5px;
+}
+
 .visual-bottom strong {
   display: block;
-  font-family: Georgia,serif;
+  font-family: Georgia, serif;
   font-size: 22px;
-  margin-bottom: 6px;
+  line-height: 1.35;
+  margin-bottom: 8px;
 }
 
 .visual-bottom span {
+  display: block;
   font-size: 12px;
+  line-height: 1.6;
   color: #CFE7D7;
 }
 
+/* CORRECTION ENCADRÉ 02 */
+
 .visual-caption {
-  position: absolute;
-  right: -23px;
-  bottom: 35px;
+  position: relative;
+  right: auto;
+  bottom: auto;
+  width: fit-content;
+  max-width: 100%;
+  margin: 22px auto 0;
   background: white;
   color: var(--green-dark);
-  padding: 15px 20px;
+  padding: 12px 20px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
-  box-shadow: 0 10px 30px #002C2030;
+  box-shadow: 0 8px 20px rgba(0,0,0,.12);
+  border-radius: 4px;
+  z-index: 3;
 }
 
 .caption-number {
-  font-size: 29px;
+  font-size: 25px;
   font-weight: 800;
+  line-height: 1;
 }
 
 .visual-caption span:last-child {
@@ -422,14 +446,14 @@ a {
 }
 
 .statement-mark {
-  font-family: Georgia,serif;
+  font-family: Georgia, serif;
   font-size: 85px;
   line-height: .8;
   color: #9BC8AA;
 }
 
 .about-statement h3 {
-  font-family: Georgia,serif;
+  font-family: Georgia, serif;
   font-size: 26px;
   line-height: 1.4;
   color: var(--green-dark);
@@ -499,7 +523,7 @@ a {
 }
 
 .formation-card h3 {
-  font-family: Georgia,serif;
+  font-family: Georgia, serif;
   color: var(--green-dark);
   font-size: 24px;
   margin: 13px 0;
@@ -537,7 +561,7 @@ a {
   padding: 28px 22px;
   border: 1px solid var(--border);
   border-radius: 5px;
-  background: #FFFFFF;
+  background: white;
   transition: .25s;
 }
 
@@ -561,7 +585,7 @@ a {
 }
 
 .platform-card h3 {
-  font-family: Georgia,serif;
+  font-family: Georgia, serif;
   color: var(--green-dark);
   font-size: 19px;
   margin-bottom: 12px;
@@ -614,7 +638,7 @@ a {
 }
 
 .admission-content h2 {
-  font-family: Georgia,serif;
+  font-family: Georgia, serif;
   font-size: clamp(30px,4vw,47px);
   line-height: 1.2;
   margin: 18px 0;
@@ -684,7 +708,7 @@ a {
 }
 
 .contact-card h3 {
-  font-family: Georgia,serif;
+  font-family: Georgia, serif;
   color: var(--green-dark);
   margin: 15px 0 8px;
 }
@@ -792,8 +816,8 @@ a {
 
 @media(max-width:850px) {
   .header {
-    height: 82px;
-    padding: 0 5%;
+    min-height: 82px;
+    padding: 10px 5%;
   }
 
   .brand img {
@@ -839,7 +863,7 @@ a {
 
   .hero-visual {
     max-width: 450px;
-    margin-top: 20px;
+    margin: 20px auto 0;
   }
 
   .about-layout,
@@ -880,7 +904,35 @@ a {
   }
 
   .visual-frame {
-    min-height: 340px;
+    min-height: 390px;
+    padding: 22px;
+  }
+
+  .visual-frame:before {
+    width: 260px;
+    height: 260px;
+  }
+
+  .emblem-ring {
+    width: 175px;
+    height: 175px;
+  }
+
+  .visual-bottom strong {
+    font-size: 20px;
+  }
+
+  .visual-caption {
+    margin-top: 18px;
+    padding: 12px 16px;
+  }
+
+  .caption-number {
+    font-size: 23px;
+  }
+
+  .visual-caption span:last-child {
+    font-size: 8px;
   }
 
   .trust-strip {
