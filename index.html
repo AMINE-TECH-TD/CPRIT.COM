@@ -1,405 +1,320 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#061638">
-<meta name="description" content="CPRIT-FORMATION : formation professionnelle des futurs enseignants du primaire au Tchad.">
-<title>CPRIT-FORMATION | Former les enseignants de demain</title>
-<link rel="icon" href="assets/logo-cprit.png">
-
-<style>
-:root {
-  --navy:#061638;
-  --blue:#0755D9;
-  --royal:#087CFF;
-  --gold:#FFC928;
-  --white:#FFFFFF;
-  --bg:#F2F6FC;
-  --text:#253653;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
- font-family:Arial,Helvetica,sans-serif;
- background:var(--bg);
- color:var(--text);
- line-height:1.65;
-}
-a{text-decoration:none;color:inherit}
-.site-header{
- background:var(--navy);
- color:white;
- min-height:82px;
- display:flex;
- align-items:center;
- justify-content:space-between;
- padding:12px 6%;
- position:sticky;
- top:0;
- z-index:100;
- box-shadow:0 5px 25px #06163830;
-}
-.brand{display:flex;align-items:center;gap:12px}
-.brand img{width:57px;height:57px;object-fit:contain}
-.brand strong{display:block;font-size:23px;color:var(--gold)}
-.brand small{display:block;font-size:11px;line-height:1.4}
-nav{display:flex;align-items:center;gap:22px}
-nav a{font-size:13px;font-weight:bold;color:#fff}
-nav a:hover{color:var(--gold)}
-#language{
- padding:8px;border-radius:7px;border:1px solid #ffffff55;
- background:var(--navy);color:white;
-}
-.menu-toggle{
- display:none;background:none;color:white;
- border:0;font-size:28px;cursor:pointer;
-}
-.hero{
- min-height:590px;
- background:linear-gradient(110deg,#061638f2,#0755D9c9),
- linear-gradient(45deg,#061638,#087CFF);
- display:flex;align-items:center;
- padding:85px 9%;
- color:white;
- position:relative;
- overflow:hidden;
-}
-.hero:after{
- content:"";position:absolute;width:440px;height:440px;
- border:1px solid #ffffff30;border-radius:50%;
- right:-100px;top:70px;
- box-shadow:0 0 0 50px #ffffff08,0 0 0 100px #ffffff05;
-}
-.hero-content{max-width:760px;position:relative;z-index:2}
-.eyebrow{color:var(--gold);font-weight:bold;letter-spacing:3px;font-size:13px}
-.hero h1{font-size:clamp(36px,6vw,66px);line-height:1.12;margin:23px 0}
-.hero-text{font-size:18px;color:#e2eaff;max-width:650px;margin-bottom:30px}
-.button{
- display:inline-block;background:var(--gold);color:var(--navy);
- padding:15px 27px;border-radius:9px;font-weight:bold;
- box-shadow:0 8px 20px #0003;transition:.2s;
-}
-.button:hover{transform:translateY(-3px)}
-.button-outline{
- display:inline-block;border:1px solid #ffffff99;
- padding:14px 25px;border-radius:9px;margin-left:10px;
- font-weight:bold;
-}
-.section{padding:85px 8%}
-.kicker{color:var(--blue);font-size:12px;font-weight:bold;letter-spacing:3px}
-.section h2{font-size:clamp(27px,4vw,40px);color:var(--navy);line-height:1.2;margin:12px 0 20px}
-.intro-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:50px;align-items:center}
-.intro-text{font-size:17px;color:#59677e}
-.stats{
- display:grid;grid-template-columns:repeat(3,1fr);
- gap:18px;margin-top:40px;
-}
-.stat{
- background:white;padding:23px;border-radius:13px;
- box-shadow:0 7px 25px #0616380c;
- border-bottom:3px solid var(--gold);
-}
-.stat strong{display:block;font-size:28px;color:var(--blue)}
-.stat span{font-size:13px;color:#65738b}
-.program{background:white}
-.heading{text-align:center;max-width:750px;margin:0 auto 42px}
-.cards{
- display:grid;grid-template-columns:repeat(3,1fr);gap:22px;
-}
-.card{
- background:white;padding:28px;border-radius:16px;
- box-shadow:0 9px 30px #06163812;
- border:1px solid #e7edf6;
- transition:.25s;
-}
-.card:hover{transform:translateY(-6px);box-shadow:0 15px 35px #06163820}
-.card-icon{
- width:55px;height:55px;border-radius:14px;
- display:grid;place-items:center;
- background:#eaf2ff;color:var(--blue);
- font-size:27px;margin-bottom:20px;
-}
-.card h3{color:var(--navy);font-size:20px;margin-bottom:10px}
-.card p{font-size:14px;color:#66748b;margin-bottom:18px}
-.card a{color:var(--blue);font-weight:bold;font-size:14px}
-.training{
- background:linear-gradient(120deg,var(--navy),#0755D9);
- color:white;
-}
-.training .kicker{color:var(--gold)}
-.training h2{color:white}
-.training p{color:#e1eaff}
-.training-content{
- display:grid;grid-template-columns:1fr 1fr;
- gap:45px;align-items:center;
-}
-.year-card{
- background:#ffffff12;border:1px solid #ffffff30;
- border-radius:17px;padding:28px;margin-bottom:15px;
-}
-.year-card strong{color:var(--gold);font-size:20px}
-.year-card p{margin-top:8px;font-size:14px}
-.member{background:var(--bg)}
-.member .card{border-top:4px solid var(--gold)}
-.ai-card{
- background:linear-gradient(135deg,#071c45,#0755D9);
- color:white;border-radius:20px;padding:38px;
- box-shadow:0 15px 35px #06163830;
-}
-.ai-card h3{font-size:27px;margin:15px 0}
-.ai-card p{color:#e0eaff;margin-bottom:20px}
-.ai-symbol{font-size:48px;color:var(--gold)}
-.admission{
- text-align:center;background:#fff;
-}
-.admission-inner{
- max-width:850px;margin:auto;
- background:linear-gradient(120deg,#061638,#0755D9);
- color:white;padding:55px 30px;border-radius:20px;
-}
-.admission h2{color:white}
-.admission p{color:#e2eaff;margin-bottom:25px}
-.contact-grid{
- display:grid;grid-template-columns:1fr 1fr;gap:35px;
-}
-.contact-box{background:white;padding:25px;border-radius:14px}
-footer{
- background:var(--navy);color:white;
- text-align:center;padding:35px 15px;
-}
-footer img{width:48px;vertical-align:middle;margin-right:10px}
-footer strong{color:var(--gold);font-size:22px}
-footer p{margin:12px 0;color:#d6e1f5;font-size:14px}
-footer small{color:#aabbd7}
-@media(max-width:850px){
- .menu-toggle{display:block}
- nav{
-  display:none;position:absolute;top:82px;left:0;width:100%;
-  background:var(--navy);padding:22px;
-  flex-direction:column;align-items:stretch;
- }
- nav.open{display:flex}
- nav a{padding:9px}
- .intro-grid,.training-content,.contact-grid{grid-template-columns:1fr}
- .cards{grid-template-columns:1fr 1fr}
-}
-@media(max-width:550px){
- .hero{min-height:540px;padding:70px 7%}
- .hero-text{font-size:16px}
- .section{padding:60px 6%}
- .cards,.stats{grid-template-columns:1fr}
- .button-outline{margin:12px 0 0}
- .admission-inner{padding:35px 20px}
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#064B35">
+  <meta name="description" content="CPRIT — Centre pédagogique régional de l'ICESCO au Tchad. Formation professionnelle des futurs enseignants du primaire.">
+  <title>CPRIT | Centre pédagogique régional de l'ICESCO au Tchad</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
-<header class="site-header">
- <a class="brand" href="#">
-  <img src="assets/logo-cprit.png" alt="Logo CPRIT">
-  <span><strong>CPRIT</strong><small>Centre pédagogique régional<br>de l'ICESCO au Tchad</small></span>
- </a>
+<header class="header">
+  <a class="brand" href="#accueil">
+    <img src="assets/logo-cprit.png" alt="Logo officiel du CPRIT">
+    <span class="brand-text">
+      <strong>CPRIT</strong>
+      <small>Centre pédagogique régional<br>de l'ICESCO au Tchad</small>
+    </span>
+  </a>
 
- <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
+  <button class="menu-toggle" id="menuToggle" aria-label="Ouvrir le menu">☰</button>
 
- <nav id="mainNav">
-  <a href="#accueil">Accueil</a>
-  <a href="#centre">Le Centre</a>
-  <a href="#programme">Formation</a>
-  <a href="#espaces">Espaces pédagogiques</a>
-  <a href="#contact">Contact</a>
-  <a href="inscription.html">Inscription</a>
-  <select id="language" aria-label="Langue">
-   <option value="fr">FR</option>
-   <option value="en">EN</option>
-   <option value="ar">AR</option>
-  </select>
- </nav>
+  <nav class="navigation" id="mainNav">
+    <a href="#accueil">Accueil</a>
+    <a href="#centre">Le Centre</a>
+    <a href="#formation">Formation</a>
+    <a href="#espaces">Plateforme</a>
+    <a href="#admission">Admission</a>
+    <a href="#contact">Contact</a>
+    <a href="inscription.html" class="nav-button">S'inscrire</a>
+  </nav>
 </header>
 
 <main>
 
 <section class="hero" id="accueil">
- <div class="hero-content">
-  <p class="eyebrow">CENTRE PÉDAGOGIQUE RÉGIONAL DE L'ICESCO AU TCHAD</p>
-  <h1>Former les enseignants de demain.</h1>
-  <p class="hero-text">
-   Une formation professionnelle de deux années pour préparer
-   les bacheliers au métier d'enseignant dans les écoles primaires.
-   Apprendre, pratiquer et transmettre le savoir.
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <span class="eyebrow">FORMATION • PÉDAGOGIE • EXCELLENCE</span>
+
+      <h1>
+        Former les enseignants
+        <span>qui bâtiront l'école de demain.</span>
+      </h1>
+
+      <p>
+        Le Centre pédagogique régional de l'ICESCO au Tchad
+        prépare les titulaires du baccalauréat au métier
+        d'enseignant du primaire à travers un parcours
+        professionnel de deux années.
+      </p>
+
+      <div class="hero-actions">
+        <a href="inscription.html" class="primary-button">
+          Déposer une candidature <span>→</span>
+        </a>
+        <a href="#formation" class="secondary-button">
+          Découvrir la formation
+        </a>
+      </div>
+
+      <div class="hero-note">
+        <span class="note-dot"></span>
+        Un engagement pour la qualité de l'éducation au Tchad
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="visual-frame">
+        <div class="visual-top">
+          <span>CPRIT</span>
+          <span>FORMATION DES ENSEIGNANTS</span>
+        </div>
+        <div class="visual-emblem">
+          <div class="emblem-ring">
+            <div class="emblem-book">✦</div>
+          </div>
+        </div>
+        <div class="visual-bottom">
+          <strong>Le savoir transmet l'avenir.</strong>
+          <span>Deux années pour préparer les éducateurs de demain.</span>
+        </div>
+      </div>
+      <div class="visual-caption">
+        <span class="caption-number">02</span>
+        <span>ANNÉES DE FORMATION</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="trust-strip">
+  <div class="trust-item">
+    <strong>01</strong>
+    <span>Formation initiale</span>
+  </div>
+  <div class="trust-item">
+    <strong>02</strong>
+    <span>Années de préparation</span>
+  </div>
+  <div class="trust-item">
+    <strong>03</strong>
+    <span>Apprentissage numérique</span>
+  </div>
+</div>
+
+<section class="section about" id="centre">
+  <div class="section-heading">
+    <span class="section-label">PRÉSENTATION INSTITUTIONNELLE</span>
+    <h2>Un centre engagé pour l'avenir de l'éducation</h2>
+  </div>
+
+  <div class="about-layout">
+    <div class="about-statement">
+      <span class="statement-mark">“</span>
+      <h3>La qualité de l'éducation commence par la qualité de la formation des enseignants.</h3>
+      <div class="statement-line"></div>
+      <span class="statement-caption">LA VOCATION DU CPRIT</span>
+    </div>
+
+    <div class="about-description">
+      <p>
+        Le Centre pédagogique régional de l'ICESCO au Tchad
+        a pour vocation de contribuer à la préparation
+        professionnelle des futurs enseignants du primaire.
+      </p>
+      <p>
+        À travers une formation structurée sur deux années,
+        le Centre accompagne les apprenants dans l'acquisition
+        des connaissances, des compétences pédagogiques et
+        des pratiques nécessaires à l'exercice du métier.
+      </p>
+      <p>
+        Le numérique vient compléter cet accompagnement
+        grâce à une plateforme dédiée aux cours, aux ressources
+        pédagogiques et au suivi des apprentissages.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="section formation-section" id="formation">
+  <div class="section-heading centered">
+    <span class="section-label">PARCOURS DE FORMATION</span>
+    <h2>Deux années pour devenir enseignant</h2>
+    <p>
+      Un parcours destiné aux titulaires du baccalauréat
+      qui souhaitent exercer dans l'enseignement primaire.
+    </p>
+  </div>
+
+  <div class="formation-grid">
+    <article class="formation-card">
+      <div class="formation-number">01</div>
+      <span class="formation-tag">PREMIÈRE ANNÉE</span>
+      <h3>Construire les fondamentaux</h3>
+      <p>
+        Acquisition des connaissances générales,
+        découverte des sciences de l'éducation,
+        apprentissage des principes pédagogiques
+        et initiation aux pratiques d'enseignement.
+      </p>
+      <div class="formation-footer">ANNÉE DE FONDATION</div>
+    </article>
+
+    <article class="formation-card featured">
+      <div class="formation-number">02</div>
+      <span class="formation-tag">DEUXIÈME ANNÉE</span>
+      <h3>Maîtriser les pratiques pédagogiques</h3>
+      <p>
+        Approfondissement des méthodes d'enseignement,
+        préparation des leçons, évaluation des apprentissages
+        et développement des compétences professionnelles.
+      </p>
+      <div class="formation-footer">ANNÉE DE PROFESSIONNALISATION</div>
+    </article>
+  </div>
+</section>
+
+<section class="section platform-section" id="espaces">
+  <div class="section-heading centered">
+    <span class="section-label">ENVIRONNEMENT NUMÉRIQUE</span>
+    <h2>Une plateforme au service de la formation</h2>
+    <p>
+      Des espaces numériques organisés pour accompagner
+      les formateurs et les futurs enseignants du CPRIT.
+    </p>
+  </div>
+
+  <div class="platform-grid">
+    <article class="platform-card">
+      <div class="platform-icon">01</div>
+      <h3>Espace Formateurs</h3>
+      <p>
+        Publier les cours, partager les supports pédagogiques,
+        organiser les exercices et suivre les résultats.
+      </p>
+      <span class="access-label">ACCÈS PROFESSIONNEL</span>
+    </article>
+
+    <article class="platform-card">
+      <div class="platform-icon">02</div>
+      <h3>Espace Futurs enseignants</h3>
+      <p>
+        Consulter les leçons, télécharger les documents,
+        effectuer les exercices et suivre sa progression.
+      </p>
+      <span class="access-label">ACCÈS APPRENANT</span>
+    </article>
+
+    <article class="platform-card">
+      <div class="platform-icon">03</div>
+      <h3>Formation en ligne</h3>
+      <p>
+        Accéder à distance aux cours, vidéos,
+        ressources pédagogiques et activités de formation.
+      </p>
+      <span class="access-label">APPRENTISSAGE NUMÉRIQUE</span>
+    </article>
+
+    <article class="platform-card ai-platform">
+      <div class="platform-icon">04</div>
+      <h3>Assistant pédagogique IA</h3>
+      <p>
+        Poser des questions, demander des explications
+        et obtenir une assistance pour mieux comprendre
+        les notions étudiées.
+      </p>
+      <span class="access-label">ASSISTANCE INTELLIGENTE</span>
+    </article>
+  </div>
+
+  <p class="platform-notice">
+    Les espaces pédagogiques sont réservés aux apprenants inscrits
+    et validés ainsi qu'aux formateurs autorisés par le CPRIT.
   </p>
-  <a class="button" href="inscription.html">Demander une admission →</a>
-  <a class="button-outline" href="#programme">Découvrir la formation</a>
- </div>
 </section>
 
-<section class="section" id="centre">
- <div class="intro-grid">
-  <div>
-   <div class="kicker">BIENVENUE AU CPRIT</div>
-   <h2>Un centre dédié à la formation des enseignants du primaire</h2>
+<section class="admission-section" id="admission">
+  <div class="admission-content">
+    <span class="section-label light-label">ADMISSIONS AU CPRIT</span>
+    <h2>Votre avenir dans l'enseignement commence ici.</h2>
+    <p>
+      Vous êtes titulaire du baccalauréat et souhaitez
+      devenir enseignant dans une école primaire ?
+      Soumettez votre demande d'admission au CPRIT.
+    </p>
+    <a href="inscription.html" class="admission-button">
+      Accéder au formulaire d'inscription →
+    </a>
+    <small>Chaque demande est soumise à l'examen et à la validation du CPRIT.</small>
   </div>
-  <div class="intro-text">
-   Le CPRIT prépare les futurs enseignants à exercer leur métier
-   avec compétence, responsabilité et engagement.
-   Notre mission est de contribuer à l'amélioration de la qualité
-   de l'enseignement primaire au Tchad à travers une formation
-   structurée, des pratiques pédagogiques et l'apprentissage numérique.
-  </div>
- </div>
-
- <div class="stats">
-  <div class="stat"><strong>02 ans</strong><span>Durée de formation initiale</span></div>
-  <div class="stat"><strong>L1 – L2</strong><span>Deux années de préparation</span></div>
-  <div class="stat"><strong>24/7</strong><span>Accès aux ressources en ligne selon les droits</span></div>
- </div>
 </section>
 
-<section class="section program" id="programme">
- <div class="heading">
-  <div class="kicker">NOTRE FORMATION</div>
-  <h2>Un parcours de deux années</h2>
-  <p>Un programme destiné aux titulaires du baccalauréat qui souhaitent devenir enseignants du primaire.</p>
- </div>
+<section class="section contact-section" id="contact">
+  <div class="contact-layout">
+    <div>
+      <span class="section-label">NOUS CONTACTER</span>
+      <h2>Le CPRIT à votre écoute</h2>
+      <p>
+        Pour toute information concernant les admissions,
+        le parcours de formation ou les activités du Centre,
+        notre équipe reste à votre disposition.
+      </p>
+    </div>
 
- <div class="training-content">
-  <div class="year-card" style="background:#f1f5fc;border-color:#dce6f5;color:#253653">
-   <strong>PREMIÈRE ANNÉE</strong>
-   <h3 style="color:#061638;margin-top:10px">Acquérir les fondamentaux</h3>
-   <p style="color:#59677e">Découverte des sciences de l'éducation, bases pédagogiques, connaissances générales et premières pratiques d'enseignement.</p>
+    <div class="contact-card">
+      <div class="contact-logo">
+        <img src="assets/logo-cprit.png" alt="Logo CPRIT">
+      </div>
+      <h3>Centre pédagogique régional de l'ICESCO au Tchad</h3>
+      <p>N'Djamena, République du Tchad</p>
+      <span>Les coordonnées officielles seront publiées après validation.</span>
+    </div>
   </div>
-  <div class="year-card" style="background:#f1f5fc;border-color:#dce6f5;color:#253653">
-   <strong>DEUXIÈME ANNÉE</strong>
-   <h3 style="color:#061638;margin-top:10px">Se préparer au métier</h3>
-   <p style="color:#59677e">Approfondissement des méthodes d'enseignement, préparation des leçons, évaluations et pratiques pédagogiques en milieu scolaire.</p>
-  </div>
- </div>
-</section>
-
-<section class="section member" id="espaces">
- <div class="heading">
-  <div class="kicker">NOTRE PLATEFORME PÉDAGOGIQUE</div>
-  <h2>Des espaces numériques pour apprendre et enseigner</h2>
-  <p>Ces espaces sont accessibles aux membres autorisés après inscription et validation par le CPRIT.</p>
- </div>
-
- <div class="cards">
-  <article class="card">
-   <div class="card-icon">◈</div>
-   <h3>Espace Formateurs</h3>
-   <p>Préparer et publier les cours, partager les supports, organiser les exercices et suivre les progrès des futurs enseignants.</p>
-   <a href="inscription.html">Accès réservé aux formateurs →</a>
-  </article>
-
-  <article class="card">
-   <div class="card-icon">♙</div>
-   <h3>Espace Futurs enseignants</h3>
-   <p>Retrouver les leçons, les documents, les exercices, les évaluations et le suivi des deux années de formation.</p>
-   <a href="inscription.html">Rejoindre le CPRIT →</a>
-  </article>
-
-  <article class="card">
-   <div class="card-icon">▣</div>
-   <h3>Formation en ligne</h3>
-   <p>Apprendre à distance grâce aux cours numériques, vidéos pédagogiques et ressources mises à disposition.</p>
-   <a href="inscription.html">Découvrir les formations →</a>
-  </article>
- </div>
-
- <div style="margin-top:28px">
-  <div class="ai-card">
-   <div class="ai-symbol">✧</div>
-   <h3>Assistant pédagogique intelligent</h3>
-   <p>
-    Un assistant basé sur l'intelligence artificielle pour aider
-    les apprenants à comprendre leurs cours, poser des questions,
-    obtenir des explications et approfondir leurs connaissances.
-   </p>
-   <strong>Service réservé aux membres autorisés du CPRIT.</strong>
-  </div>
- </div>
-</section>
-
-<section class="section admission">
- <div class="admission-inner">
-  <div class="kicker" style="color:#ffc928">REJOIGNEZ LE CPRIT</div>
-  <h2>Vous êtes titulaire du baccalauréat ?</h2>
-  <p>Vous souhaitez devenir enseignant dans une école primaire ? Déposez votre demande d'admission auprès du CPRIT.</p>
-  <a href="inscription.html" class="button">Commencer mon inscription →</a>
- </div>
-</section>
-
-<section class="section" id="contact">
- <div class="contact-grid">
-  <div>
-   <div class="kicker">CONTACT</div>
-   <h2>Le CPRIT à votre écoute</h2>
-   <p>Pour toute information sur les admissions, les formations et les activités pédagogiques, contactez le Centre.</p>
-  </div>
-  <div class="contact-box">
-   <h3 style="color:#061638">CPRIT — Tchad</h3>
-   <p>N'Djamena, République du Tchad</p>
-   <p style="margin-top:12px;color:#66748b;font-size:13px">
-    Les coordonnées officielles seront ajoutées après validation par le Centre.
-   </p>
-  </div>
- </div>
 </section>
 
 </main>
 
-<footer>
- <img src="assets/logo-cprit.png" alt="Logo CPRIT">
- <strong>CPRIT-FORMATION</strong>
- <p>Former aujourd'hui les enseignants qui construiront l'école de demain.</p>
- <small>© <span id="year"></span> CPRIT — Tous droits réservés.</small>
+<footer class="footer">
+  <div class="footer-main">
+    <div class="footer-brand">
+      <img src="assets/logo-cprit.png" alt="CPRIT">
+      <div>
+        <strong>CPRIT</strong>
+        <span>Centre pédagogique régional<br>de l'ICESCO au Tchad</span>
+      </div>
+    </div>
+
+    <p>Former aujourd'hui les enseignants qui construiront l'école de demain.</p>
+
+    <a href="inscription.html">Demande d'admission →</a>
+  </div>
+
+  <div class="footer-bottom">
+    <span>© <span id="year"></span> CPRIT. Tous droits réservés.</span>
+    <span>Centre pédagogique régional de l'ICESCO au Tchad</span>
+  </div>
 </footer>
 
+<script src="script.js"></script>
 <script>
 document.getElementById("year").textContent = new Date().getFullYear();
 
-const menuToggle = document.getElementById("menuToggle");
-const mainNav = document.getElementById("mainNav");
+const toggle = document.getElementById("menuToggle");
+const nav = document.getElementById("mainNav");
 
-menuToggle.addEventListener("click", () => {
- mainNav.classList.toggle("open");
+toggle.addEventListener("click", function() {
+  nav.classList.toggle("open");
 });
 
-mainNav.querySelectorAll("a").forEach(link => {
- link.addEventListener("click", () => mainNav.classList.remove("open"));
-});
-
-const translations = {
- en: {
-  hero:"Train the teachers of tomorrow.",
-  intro:"A centre dedicated to primary school teacher training",
-  apply:"Apply for admission →"
- },
- ar: {
-  hero:"نُعِدّ معلمي الغد",
-  intro:"مركز مخصص لتكوين معلمي التعليم الابتدائي",
-  apply:"طلب الالتحاق ←"
- }
-};
-
-document.getElementById("language").addEventListener("change", function() {
- const lang = this.value;
- document.documentElement.lang = lang;
- document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
-
- if(lang === "fr") {
-  document.querySelector(".hero h1").textContent = "Former les enseignants de demain.";
-  document.querySelector(".intro h2").textContent = "Un centre dédié à la formation des enseignants du primaire";
-  document.querySelector(".hero .button").textContent = "Demander une admission →";
- } else {
-  document.querySelector(".hero h1").textContent = translations[lang].hero;
-  document.querySelector(".intro h2").textContent = translations[lang].intro;
-  document.querySelector(".hero .button").textContent = translations[lang].apply;
- }
+nav.querySelectorAll("a").forEach(function(link) {
+  link.addEventListener("click", function() {
+    nav.classList.remove("open");
+  });
 });
 </script>
 
