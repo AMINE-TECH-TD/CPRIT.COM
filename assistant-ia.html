@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr" dir="ltr">
 <head>
@@ -212,16 +211,6 @@ main {
   line-height:1.5;
 }
 
-.language {
-  padding:10px 12px;
-  border:1px solid #dce7df;
-  border-radius:6px;
-  color:var(--dark);
-  background:white;
-  font-size:13px;
-  max-width:130px;
-}
-
 .messages {
   min-height:300px;
   height:440px;
@@ -339,7 +328,7 @@ footer {
   font-size:11px;
 }
 
-/* MODE ARABE */
+/* AFFICHAGE EN ARABE */
 
 html[dir="rtl"] body {
   direction:rtl;
@@ -391,10 +380,6 @@ html[dir="rtl"] .suggestions {
 html[dir="rtl"] .composer textarea {
   direction:rtl;
   text-align:right;
-}
-
-html[dir="rtl"] .language {
-  direction:rtl;
 }
 
 html[dir="rtl"] .back {
@@ -463,18 +448,6 @@ html[dir="rtl"] .back {
     padding:0 14px;
   }
 }
-
-@media(max-width:380px) {
-  .chat-header {
-    flex-direction:column;
-    align-items:flex-start;
-  }
-
-  .language {
-    width:100%;
-    max-width:none;
-  }
-}
 </style>
 </head>
 
@@ -538,12 +511,6 @@ html[dir="rtl"] .back {
         <strong data-i18n="chatTitle">Assistant pédagogique CPRIT</strong>
         <small data-i18n="chatSubtitle">Sciences de l'éducation • Pédagogie • Formation</small>
       </div>
-
-      <select class="language" id="language" aria-label="Choose language">
-        <option value="fr">Français</option>
-        <option value="en">English</option>
-        <option value="ar">العربية</option>
-      </select>
     </div>
 
     <div class="messages" id="messages">
@@ -590,13 +557,12 @@ const messages = document.getElementById("messages");
 const form = document.getElementById("chatForm");
 const question = document.getElementById("question");
 const send = document.getElementById("send");
-const language = document.getElementById("language");
 const selectedMode = document.getElementById("selectedMode");
 
 document.getElementById("year").textContent =
   new Date().getFullYear();
 
-/* TRADUCTIONS DE TOUTE L'INTERFACE */
+/* TRADUCTIONS */
 
 const translations = {
 
@@ -710,7 +676,7 @@ emptyError:"لم يتم تلقي أي إجابة من الخادم."
 
 };
 
-/* نصوص الاقتراحات */
+/* اقتراحات الأسئلة */
 
 const suggestionPrompts = {
 fr: {
@@ -733,7 +699,7 @@ classroom:"كيف يمكنني تدبير قسم صعب في المرحلة ال
 }
 };
 
-/* TROIS FONCTIONS FACULTATIVES */
+/* LES TROIS FONCTIONS FACULTATIVES */
 
 const modes = {
 
@@ -772,7 +738,18 @@ instruction:"Construis une épreuve adaptée au niveau demandé. Présente le ti
 let currentMode = null;
 let currentLanguage = "fr";
 
-/* APPLICATION DE LA LANGUE */
+/* LIRE LA LANGUE CHOISIE SUR LA PAGE D'ACCUEIL */
+
+function getSavedLanguage() {
+  try {
+    const saved = localStorage.getItem("cprit_language") || "fr";
+    return translations[saved] ? saved : "fr";
+  } catch (error) {
+    return "fr";
+  }
+}
+
+/* APPLICATION DE LA LANGUE DU SITE */
 
 function applyLanguage(selected) {
 
@@ -805,8 +782,6 @@ function applyLanguage(selected) {
 
   });
 
-  language.value = lang;
-
   document.title =
     lang === "ar"
       ? "المساعد التربوي الذكي | CPRIT"
@@ -814,33 +789,24 @@ function applyLanguage(selected) {
       ? "AI Pedagogical Assistant | CPRIT"
       : "Assistant pédagogique IA | CPRIT";
 
-  document.getElementById("menuToggle")?.setAttribute("aria-label", words.back);
-
-  try {
-    localStorage.setItem("cprit_language", lang);
-  } catch (error) {
-    console.warn("Impossible de mémoriser la langue.");
-  }
-
   updateModeLabel();
 
+  if (question.value.trim() === "") {
+    question.placeholder = words.placeholder;
+  }
 }
 
-/* CHOIX INITIAL : LANGUE DU SITE */
+/* INITIALISATION AUTOMATIQUE */
 
-let savedLanguage = "fr";
+applyLanguage(getSavedLanguage());
 
-try {
-  savedLanguage = localStorage.getItem("cprit_language") || "fr";
-} catch (error) {}
+/* SYNCHRONISATION SI LA LANGUE CHANGE DANS UN AUTRE ONGLET */
 
-applyLanguage(savedLanguage);
+window.addEventListener("storage", function(event) {
 
-/* CHANGEMENT DE LANGUE */
-
-language.addEventListener("change", function() {
-
-  applyLanguage(this.value);
+  if (event.key === "cprit_language" && event.newValue) {
+    applyLanguage(event.newValue);
+  }
 
 });
 
@@ -891,7 +857,6 @@ function selectMode(mode) {
     const active = button.dataset.mode === mode;
 
     button.classList.toggle("active", active);
-
     button.setAttribute("aria-pressed", String(active));
 
   });
@@ -899,9 +864,7 @@ function selectMode(mode) {
   updateModeLabel();
 
   question.value = modes[mode].prompt;
-
-  question.placeholder =
-    translations[currentLanguage].modeEdit;
+  question.placeholder = translations[currentLanguage].modeEdit;
 
   form.scrollIntoView({
     behavior:"smooth",
@@ -917,9 +880,7 @@ function selectMode(mode) {
 document.querySelectorAll(".tool").forEach(button => {
 
   button.addEventListener("click", function() {
-
     selectMode(this.dataset.mode);
-
   });
 
 });
@@ -933,7 +894,6 @@ document.getElementById("freeQuestion").addEventListener("click", function() {
   document.querySelectorAll(".tool").forEach(button => {
 
     button.classList.remove("active");
-
     button.setAttribute("aria-pressed", "false");
 
   });
@@ -942,9 +902,7 @@ document.getElementById("freeQuestion").addEventListener("click", function() {
     translations[currentLanguage].modeFree;
 
   question.value = "";
-
-  question.placeholder =
-    translations[currentLanguage].placeholder;
+  question.placeholder = translations[currentLanguage].placeholder;
 
   form.scrollIntoView({
     behavior:"smooth",
@@ -966,7 +924,6 @@ document.querySelectorAll("[data-suggestion]").forEach(button => {
     document.querySelectorAll(".tool").forEach(card => {
 
       card.classList.remove("active");
-
       card.setAttribute("aria-pressed", "false");
 
     });
@@ -997,7 +954,7 @@ function getLanguageInstruction() {
   }
 
   if (currentLanguage === "ar") {
-    return "تعليمات لغوية إلزامية: يجب أن تكون إجابتك باللغة العربية الفصحى حصراً. اكتب جميع العناوين والشروحات والدروس والتمارين والتصحيحات باللغة العربية. لا تستخدم الفرنسية أو الإنجليزية في الإجابة، إلا عند الضرورة القصوى لاسم علم أو مصطلح لا يمكن ترجمته. هذه التعليمات إلزامية.";
+    return "تعليمات لغوية إلزامية: يجب أن تكون إجابتك باللغة العربية الفصحى حصراً. اكتب جميع العناوين والشروحات والدروس والتمارين والتصحيحات باللغة العربية. لا تستخدم الفرنسية أو الإنجليزية في الإجابة إلا عند الضرورة القصوى لاسم علم أو مصطلح لا يمكن ترجمته. هذه التعليمات إلزامية.";
   }
 
   return "INSTRUCTION LINGUISTIQUE OBLIGATOIRE : réponds exclusivement en français. Tous les titres, explications, leçons, exercices et corrigés doivent être en français. N'utilise pas l'anglais ni l'arabe. Cette règle est obligatoire.";
@@ -1079,6 +1036,9 @@ form.addEventListener("submit", async function(e) {
 
   if (!text || send.disabled) return;
 
+  // Relire la préférence avant chaque demande.
+  currentLanguage = getSavedLanguage();
+
   const fullMessage = buildMessage(text);
 
   addMessage(text, "user");
@@ -1095,7 +1055,6 @@ form.addEventListener("submit", async function(e) {
     translations[currentLanguage].loading;
 
   messages.appendChild(loading);
-
   messages.scrollTop = messages.scrollHeight;
 
   try {
@@ -1159,7 +1118,6 @@ question.addEventListener("keydown", function(e) {
   if (e.key === "Enter" && !e.shiftKey) {
 
     e.preventDefault();
-
     form.requestSubmit();
 
   }
