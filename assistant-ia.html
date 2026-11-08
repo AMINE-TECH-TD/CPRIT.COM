@@ -16,11 +16,7 @@
   --muted:#718078;
 }
 
-* {
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
+* {box-sizing:border-box;margin:0;padding:0}
 
 body {
   font-family:"Segoe UI",Arial,sans-serif;
@@ -71,13 +67,13 @@ header {
 
 main {
   max-width:1000px;
-  margin:45px auto;
+  margin:40px auto;
   padding:0 18px;
 }
 
 .heading {
   text-align:center;
-  margin-bottom:30px;
+  margin-bottom:25px;
 }
 
 .heading span {
@@ -97,6 +93,69 @@ main {
 .heading p {
   color:var(--muted);
   font-size:14px;
+}
+
+.tools-title {
+  color:var(--dark);
+  font-size:15px;
+  font-weight:800;
+  margin:0 0 12px;
+}
+
+.tools {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-bottom:22px;
+}
+
+.tool {
+  background:white;
+  border:1px solid #dce9df;
+  border-radius:10px;
+  padding:17px 12px;
+  text-align:left;
+  cursor:pointer;
+  transition:.2s;
+  color:var(--dark);
+}
+
+.tool:hover {
+  border-color:var(--green);
+  transform:translateY(-2px);
+  box-shadow:0 7px 20px rgba(6,75,53,.08);
+}
+
+.tool.active {
+  background:var(--light);
+  border:2px solid var(--green);
+}
+
+.tool .tool-icon {
+  font-size:25px;
+  display:block;
+  margin-bottom:9px;
+}
+
+.tool strong {
+  display:block;
+  font-size:13px;
+  margin-bottom:5px;
+}
+
+.tool small {
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.5;
+  display:block;
+}
+
+.selected-mode {
+  font-size:12px;
+  color:var(--green);
+  font-weight:700;
+  margin:0 0 12px;
+  min-height:17px;
 }
 
 .chat {
@@ -127,13 +186,16 @@ main {
   font-size:11px;
 }
 
-.online {
-  font-size:11px;
-  color:#BCE9CC;
+.language {
+  padding:8px 12px;
+  border:1px solid #dce7df;
+  border-radius:5px;
+  color:var(--dark);
+  background:white;
 }
 
 .messages {
-  height:420px;
+  height:440px;
   overflow-y:auto;
   padding:25px;
   display:flex;
@@ -143,7 +205,7 @@ main {
 }
 
 .message {
-  max-width:85%;
+  max-width:90%;
   padding:14px 17px;
   border-radius:10px;
   font-size:14px;
@@ -234,14 +296,6 @@ main {
   background:#F8FAF8;
 }
 
-.language {
-  padding:8px 12px;
-  border:1px solid #dce7df;
-  border-radius:5px;
-  color:var(--dark);
-  background:white;
-}
-
 footer {
   text-align:center;
   padding:25px;
@@ -249,48 +303,24 @@ footer {
   font-size:11px;
 }
 
-@media(max-width:600px) {
-  header {
-    padding:12px 4%;
+@media(max-width:650px) {
+  header {padding:12px 4%}
+  .brand img {width:43px;height:43px}
+  .brand strong {font-size:17px}
+  .brand small {font-size:9px}
+  main {margin:27px auto}
+  .tools {grid-template-columns:1fr}
+  .tool {padding:13px}
+  .tool .tool-icon {
+    display:inline-block;
+    margin-right:9px;
+    vertical-align:middle;
   }
-
-  .brand img {
-    width:43px;
-    height:43px;
-  }
-
-  .brand strong {
-    font-size:17px;
-  }
-
-  .brand small {
-    font-size:9px;
-  }
-
-  main {
-    margin:28px auto;
-  }
-
-  .messages {
-    height:400px;
-    padding:16px;
-  }
-
-  .message {
-    max-width:95%;
-  }
-
-  .composer {
-    padding:11px;
-  }
-
-  .send {
-    padding:0 15px;
-  }
-
-  .chat-header {
-    padding:15px;
-  }
+  .messages {height:410px;padding:16px}
+  .message {max-width:96%}
+  .composer {padding:11px}
+  .send {padding:0 15px}
+  .chat-header {padding:15px}
 }
 </style>
 </head>
@@ -305,7 +335,6 @@ footer {
       <small>Centre pédagogique régional de l'ICESCO au Tchad</small>
     </span>
   </a>
-
   <a class="back" href="index.html">← Accueil</a>
 </header>
 
@@ -315,6 +344,34 @@ footer {
     <span>INTELLIGENCE ARTIFICIELLE ÉDUCATIVE</span>
     <h1>Votre assistant pédagogique intelligent</h1>
     <p>Un accompagnement pédagogique pour les futurs enseignants.</p>
+  </div>
+
+  <h2 class="tools-title">Que souhaitez-vous préparer ?</h2>
+
+  <div class="tools">
+
+    <button class="tool active" type="button" data-mode="lesson">
+      <span class="tool-icon">📚</span>
+      <strong>Préparer une leçon</strong>
+      <small>Fiche pédagogique, objectifs, prérequis et déroulement.</small>
+    </button>
+
+    <button class="tool" type="button" data-mode="exercises">
+      <span class="tool-icon">✏️</span>
+      <strong>Créer des exercices</strong>
+      <small>Activités progressives, exercices et corrigés détaillés.</small>
+    </button>
+
+    <button class="tool" type="button" data-mode="evaluation">
+      <span class="tool-icon">📝</span>
+      <strong>Préparer une évaluation</strong>
+      <small>Interrogation, composition, correction et barème.</small>
+    </button>
+
+  </div>
+
+  <div class="selected-mode" id="selectedMode">
+    Mode sélectionné : Préparer une leçon
   </div>
 
   <section class="chat">
@@ -336,34 +393,34 @@ footer {
       <div class="message bot">
         Bonjour et bienvenue sur l'assistant pédagogique du CPRIT.
 
-        Je suis conçu pour vous accompagner dans vos études, comprendre vos cours, préparer vos leçons et approfondir vos connaissances.
+        Je vous accompagne dans la préparation des leçons, la création des exercices et l'élaboration des évaluations.
 
-        Quelle est votre question aujourd'hui ?
+        Sélectionnez une fonction et posez votre question.
       </div>
     </div>
 
     <div class="suggestions">
-      <button type="button" onclick="suggest('Explique-moi les sciences de l’éducation.')">
+      <button type="button" data-prompt="Prépare une fiche pédagogique de français pour le CE2.">
+        Leçon de français
+      </button>
+
+      <button type="button" data-prompt="Crée 10 exercices de mathématiques pour le CE1 avec leurs corrigés.">
+        Exercices de mathématiques
+      </button>
+
+      <button type="button" data-prompt="Prépare une évaluation de lecture pour le CM1 avec un barème sur 20.">
+        Évaluation de lecture
+      </button>
+
+      <button type="button" data-prompt="Explique-moi les principales méthodes pédagogiques.">
         Sciences de l'éducation
-      </button>
-
-      <button type="button" onclick="suggest('Comment préparer une bonne leçon ?')">
-        Préparer une leçon
-      </button>
-
-      <button type="button" onclick="suggest('Donne-moi un exercice de pédagogie.')">
-        Exercices
-      </button>
-
-      <button type="button" onclick="suggest('Quelles sont les méthodes pédagogiques ?')">
-        Méthodes pédagogiques
       </button>
     </div>
 
     <form class="composer" id="chatForm">
       <textarea
         id="question"
-        placeholder="Écrivez votre question ici..."
+        placeholder="Précisez la classe, la discipline et votre demande..."
         required
       ></textarea>
 
@@ -392,39 +449,120 @@ const form = document.getElementById("chatForm");
 const question = document.getElementById("question");
 const send = document.getElementById("send");
 const language = document.getElementById("language");
+const selectedMode = document.getElementById("selectedMode");
 
 document.getElementById("year").textContent =
   new Date().getFullYear();
 
+const modes = {
+  lesson: {
+    name: "Préparer une leçon",
+    instruction: `
+MODE DE TRAVAIL : PRÉPARATION D'UNE LEÇON.
+
+Prépare une fiche pédagogique professionnelle et complète.
+Présente la discipline, la classe, le titre, la durée, les objectifs,
+les prérequis, le matériel, la méthode, les étapes de la séance,
+les activités de l'enseignant et des élèves, les exercices,
+l'évaluation, la remédiation et les devoirs.
+
+Vérifie que la durée totale des étapes correspond exactement
+à la durée annoncée.
+Adapte la leçon au niveau primaire demandé et au contexte tchadien.
+`
+  },
+
+  exercises: {
+    name: "Créer des exercices",
+    instruction: `
+MODE DE TRAVAIL : CRÉATION D'EXERCICES.
+
+Crée une série d'exercices pédagogiques adaptés à la classe
+et à la discipline demandées.
+
+Organise les exercices par difficulté :
+1. Exercices de découverte.
+2. Exercices d'application.
+3. Exercices de consolidation.
+4. Exercices de réflexion ou de transfert.
+
+Donne des consignes claires, des exemples si nécessaires,
+puis un corrigé détaillé et exact.
+Ajoute un barème lorsque cela est pertinent.
+Adapte les exercices au contexte scolaire tchadien.
+`
+  },
+
+  evaluation: {
+    name: "Préparer une évaluation",
+    instruction: `
+MODE DE TRAVAIL : PRÉPARATION D'UNE ÉVALUATION.
+
+Construis une évaluation adaptée au niveau et à la discipline demandés.
+
+Présente :
+1. Le titre et la classe.
+2. La durée de l'épreuve.
+3. Les compétences ou connaissances évaluées.
+4. Les consignes destinées aux élèves.
+5. Les questions et exercices progressifs.
+6. Le barème détaillé.
+7. Le corrigé complet destiné à l'enseignant.
+8. Les critères de réussite.
+
+Vérifie que la somme des points correspond exactement
+au total annoncé.
+Les questions doivent être adaptées à l'âge des élèves.
+`
+  }
+};
+
+let currentMode = "lesson";
+
 function addMessage(content, type) {
   const div = document.createElement("div");
-
   div.className = "message " + type;
   div.textContent = content;
-
   messages.appendChild(div);
   messages.scrollTop = messages.scrollHeight;
 }
 
-window.suggest = function(value) {
-  question.value = value;
-  question.focus();
-};
+function selectMode(mode) {
+  if (!modes[mode]) return;
+
+  currentMode = mode;
+
+  document.querySelectorAll(".tool").forEach(button => {
+    button.classList.toggle(
+      "active",
+      button.dataset.mode === mode
+    );
+  });
+
+  selectedMode.textContent =
+    "Mode sélectionné : " + modes[mode].name;
+}
+
+document.querySelectorAll(".tool").forEach(button => {
+  button.addEventListener("click", () => {
+    selectMode(button.dataset.mode);
+  });
+});
+
+document.querySelectorAll("[data-prompt]").forEach(button => {
+  button.addEventListener("click", () => {
+    question.value = button.dataset.prompt;
+    question.focus();
+  });
+});
 
 async function getErrorDetails(error) {
-
   let details = error?.message || "Erreur inconnue";
 
   if (error?.context instanceof Response) {
-
     try {
       const result = await error.context.clone().json();
-
-      details =
-        result.error ||
-        result.message ||
-        details;
-
+      details = result.error || result.message || details;
     } catch (_) {
       details = `Erreur HTTP ${error.context.status}`;
     }
@@ -434,21 +572,27 @@ async function getErrorDetails(error) {
 }
 
 form.addEventListener("submit", async function(e) {
-
   e.preventDefault();
 
   const text = question.value.trim();
 
   if (!text || send.disabled) return;
 
-  addMessage(text, "user");
+  const fullMessage =
+    modes[currentMode].instruction +
+    "\n\nDEMANDE DE L'UTILISATEUR :\n" +
+    text;
+
+  addMessage(
+    modes[currentMode].name + "\n" + text,
+    "user"
+  );
 
   question.value = "";
   send.disabled = true;
   send.textContent = "...";
 
   const loading = document.createElement("div");
-
   loading.className = "message bot";
   loading.textContent = "L'assistant prépare votre réponse...";
 
@@ -456,20 +600,17 @@ form.addEventListener("submit", async function(e) {
   messages.scrollTop = messages.scrollHeight;
 
   try {
-
     const { data, error } = await supabase.functions.invoke(
       "cprit-assistant",
       {
         body: {
-          message: text,
+          message: fullMessage,
           language: language.value
         }
       }
     );
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
     if (!data || !data.reply) {
       throw new Error(
@@ -478,11 +619,9 @@ form.addEventListener("submit", async function(e) {
     }
 
     loading.remove();
-
     addMessage(data.reply, "bot");
 
   } catch (error) {
-
     loading.remove();
 
     const details = await getErrorDetails(error);
@@ -490,29 +629,23 @@ form.addEventListener("submit", async function(e) {
     console.error("Erreur CPRIT IA :", error);
 
     addMessage(
-      "Impossible de contacter l'assistant pédagogique.\n\nDétail technique : " + details,
+      "Impossible de contacter l'assistant pédagogique.\n\nDétail technique : " +
+      details,
       "bot"
     );
 
   } finally {
-
     send.disabled = false;
     send.textContent = "Envoyer ↑";
-
     question.focus();
   }
-
 });
 
 question.addEventListener("keydown", function(e) {
-
   if (e.key === "Enter" && !e.shiftKey) {
-
     e.preventDefault();
-
     form.requestSubmit();
   }
-
 });
 
 </script>
