@@ -8,46 +8,102 @@
   <meta name="description" content="CPRIT — Centre pédagogique régional de l'ICESCO au Tchad.">
   <title>CPRIT | Centre pédagogique régional de l'ICESCO au Tchad</title>
   <link rel="stylesheet" href="styles.css">
+
   <style>
     .language-select {
       cursor: pointer;
-      padding: 9px 12px;
+      padding: 10px 12px;
       border: 1px solid #d5e2dc;
       border-radius: 6px;
       background: white;
       color: #064B35;
       font-weight: 700;
+      font-size: 13px;
+      min-width: 125px;
+      outline: none;
     }
-    html[dir="rtl"] body { direction: rtl; }
+
+    .language-select:focus {
+      border-color: #087A4B;
+      box-shadow: 0 0 0 2px rgba(8,122,75,.12);
+    }
+
+    html[dir="rtl"] body {
+      direction: rtl;
+    }
+
     html[dir="rtl"] .hero-inner,
     html[dir="rtl"] .about-layout,
-    html[dir="rtl"] .contact-layout { direction: rtl; }
+    html[dir="rtl"] .contact-layout {
+      direction: rtl;
+    }
+
     html[dir="rtl"] .hero-copy,
     html[dir="rtl"] .about-description,
-    html[dir="rtl"] .contact-layout { text-align: right; }
-    html[dir="rtl"] .hero-actions { justify-content: flex-start; }
+    html[dir="rtl"] .contact-layout {
+      text-align: right;
+    }
+
+    html[dir="rtl"] .hero-actions {
+      justify-content: flex-start;
+    }
+
     html[dir="rtl"] .visual-top,
     html[dir="rtl"] .visual-bottom,
     html[dir="rtl"] .footer-main,
-    html[dir="rtl"] .footer-bottom { direction: rtl; }
+    html[dir="rtl"] .footer-bottom {
+      direction: rtl;
+    }
+
     html[dir="rtl"] .trust-strip,
     html[dir="rtl"] .formation-grid,
-    html[dir="rtl"] .platform-grid { direction: rtl; }
-    html[dir="rtl"] .section-heading { text-align: right; }
-    html[dir="rtl"] .section-heading.centered { text-align: center; }
-    html[dir="rtl"] .admission-content { text-align: right; }
-    html[dir="rtl"] .platform-notice { text-align: right; }
-    html[dir="rtl"] .navigation { direction: rtl; }
-    html[dir="rtl"] .footer-brand { direction: rtl; }
+    html[dir="rtl"] .platform-grid {
+      direction: rtl;
+    }
+
+    html[dir="rtl"] .section-heading {
+      text-align: right;
+    }
+
+    html[dir="rtl"] .section-heading.centered {
+      text-align: center;
+    }
+
+    html[dir="rtl"] .admission-content,
+    html[dir="rtl"] .platform-notice {
+      text-align: right;
+    }
+
+    html[dir="rtl"] .navigation {
+      direction: rtl;
+    }
+
+    html[dir="rtl"] .footer-brand {
+      direction: rtl;
+    }
+
     html[dir="rtl"] .formation-card,
-    html[dir="rtl"] .platform-card { text-align: right; }
-    html[dir="rtl"] .visual-caption { direction: rtl; }
+    html[dir="rtl"] .platform-card {
+      text-align: right;
+    }
+
+    html[dir="rtl"] .visual-caption {
+      direction: rtl;
+    }
+
+    @media(max-width:700px) {
+      .language-select {
+        min-width: 100%;
+        width: 100%;
+      }
+    }
   </style>
 </head>
 
 <body>
 
 <header class="header">
+
   <a class="brand" href="#accueil">
     <img src="assets/logo-cprit.png" alt="CPRIT">
     <span class="brand-text">
@@ -56,9 +112,10 @@
     </span>
   </a>
 
-  <button class="menu-toggle" id="menuToggle" aria-label="Open menu">☰</button>
+  <button class="menu-toggle" id="menuToggle" aria-label="Ouvrir le menu">☰</button>
 
   <nav class="navigation" id="mainNav">
+
     <a href="#accueil" data-i18n="navHome">Accueil</a>
     <a href="#centre" data-i18n="navCenter">Le Centre</a>
     <a href="#formation" data-i18n="navTraining">Formation</a>
@@ -67,359 +124,899 @@
     <a href="#admission" data-i18n="navAdmission">Admission</a>
     <a href="#contact" data-i18n="navContact">Contact</a>
 
-    <select id="languageSelect" class="language-select" aria-label="Choose language">
-      <option value="fr">FR</option>
-      <option value="en">EN</option>
-      <option value="ar">AR</option>
+    <!-- UNIQUE SÉLECTEUR DE LANGUE DU SITE -->
+    <select id="languageSelect" class="language-select" aria-label="Choisir la langue">
+      <option value="fr">Français</option>
+      <option value="en">English</option>
+      <option value="ar">العربية</option>
     </select>
 
     <a href="inscription.html" class="nav-button" data-i18n="navRegister">S'inscrire</a>
+
   </nav>
 </header>
 
 <main>
 
-<section class="hero" id="accueil">
-  <div class="hero-inner">
-    <div class="hero-copy">
-      <span class="eyebrow" data-i18n="eyebrow">FORMATION • PÉDAGOGIE • EXCELLENCE</span>
-      <h1>
-        <span data-i18n="heroTitle">Former les enseignants</span>
-        <span data-i18n="heroTitle2">qui bâtiront l'école de demain.</span>
-      </h1>
-      <p data-i18n="heroDescription">
-        Le Centre pédagogique régional de l'ICESCO au Tchad
-        prépare les titulaires du baccalauréat au métier
-        d'enseignant du primaire à travers un parcours
-        professionnel de deux années.
-      </p>
-      <div class="hero-actions">
-        <a href="inscription.html" class="primary-button" data-i18n="applyButton">
-          Déposer une candidature →
-        </a>
-        <a href="#formation" class="secondary-button" data-i18n="discoverButton">
-          Découvrir la formation
-        </a>
-      </div>
-      <div class="hero-note">
-        <span class="note-dot"></span>
-        <span data-i18n="heroNote">Un engagement pour la qualité de l'éducation au Tchad</span>
-      </div>
-    </div>
+  <!-- ACCUEIL -->
+  <section class="hero" id="accueil">
 
-    <div class="hero-visual">
-      <div class="visual-frame">
-        <div class="visual-top">
-          <span>CPRIT</span>
-          <span data-i18n="visualTop">FORMATION DES ENSEIGNANTS</span>
+    <div class="hero-inner">
+
+      <div class="hero-copy">
+
+        <span class="eyebrow" data-i18n="eyebrow">
+          FORMATION • PÉDAGOGIE • EXCELLENCE
+        </span>
+
+        <h1>
+          <span data-i18n="heroTitle">Former les enseignants</span>
+          <span data-i18n="heroTitle2">qui bâtiront l'école de demain.</span>
+        </h1>
+
+        <p data-i18n="heroDescription">
+          Le Centre pédagogique régional de l'ICESCO au Tchad
+          prépare les titulaires du baccalauréat au métier
+          d'enseignant du primaire à travers un parcours
+          professionnel de deux années.
+        </p>
+
+        <div class="hero-actions">
+
+          <a href="inscription.html" class="primary-button" data-i18n="applyButton">
+            Déposer une candidature →
+          </a>
+
+          <a href="#formation" class="secondary-button" data-i18n="discoverButton">
+            Découvrir la formation
+          </a>
+
         </div>
-        <div class="visual-emblem">
-          <div class="emblem-ring">
-            <div class="emblem-book">✦</div>
+
+        <div class="hero-note">
+          <span class="note-dot"></span>
+          <span data-i18n="heroNote">
+            Un engagement pour la qualité de l'éducation au Tchad
+          </span>
+        </div>
+
+      </div>
+
+      <div class="hero-visual">
+
+        <div class="visual-frame">
+
+          <div class="visual-top">
+            <span>CPRIT</span>
+            <span data-i18n="visualTop">FORMATION DES ENSEIGNANTS</span>
           </div>
+
+          <div class="visual-emblem">
+            <div class="emblem-ring">
+              <div class="emblem-book">✦</div>
+            </div>
+          </div>
+
+          <div class="visual-bottom">
+            <strong data-i18n="visualSlogan">Le savoir transmet l'avenir.</strong>
+            <span data-i18n="visualDescription">
+              Deux années pour préparer les éducateurs de demain.
+            </span>
+          </div>
+
         </div>
-        <div class="visual-bottom">
-          <strong data-i18n="visualSlogan">Le savoir transmet l'avenir.</strong>
-          <span data-i18n="visualDescription">Deux années pour préparer les éducateurs de demain.</span>
+
+        <div class="visual-caption">
+          <span class="caption-number">02</span>
+          <span data-i18n="visualYears">ANNÉES DE FORMATION</span>
         </div>
+
       </div>
-      <div class="visual-caption">
-        <span class="caption-number">02</span>
-        <span data-i18n="visualYears">ANNÉES DE FORMATION</span>
+
+    </div>
+
+  </section>
+
+  <!-- CHIFFRES CLÉS -->
+  <div class="trust-strip">
+
+    <div class="trust-item">
+      <strong>01</strong>
+      <span data-i18n="trust1">Formation initiale</span>
+    </div>
+
+    <div class="trust-item">
+      <strong>02</strong>
+      <span data-i18n="trust2">Années de préparation</span>
+    </div>
+
+    <div class="trust-item">
+      <strong>03</strong>
+      <span data-i18n="trust3">Apprentissage numérique</span>
+    </div>
+
+  </div>
+
+  <!-- PRÉSENTATION DU CENTRE -->
+  <section class="section about" id="centre">
+
+    <div class="section-heading">
+
+      <span class="section-label" data-i18n="aboutLabel">
+        PRÉSENTATION INSTITUTIONNELLE
+      </span>
+
+      <h2 data-i18n="aboutTitle">
+        Un centre engagé pour l'avenir de l'éducation
+      </h2>
+
+    </div>
+
+    <div class="about-layout">
+
+      <div class="about-statement">
+
+        <span class="statement-mark">“</span>
+
+        <h3 data-i18n="aboutQuote">
+          La qualité de l'éducation commence par la qualité de la formation des enseignants.
+        </h3>
+
+        <div class="statement-line"></div>
+
+        <span class="statement-caption" data-i18n="aboutCaption">
+          LA VOCATION DU CPRIT
+        </span>
+
       </div>
-    </div>
-  </div>
-</section>
 
-<div class="trust-strip">
-  <div class="trust-item"><strong>01</strong><span data-i18n="trust1">Formation initiale</span></div>
-  <div class="trust-item"><strong>02</strong><span data-i18n="trust2">Années de préparation</span></div>
-  <div class="trust-item"><strong>03</strong><span data-i18n="trust3">Apprentissage numérique</span></div>
-</div>
+      <div class="about-description">
 
-<section class="section about" id="centre">
-  <div class="section-heading">
-    <span class="section-label" data-i18n="aboutLabel">PRÉSENTATION INSTITUTIONNELLE</span>
-    <h2 data-i18n="aboutTitle">Un centre engagé pour l'avenir de l'éducation</h2>
-  </div>
+        <p data-i18n="aboutP1">
+          Le Centre pédagogique régional de l'ICESCO au Tchad a pour vocation de contribuer à la préparation professionnelle des futurs enseignants du primaire.
+        </p>
 
-  <div class="about-layout">
-    <div class="about-statement">
-      <span class="statement-mark">“</span>
-      <h3 data-i18n="aboutQuote">La qualité de l'éducation commence par la qualité de la formation des enseignants.</h3>
-      <div class="statement-line"></div>
-      <span class="statement-caption" data-i18n="aboutCaption">LA VOCATION DU CPRIT</span>
+        <p data-i18n="aboutP2">
+          À travers une formation structurée sur deux années, le Centre accompagne les apprenants dans l'acquisition des connaissances, des compétences pédagogiques et des pratiques nécessaires à l'exercice du métier.
+        </p>
+
+        <p data-i18n="aboutP3">
+          Le numérique vient compléter cet accompagnement grâce à une plateforme dédiée aux cours, aux ressources pédagogiques et au suivi des apprentissages.
+        </p>
+
+      </div>
+
     </div>
 
-    <div class="about-description">
-      <p data-i18n="aboutP1">Le Centre pédagogique régional de l'ICESCO au Tchad a pour vocation de contribuer à la préparation professionnelle des futurs enseignants du primaire.</p>
-      <p data-i18n="aboutP2">À travers une formation structurée sur deux années, le Centre accompagne les apprenants dans l'acquisition des connaissances, des compétences pédagogiques et des pratiques nécessaires à l'exercice du métier.</p>
-      <p data-i18n="aboutP3">Le numérique vient compléter cet accompagnement grâce à une plateforme dédiée aux cours, aux ressources pédagogiques et au suivi des apprentissages.</p>
-    </div>
-  </div>
-</section>
+  </section>
 
-<section class="section formation-section" id="formation">
-  <div class="section-heading centered">
-    <span class="section-label" data-i18n="trainingLabel">PARCOURS DE FORMATION</span>
-    <h2 data-i18n="trainingTitle">Deux années pour devenir enseignant</h2>
-    <p data-i18n="trainingIntro">Un parcours destiné aux titulaires du baccalauréat qui souhaitent exercer dans l'enseignement primaire.</p>
-  </div>
+  <!-- FORMATION -->
+  <section class="section formation-section" id="formation">
 
-  <div class="formation-grid">
-    <article class="formation-card">
-      <div class="formation-number">01</div>
-      <span class="formation-tag" data-i18n="yearOne">PREMIÈRE ANNÉE</span>
-      <h3 data-i18n="yearOneTitle">Construire les fondamentaux</h3>
-      <p data-i18n="yearOneDescription">Acquisition des connaissances générales, découverte des sciences de l'éducation, apprentissage des principes pédagogiques et initiation aux pratiques d'enseignement.</p>
-      <div class="formation-footer" data-i18n="yearOneFooter">ANNÉE DE FONDATION</div>
-    </article>
+    <div class="section-heading centered">
 
-    <article class="formation-card featured">
-      <div class="formation-number">02</div>
-      <span class="formation-tag" data-i18n="yearTwo">DEUXIÈME ANNÉE</span>
-      <h3 data-i18n="yearTwoTitle">Maîtriser les pratiques pédagogiques</h3>
-      <p data-i18n="yearTwoDescription">Approfondissement des méthodes d'enseignement, préparation des leçons, évaluation des apprentissages et développement des compétences professionnelles.</p>
-      <div class="formation-footer" data-i18n="yearTwoFooter">ANNÉE DE PROFESSIONNALISATION</div>
-    </article>
-  </div>
-</section>
+      <span class="section-label" data-i18n="trainingLabel">
+        PARCOURS DE FORMATION
+      </span>
 
-<section class="section platform-section" id="espaces">
-  <div class="section-heading centered">
-    <span class="section-label" data-i18n="platformLabel">ENVIRONNEMENT NUMÉRIQUE</span>
-    <h2 data-i18n="platformTitle">Une plateforme au service de la formation</h2>
-    <p data-i18n="platformIntro">Des espaces numériques organisés pour accompagner les formateurs et les futurs enseignants du CPRIT.</p>
-  </div>
+      <h2 data-i18n="trainingTitle">
+        Deux années pour devenir enseignant
+      </h2>
 
-  <div class="platform-grid">
-    <article class="platform-card">
-      <div class="platform-icon">01</div>
-      <h3 data-i18n="trainerTitle">Espace Formateurs</h3>
-      <p data-i18n="trainerDescription">Publier les cours, partager les supports pédagogiques, organiser les exercices et suivre les résultats.</p>
-      <span class="access-label" data-i18n="trainerAccess">ACCÈS PROFESSIONNEL</span>
-    </article>
+      <p data-i18n="trainingIntro">
+        Un parcours destiné aux titulaires du baccalauréat qui souhaitent exercer dans l'enseignement primaire.
+      </p>
 
-    <article class="platform-card">
-      <div class="platform-icon">02</div>
-      <h3 data-i18n="studentTitle">Espace Futurs enseignants</h3>
-      <p data-i18n="studentDescription">Consulter les leçons, télécharger les documents, effectuer les exercices et suivre sa progression.</p>
-      <span class="access-label" data-i18n="studentAccess">ACCÈS APPRENANT</span>
-    </article>
-
-    <article class="platform-card">
-      <div class="platform-icon">03</div>
-      <h3 data-i18n="onlineTitle">Formation en ligne</h3>
-      <p data-i18n="onlineDescription">Accéder à distance aux cours, vidéos, ressources pédagogiques et activités de formation.</p>
-      <span class="access-label" data-i18n="onlineAccess">APPRENTISSAGE NUMÉRIQUE</span>
-    </article>
-
-    <article class="platform-card ai-platform" id="assistant-ia">
-      <div class="platform-icon">04</div>
-      <h3 data-i18n="aiTitle">Assistant pédagogique IA</h3>
-      <p data-i18n="aiDescription">Poser des questions, demander des explications et obtenir une assistance pour mieux comprendre les notions étudiées.</p>
-      <a class="ai-link" href="assistant-ia.html" data-i18n="aiLink">Découvrir l'assistant →</a>
-      <span class="access-label" data-i18n="aiAccess">ASSISTANCE INTELLIGENTE</span>
-    </article>
-  </div>
-
-  <p class="platform-notice" data-i18n="platformNotice">
-    Les espaces pédagogiques sont réservés aux apprenants inscrits et validés ainsi qu'aux formateurs autorisés par le CPRIT.
-  </p>
-</section>
-
-<section class="admission-section" id="admission">
-  <div class="admission-content">
-    <span class="section-label light-label" data-i18n="admissionLabel">ADMISSIONS AU CPRIT</span>
-    <h2 data-i18n="admissionTitle">Votre avenir dans l'enseignement commence ici.</h2>
-    <p data-i18n="admissionDescription">Vous êtes titulaire du baccalauréat et souhaitez devenir enseignant dans une école primaire ? Soumettez votre demande d'admission au CPRIT.</p>
-    <a href="inscription.html" class="admission-button" data-i18n="admissionButton">Accéder au formulaire d'inscription →</a>
-    <small data-i18n="admissionNote">Chaque demande est soumise à l'examen et à la validation du CPRIT.</small>
-  </div>
-</section>
-
-<section class="section contact-section" id="contact">
-  <div class="contact-layout">
-    <div>
-      <span class="section-label" data-i18n="contactLabel">NOUS CONTACTER</span>
-      <h2 data-i18n="contactTitle">Le CPRIT à votre écoute</h2>
-      <p data-i18n="contactDescription">Pour toute information concernant les admissions, le parcours de formation ou les activités du Centre, notre équipe reste à votre disposition.</p>
     </div>
 
-    <div class="contact-card">
-      <h3 data-i18n="contactCenter">Centre pédagogique régional de l'ICESCO au Tchad</h3>
-      <p data-i18n="contactAddress">N'Djamena, République du Tchad</p>
-      <span data-i18n="contactNote">Les coordonnées officielles seront publiées après validation.</span>
+    <div class="formation-grid">
+
+      <article class="formation-card">
+
+        <div class="formation-number">01</div>
+
+        <span class="formation-tag" data-i18n="yearOne">
+          PREMIÈRE ANNÉE
+        </span>
+
+        <h3 data-i18n="yearOneTitle">
+          Construire les fondamentaux
+        </h3>
+
+        <p data-i18n="yearOneDescription">
+          Acquisition des connaissances générales, découverte des sciences de l'éducation, apprentissage des principes pédagogiques et initiation aux pratiques d'enseignement.
+        </p>
+
+        <div class="formation-footer" data-i18n="yearOneFooter">
+          ANNÉE DE FONDATION
+        </div>
+
+      </article>
+
+      <article class="formation-card featured">
+
+        <div class="formation-number">02</div>
+
+        <span class="formation-tag" data-i18n="yearTwo">
+          DEUXIÈME ANNÉE
+        </span>
+
+        <h3 data-i18n="yearTwoTitle">
+          Maîtriser les pratiques pédagogiques
+        </h3>
+
+        <p data-i18n="yearTwoDescription">
+          Approfondissement des méthodes d'enseignement, préparation des leçons, évaluation des apprentissages et développement des compétences professionnelles.
+        </p>
+
+        <div class="formation-footer" data-i18n="yearTwoFooter">
+          ANNÉE DE PROFESSIONNALISATION
+        </div>
+
+      </article>
+
     </div>
-  </div>
-</section>
+
+  </section>
+
+  <!-- PLATEFORME NUMÉRIQUE -->
+  <section class="section platform-section" id="espaces">
+
+    <div class="section-heading centered">
+
+      <span class="section-label" data-i18n="platformLabel">
+        ENVIRONNEMENT NUMÉRIQUE
+      </span>
+
+      <h2 data-i18n="platformTitle">
+        Une plateforme au service de la formation
+      </h2>
+
+      <p data-i18n="platformIntro">
+        Des espaces numériques organisés pour accompagner les formateurs et les futurs enseignants du CPRIT.
+      </p>
+
+    </div>
+
+    <div class="platform-grid">
+
+      <article class="platform-card">
+
+        <div class="platform-icon">01</div>
+
+        <h3 data-i18n="trainerTitle">Espace Formateurs</h3>
+
+        <p data-i18n="trainerDescription">
+          Publier les cours, partager les supports pédagogiques, organiser les exercices et suivre les résultats.
+        </p>
+
+        <span class="access-label" data-i18n="trainerAccess">
+          ACCÈS PROFESSIONNEL
+        </span>
+
+      </article>
+
+      <article class="platform-card">
+
+        <div class="platform-icon">02</div>
+
+        <h3 data-i18n="studentTitle">Espace Futurs enseignants</h3>
+
+        <p data-i18n="studentDescription">
+          Consulter les leçons, télécharger les documents, effectuer les exercices et suivre sa progression.
+        </p>
+
+        <span class="access-label" data-i18n="studentAccess">
+          ACCÈS APPRENANT
+        </span>
+
+      </article>
+
+      <article class="platform-card">
+
+        <div class="platform-icon">03</div>
+
+        <h3 data-i18n="onlineTitle">Formation en ligne</h3>
+
+        <p data-i18n="onlineDescription">
+          Accéder à distance aux cours, vidéos, ressources pédagogiques et activités de formation.
+        </p>
+
+        <span class="access-label" data-i18n="onlineAccess">
+          APPRENTISSAGE NUMÉRIQUE
+        </span>
+
+      </article>
+
+      <article class="platform-card ai-platform" id="assistant-ia">
+
+        <div class="platform-icon">04</div>
+
+        <h3 data-i18n="aiTitle">Assistant pédagogique IA</h3>
+
+        <p data-i18n="aiDescription">
+          Poser des questions, demander des explications et obtenir une assistance pour mieux comprendre les notions étudiées.
+        </p>
+
+        <a class="ai-link" href="assistant-ia.html" data-i18n="aiLink">
+          Découvrir l'assistant →
+        </a>
+
+        <span class="access-label" data-i18n="aiAccess">
+          ASSISTANCE INTELLIGENTE
+        </span>
+
+      </article>
+
+    </div>
+
+    <p class="platform-notice" data-i18n="platformNotice">
+      Les espaces pédagogiques sont réservés aux apprenants inscrits et validés ainsi qu'aux formateurs autorisés par le CPRIT.
+    </p>
+
+  </section>
+
+  <!-- ADMISSION -->
+  <section class="admission-section" id="admission">
+
+    <div class="admission-content">
+
+      <span class="section-label light-label" data-i18n="admissionLabel">
+        ADMISSIONS AU CPRIT
+      </span>
+
+      <h2 data-i18n="admissionTitle">
+        Votre avenir dans l'enseignement commence ici.
+      </h2>
+
+      <p data-i18n="admissionDescription">
+        Vous êtes titulaire du baccalauréat et souhaitez devenir enseignant dans une école primaire ? Soumettez votre demande d'admission au CPRIT.
+      </p>
+
+      <a href="inscription.html" class="admission-button" data-i18n="admissionButton">
+        Accéder au formulaire d'inscription →
+      </a>
+
+      <small data-i18n="admissionNote">
+        Chaque demande est soumise à l'examen et à la validation du CPRIT.
+      </small>
+
+    </div>
+
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section contact-section" id="contact">
+
+    <div class="contact-layout">
+
+      <div>
+
+        <span class="section-label" data-i18n="contactLabel">
+          NOUS CONTACTER
+        </span>
+
+        <h2 data-i18n="contactTitle">
+          Le CPRIT à votre écoute
+        </h2>
+
+        <p data-i18n="contactDescription">
+          Pour toute information concernant les admissions, le parcours de formation ou les activités du Centre, notre équipe reste à votre disposition.
+        </p>
+
+      </div>
+
+      <div class="contact-card">
+
+        <h3 data-i18n="contactCenter">
+          Centre pédagogique régional de l'ICESCO au Tchad
+        </h3>
+
+        <p data-i18n="contactAddress">
+          N'Djamena, République du Tchad
+        </p>
+
+        <span data-i18n="contactNote">
+          Les coordonnées officielles seront publiées après validation.
+        </span>
+
+      </div>
+
+    </div>
+
+  </section>
 
 </main>
 
+<!-- PIED DE PAGE -->
 <footer class="footer">
+
   <div class="footer-main">
+
     <div class="footer-brand">
+
       <img src="assets/logo-cprit.png" alt="CPRIT">
+
       <div>
         <strong>CPRIT</strong>
-        <span data-i18n="brandSubtitle">Centre pédagogique régional<br>de l'ICESCO au Tchad</span>
+        <span data-i18n="brandSubtitle">
+          Centre pédagogique régional<br>de l'ICESCO au Tchad
+        </span>
       </div>
+
     </div>
 
-    <p data-i18n="footerSlogan">Former aujourd'hui les enseignants qui construiront l'école de demain.</p>
-    <a href="inscription.html" data-i18n="footerAdmission">Demande d'admission →</a>
+    <p data-i18n="footerSlogan">
+      Former aujourd'hui les enseignants qui construiront l'école de demain.
+    </p>
+
+    <a href="inscription.html" data-i18n="footerAdmission">
+      Demande d'admission →
+    </a>
+
   </div>
 
   <div class="footer-bottom">
-    <span>© <span id="year"></span> CPRIT. <span data-i18n="rights">Tous droits réservés.</span></span>
-    <span data-i18n="footerCenter">Centre pédagogique régional de l'ICESCO au Tchad</span>
+
+    <span>
+      © <span id="year"></span> CPRIT.
+      <span data-i18n="rights">Tous droits réservés.</span>
+    </span>
+
+    <span data-i18n="footerCenter">
+      Centre pédagogique régional de l'ICESCO au Tchad
+    </span>
+
   </div>
+
 </footer>
 
 <script src="script.js"></script>
 
 <script>
-document.getElementById("year").textContent = new Date().getFullYear();
+/* ANNÉE AUTOMATIQUE */
+
+document.getElementById("year").textContent =
+  new Date().getFullYear();
+
+/* MENU MOBILE */
 
 const toggle = document.getElementById("menuToggle");
 const nav = document.getElementById("mainNav");
 
-toggle.addEventListener("click", function() {
-  nav.classList.toggle("open");
-});
+if (toggle && nav) {
 
-nav.querySelectorAll("a").forEach(function(link) {
-  link.addEventListener("click", function() {
-    nav.classList.remove("open");
+  toggle.addEventListener("click", function() {
+    nav.classList.toggle("open");
   });
-});
+
+  nav.querySelectorAll("a").forEach(function(link) {
+    link.addEventListener("click", function() {
+      nav.classList.remove("open");
+    });
+  });
+
+}
+
+/* TRADUCTIONS COMPLÈTES */
 
 const translations = {
+
 fr: {
+
 brandSubtitle:"Centre pédagogique régional<br>de l'ICESCO au Tchad",
-navHome:"Accueil",navCenter:"Le Centre",navTraining:"Formation",navPlatform:"Plateforme",navAI:"Assistant IA",navAdmission:"Admission",navContact:"Contact",navRegister:"S'inscrire",
+
+navHome:"Accueil",
+navCenter:"Le Centre",
+navTraining:"Formation",
+navPlatform:"Plateforme",
+navAI:"Assistant IA",
+navAdmission:"Admission",
+navContact:"Contact",
+navRegister:"S'inscrire",
+
 eyebrow:"FORMATION • PÉDAGOGIE • EXCELLENCE",
-heroTitle:"Former les enseignants",heroTitle2:"qui bâtiront l'école de demain.",
+
+heroTitle:"Former les enseignants",
+heroTitle2:"qui bâtiront l'école de demain.",
+
 heroDescription:"Le Centre pédagogique régional de l'ICESCO au Tchad prépare les titulaires du baccalauréat au métier d'enseignant du primaire à travers un parcours professionnel de deux années.",
-applyButton:"Déposer une candidature →",discoverButton:"Découvrir la formation",
+
+applyButton:"Déposer une candidature →",
+discoverButton:"Découvrir la formation",
+
 heroNote:"Un engagement pour la qualité de l'éducation au Tchad",
-visualTop:"FORMATION DES ENSEIGNANTS",visualSlogan:"Le savoir transmet l'avenir.",visualDescription:"Deux années pour préparer les éducateurs de demain.",visualYears:"ANNÉES DE FORMATION",
-trust1:"Formation initiale",trust2:"Années de préparation",trust3:"Apprentissage numérique",
-aboutLabel:"PRÉSENTATION INSTITUTIONNELLE",aboutTitle:"Un centre engagé pour l'avenir de l'éducation",aboutQuote:"La qualité de l'éducation commence par la qualité de la formation des enseignants.",aboutCaption:"LA VOCATION DU CPRIT",
+
+visualTop:"FORMATION DES ENSEIGNANTS",
+visualSlogan:"Le savoir transmet l'avenir.",
+visualDescription:"Deux années pour préparer les éducateurs de demain.",
+visualYears:"ANNÉES DE FORMATION",
+
+trust1:"Formation initiale",
+trust2:"Années de préparation",
+trust3:"Apprentissage numérique",
+
+aboutLabel:"PRÉSENTATION INSTITUTIONNELLE",
+aboutTitle:"Un centre engagé pour l'avenir de l'éducation",
+aboutQuote:"La qualité de l'éducation commence par la qualité de la formation des enseignants.",
+aboutCaption:"LA VOCATION DU CPRIT",
+
 aboutP1:"Le Centre pédagogique régional de l'ICESCO au Tchad a pour vocation de contribuer à la préparation professionnelle des futurs enseignants du primaire.",
+
 aboutP2:"À travers une formation structurée sur deux années, le Centre accompagne les apprenants dans l'acquisition des connaissances, des compétences pédagogiques et des pratiques nécessaires à l'exercice du métier.",
+
 aboutP3:"Le numérique vient compléter cet accompagnement grâce à une plateforme dédiée aux cours, aux ressources pédagogiques et au suivi des apprentissages.",
-trainingLabel:"PARCOURS DE FORMATION",trainingTitle:"Deux années pour devenir enseignant",trainingIntro:"Un parcours destiné aux titulaires du baccalauréat qui souhaitent exercer dans l'enseignement primaire.",
-yearOne:"PREMIÈRE ANNÉE",yearOneTitle:"Construire les fondamentaux",yearOneDescription:"Acquisition des connaissances générales, découverte des sciences de l'éducation, apprentissage des principes pédagogiques et initiation aux pratiques d'enseignement.",yearOneFooter:"ANNÉE DE FONDATION",
-yearTwo:"DEUXIÈME ANNÉE",yearTwoTitle:"Maîtriser les pratiques pédagogiques",yearTwoDescription:"Approfondissement des méthodes d'enseignement, préparation des leçons, évaluation des apprentissages et développement des compétences professionnelles.",yearTwoFooter:"ANNÉE DE PROFESSIONNALISATION",
-platformLabel:"ENVIRONNEMENT NUMÉRIQUE",platformTitle:"Une plateforme au service de la formation",platformIntro:"Des espaces numériques organisés pour accompagner les formateurs et les futurs enseignants du CPRIT.",
-trainerTitle:"Espace Formateurs",trainerDescription:"Publier les cours, partager les supports pédagogiques, organiser les exercices et suivre les résultats.",trainerAccess:"ACCÈS PROFESSIONNEL",
-studentTitle:"Espace Futurs enseignants",studentDescription:"Consulter les leçons, télécharger les documents, effectuer les exercices et suivre sa progression.",studentAccess:"ACCÈS APPRENANT",
-onlineTitle:"Formation en ligne",onlineDescription:"Accéder à distance aux cours, vidéos, ressources pédagogiques et activités de formation.",onlineAccess:"APPRENTISSAGE NUMÉRIQUE",
-aiTitle:"Assistant pédagogique IA",aiDescription:"Poser des questions, demander des explications et obtenir une assistance pour mieux comprendre les notions étudiées.",aiLink:"Découvrir l'assistant →",aiAccess:"ASSISTANCE INTELLIGENTE",
+
+trainingLabel:"PARCOURS DE FORMATION",
+trainingTitle:"Deux années pour devenir enseignant",
+trainingIntro:"Un parcours destiné aux titulaires du baccalauréat qui souhaitent exercer dans l'enseignement primaire.",
+
+yearOne:"PREMIÈRE ANNÉE",
+yearOneTitle:"Construire les fondamentaux",
+yearOneDescription:"Acquisition des connaissances générales, découverte des sciences de l'éducation, apprentissage des principes pédagogiques et initiation aux pratiques d'enseignement.",
+yearOneFooter:"ANNÉE DE FONDATION",
+
+yearTwo:"DEUXIÈME ANNÉE",
+yearTwoTitle:"Maîtriser les pratiques pédagogiques",
+yearTwoDescription:"Approfondissement des méthodes d'enseignement, préparation des leçons, évaluation des apprentissages et développement des compétences professionnelles.",
+yearTwoFooter:"ANNÉE DE PROFESSIONNALISATION",
+
+platformLabel:"ENVIRONNEMENT NUMÉRIQUE",
+platformTitle:"Une plateforme au service de la formation",
+platformIntro:"Des espaces numériques organisés pour accompagner les formateurs et les futurs enseignants du CPRIT.",
+
+trainerTitle:"Espace Formateurs",
+trainerDescription:"Publier les cours, partager les supports pédagogiques, organiser les exercices et suivre les résultats.",
+trainerAccess:"ACCÈS PROFESSIONNEL",
+
+studentTitle:"Espace Futurs enseignants",
+studentDescription:"Consulter les leçons, télécharger les documents, effectuer les exercices et suivre sa progression.",
+studentAccess:"ACCÈS APPRENANT",
+
+onlineTitle:"Formation en ligne",
+onlineDescription:"Accéder à distance aux cours, vidéos, ressources pédagogiques et activités de formation.",
+onlineAccess:"APPRENTISSAGE NUMÉRIQUE",
+
+aiTitle:"Assistant pédagogique IA",
+aiDescription:"Poser des questions, demander des explications et obtenir une assistance pour mieux comprendre les notions étudiées.",
+aiLink:"Découvrir l'assistant →",
+aiAccess:"ASSISTANCE INTELLIGENTE",
+
 platformNotice:"Les espaces pédagogiques sont réservés aux apprenants inscrits et validés ainsi qu'aux formateurs autorisés par le CPRIT.",
-admissionLabel:"ADMISSIONS AU CPRIT",admissionTitle:"Votre avenir dans l'enseignement commence ici.",admissionDescription:"Vous êtes titulaire du baccalauréat et souhaitez devenir enseignant dans une école primaire ? Soumettez votre demande d'admission au CPRIT.",admissionButton:"Accéder au formulaire d'inscription →",admissionNote:"Chaque demande est soumise à l'examen et à la validation du CPRIT.",
-contactLabel:"NOUS CONTACTER",contactTitle:"Le CPRIT à votre écoute",contactDescription:"Pour toute information concernant les admissions, le parcours de formation ou les activités du Centre, notre équipe reste à votre disposition.",contactCenter:"Centre pédagogique régional de l'ICESCO au Tchad",contactAddress:"N'Djamena, République du Tchad",contactNote:"Les coordonnées officielles seront publiées après validation.",
-footerSlogan:"Former aujourd'hui les enseignants qui construiront l'école de demain.",footerAdmission:"Demande d'admission →",rights:"Tous droits réservés.",footerCenter:"Centre pédagogique régional de l'ICESCO au Tchad"
+
+admissionLabel:"ADMISSIONS AU CPRIT",
+admissionTitle:"Votre avenir dans l'enseignement commence ici.",
+admissionDescription:"Vous êtes titulaire du baccalauréat et souhaitez devenir enseignant dans une école primaire ? Soumettez votre demande d'admission au CPRIT.",
+admissionButton:"Accéder au formulaire d'inscription →",
+admissionNote:"Chaque demande est soumise à l'examen et à la validation du CPRIT.",
+
+contactLabel:"NOUS CONTACTER",
+contactTitle:"Le CPRIT à votre écoute",
+contactDescription:"Pour toute information concernant les admissions, le parcours de formation ou les activités du Centre, notre équipe reste à votre disposition.",
+contactCenter:"Centre pédagogique régional de l'ICESCO au Tchad",
+contactAddress:"N'Djamena, République du Tchad",
+contactNote:"Les coordonnées officielles seront publiées après validation.",
+
+footerSlogan:"Former aujourd'hui les enseignants qui construiront l'école de demain.",
+footerAdmission:"Demande d'admission →",
+rights:"Tous droits réservés.",
+footerCenter:"Centre pédagogique régional de l'ICESCO au Tchad"
+
 },
+
 en: {
+
 brandSubtitle:"Regional Pedagogical Centre<br>of ICESCO in Chad",
-navHome:"Home",navCenter:"The Centre",navTraining:"Training",navPlatform:"Platform",navAI:"AI Assistant",navAdmission:"Admissions",navContact:"Contact",navRegister:"Register",
+
+navHome:"Home",
+navCenter:"The Centre",
+navTraining:"Training",
+navPlatform:"Platform",
+navAI:"AI Assistant",
+navAdmission:"Admissions",
+navContact:"Contact",
+navRegister:"Register",
+
 eyebrow:"TRAINING • PEDAGOGY • EXCELLENCE",
-heroTitle:"Training the teachers",heroTitle2:"who will build the school of tomorrow.",
+
+heroTitle:"Training the teachers",
+heroTitle2:"who will build the school of tomorrow.",
+
 heroDescription:"The ICESCO Regional Pedagogical Centre in Chad prepares high school graduates for careers as primary school teachers through a two-year professional training programme.",
-applyButton:"Submit an application →",discoverButton:"Discover the programme",
+
+applyButton:"Submit an application →",
+discoverButton:"Discover the programme",
+
 heroNote:"A commitment to the quality of education in Chad",
-visualTop:"TEACHER TRAINING",visualSlogan:"Knowledge shapes the future.",visualDescription:"Two years to prepare tomorrow's educators.",visualYears:"YEARS OF TRAINING",
-trust1:"Initial training",trust2:"Years of preparation",trust3:"Digital learning",
-aboutLabel:"INSTITUTIONAL PRESENTATION",aboutTitle:"A centre committed to the future of education",aboutQuote:"Quality education begins with quality teacher training.",aboutCaption:"THE MISSION OF CPRIT",
+
+visualTop:"TEACHER TRAINING",
+visualSlogan:"Knowledge shapes the future.",
+visualDescription:"Two years to prepare tomorrow's educators.",
+visualYears:"YEARS OF TRAINING",
+
+trust1:"Initial training",
+trust2:"Years of preparation",
+trust3:"Digital learning",
+
+aboutLabel:"INSTITUTIONAL PRESENTATION",
+aboutTitle:"A centre committed to the future of education",
+aboutQuote:"Quality education begins with quality teacher training.",
+aboutCaption:"THE MISSION OF CPRIT",
+
 aboutP1:"The ICESCO Regional Pedagogical Centre in Chad aims to contribute to the professional preparation of future primary school teachers.",
+
 aboutP2:"Through a structured two-year programme, the Centre supports learners in acquiring the knowledge, pedagogical skills and practical abilities required for the profession.",
+
 aboutP3:"Digital technology complements this support through a platform dedicated to courses, educational resources and learning progress monitoring.",
-trainingLabel:"TRAINING PROGRAMME",trainingTitle:"Two years to become a teacher",trainingIntro:"A programme designed for high school graduates who wish to teach at primary school level.",
-yearOne:"FIRST YEAR",yearOneTitle:"Building the foundations",yearOneDescription:"Acquiring general knowledge, discovering educational sciences, learning pedagogical principles and becoming familiar with teaching practices.",yearOneFooter:"FOUNDATION YEAR",
-yearTwo:"SECOND YEAR",yearTwoTitle:"Mastering teaching practices",yearTwoDescription:"Developing teaching methods, preparing lessons, assessing learning and strengthening professional skills.",yearTwoFooter:"PROFESSIONAL DEVELOPMENT YEAR",
-platformLabel:"DIGITAL ENVIRONMENT",platformTitle:"A platform supporting teacher training",platformIntro:"Organised digital spaces designed to support CPRIT trainers and future teachers.",
-trainerTitle:"Trainers' Area",trainerDescription:"Publish courses, share teaching materials, organise exercises and monitor results.",trainerAccess:"PROFESSIONAL ACCESS",
-studentTitle:"Future Teachers' Area",studentDescription:"Access lessons, download documents, complete exercises and track learning progress.",studentAccess:"LEARNER ACCESS",
-onlineTitle:"Online Training",onlineDescription:"Access courses, videos, educational resources and training activities remotely.",onlineAccess:"DIGITAL LEARNING",
-aiTitle:"AI Pedagogical Assistant",aiDescription:"Ask questions, request explanations and receive support to better understand the topics being studied.",aiLink:"Discover the assistant →",aiAccess:"INTELLIGENT ASSISTANCE",
+
+trainingLabel:"TRAINING PROGRAMME",
+trainingTitle:"Two years to become a teacher",
+trainingIntro:"A programme designed for high school graduates who wish to teach at primary school level.",
+
+yearOne:"FIRST YEAR",
+yearOneTitle:"Building the foundations",
+yearOneDescription:"Acquiring general knowledge, discovering educational sciences, learning pedagogical principles and becoming familiar with teaching practices.",
+yearOneFooter:"FOUNDATION YEAR",
+
+yearTwo:"SECOND YEAR",
+yearTwoTitle:"Mastering teaching practices",
+yearTwoDescription:"Developing teaching methods, preparing lessons, assessing learning and strengthening professional skills.",
+yearTwoFooter:"PROFESSIONAL DEVELOPMENT YEAR",
+
+platformLabel:"DIGITAL ENVIRONMENT",
+platformTitle:"A platform supporting teacher training",
+platformIntro:"Organised digital spaces designed to support CPRIT trainers and future teachers.",
+
+trainerTitle:"Trainers' Area",
+trainerDescription:"Publish courses, share teaching materials, organise exercises and monitor results.",
+trainerAccess:"PROFESSIONAL ACCESS",
+
+studentTitle:"Future Teachers' Area",
+studentDescription:"Access lessons, download documents, complete exercises and track learning progress.",
+studentAccess:"LEARNER ACCESS",
+
+onlineTitle:"Online Training",
+onlineDescription:"Access courses, videos, educational resources and training activities remotely.",
+onlineAccess:"DIGITAL LEARNING",
+
+aiTitle:"AI Pedagogical Assistant",
+aiDescription:"Ask questions, request explanations and receive support to better understand the topics being studied.",
+aiLink:"Discover the assistant →",
+aiAccess:"INTELLIGENT ASSISTANCE",
+
 platformNotice:"The educational areas are reserved for enrolled and approved learners and trainers authorised by CPRIT.",
-admissionLabel:"ADMISSIONS TO CPRIT",admissionTitle:"Your future in teaching starts here.",admissionDescription:"Are you a high school graduate who wants to become a primary school teacher? Submit your application for admission to CPRIT.",admissionButton:"Access the registration form →",admissionNote:"Each application is subject to review and approval by CPRIT.",
-contactLabel:"CONTACT US",contactTitle:"CPRIT is here to help",contactDescription:"For information about admissions, the training programme or the Centre's activities, our team is available to assist you.",contactCenter:"ICESCO Regional Pedagogical Centre in Chad",contactAddress:"N'Djamena, Republic of Chad",contactNote:"Official contact details will be published after approval.",
-footerSlogan:"Training today's teachers to build tomorrow's schools.",footerAdmission:"Admission application →",rights:"All rights reserved.",footerCenter:"ICESCO Regional Pedagogical Centre in Chad"
+
+admissionLabel:"ADMISSIONS TO CPRIT",
+admissionTitle:"Your future in teaching starts here.",
+admissionDescription:"Are you a high school graduate who wants to become a primary school teacher? Submit your application for admission to CPRIT.",
+admissionButton:"Access the registration form →",
+admissionNote:"Each application is subject to review and approval by CPRIT.",
+
+contactLabel:"CONTACT US",
+contactTitle:"CPRIT is here to help",
+contactDescription:"For information about admissions, the training programme or the Centre's activities, our team is available to assist you.",
+contactCenter:"ICESCO Regional Pedagogical Centre in Chad",
+contactAddress:"N'Djamena, Republic of Chad",
+contactNote:"Official contact details will be published after approval.",
+
+footerSlogan:"Training today's teachers to build tomorrow's schools.",
+footerAdmission:"Admission application →",
+rights:"All rights reserved.",
+footerCenter:"ICESCO Regional Pedagogical Centre in Chad"
+
 },
+
 ar: {
+
 brandSubtitle:"المركز التربوي الإقليمي<br>للإيسيسكو في تشاد",
-navHome:"الرئيسية",navCenter:"المركز",navTraining:"التكوين",navPlatform:"المنصة",navAI:"المساعد الذكي",navAdmission:"القبول",navContact:"اتصل بنا",navRegister:"التسجيل",
+
+navHome:"الرئيسية",
+navCenter:"المركز",
+navTraining:"التكوين",
+navPlatform:"المنصة",
+navAI:"المساعد الذكي",
+navAdmission:"القبول",
+navContact:"اتصل بنا",
+navRegister:"التسجيل",
+
 eyebrow:"التكوين • التربية • التميز",
-heroTitle:"إعداد المعلمين",heroTitle2:"الذين سيبنون مدرسة الغد.",
+
+heroTitle:"إعداد المعلمين",
+heroTitle2:"الذين سيبنون مدرسة الغد.",
+
 heroDescription:"يعمل المركز التربوي الإقليمي للإيسيسكو في تشاد على إعداد الحاصلين على شهادة البكالوريا لمهنة التدريس في المرحلة الابتدائية من خلال برنامج مهني يمتد على سنتين.",
-applyButton:"تقديم طلب الترشح ←",discoverButton:"اكتشف برنامج التكوين",
+
+applyButton:"تقديم طلب الترشح ←",
+discoverButton:"اكتشف برنامج التكوين",
+
 heroNote:"التزام من أجل جودة التعليم في تشاد",
-visualTop:"تكوين المعلمين",visualSlogan:"العلم يصنع المستقبل.",visualDescription:"سنتان لإعداد مربي الغد.",visualYears:"سنوات التكوين",
-trust1:"التكوين الأولي",trust2:"سنتان من الإعداد",trust3:"التعلم الرقمي",
-aboutLabel:"التعريف بالمؤسسة",aboutTitle:"مركز ملتزم بمستقبل التعليم",aboutQuote:"جودة التعليم تبدأ بجودة تكوين المعلمين.",aboutCaption:"رسالة المركز",
+
+visualTop:"تكوين المعلمين",
+visualSlogan:"العلم يصنع المستقبل.",
+visualDescription:"سنتان لإعداد مربي الغد.",
+visualYears:"سنوات التكوين",
+
+trust1:"التكوين الأولي",
+trust2:"سنتان من الإعداد",
+trust3:"التعلم الرقمي",
+
+aboutLabel:"التعريف بالمؤسسة",
+aboutTitle:"مركز ملتزم بمستقبل التعليم",
+aboutQuote:"جودة التعليم تبدأ بجودة تكوين المعلمين.",
+aboutCaption:"رسالة المركز",
+
 aboutP1:"يهدف المركز التربوي الإقليمي للإيسيسكو في تشاد إلى الإسهام في الإعداد المهني لمعلمي المرحلة الابتدائية في المستقبل.",
+
 aboutP2:"من خلال برنامج تكويني منظم يمتد على سنتين، يرافق المركز المتعلمين في اكتساب المعارف والمهارات التربوية والممارسات اللازمة لمزاولة مهنة التعليم.",
+
 aboutP3:"وتكمل التكنولوجيا الرقمية هذا المسار من خلال منصة مخصصة للدروس والموارد التربوية ومتابعة التعلم.",
-trainingLabel:"مسار التكوين",trainingTitle:"سنتان لتصبح معلماً",trainingIntro:"برنامج موجه للحاصلين على شهادة البكالوريا والراغبين في العمل في مجال التعليم الابتدائي.",
-yearOne:"السنة الأولى",yearOneTitle:"بناء الأسس",yearOneDescription:"اكتساب المعارف العامة، والتعرف على علوم التربية، وتعلم المبادئ التربوية، والتدرب على أساسيات ممارسات التدريس.",yearOneFooter:"سنة التأسيس",
-yearTwo:"السنة الثانية",yearTwoTitle:"إتقان الممارسات التربوية",yearTwoDescription:"تعميق أساليب التدريس، وإعداد الدروس، وتقييم التعلمات، وتطوير الكفاءات المهنية.",yearTwoFooter:"سنة التأهيل المهني",
-platformLabel:"البيئة الرقمية",platformTitle:"منصة لخدمة التكوين",platformIntro:"فضاءات رقمية منظمة لمرافقة المكونين ومعلمي المستقبل في المركز.",
-trainerTitle:"فضاء المكونين",trainerDescription:"نشر الدروس، ومشاركة الوسائل التعليمية، وتنظيم التمارين، ومتابعة النتائج.",trainerAccess:"دخول مهني",
-studentTitle:"فضاء المعلمين المستقبليين",studentDescription:"الاطلاع على الدروس، وتنزيل الوثائق، وإنجاز التمارين، ومتابعة التقدم في التعلم.",studentAccess:"دخول المتعلم",
-onlineTitle:"التكوين عبر الإنترنت",onlineDescription:"الوصول عن بعد إلى الدروس ومقاطع الفيديو والموارد التربوية وأنشطة التكوين.",onlineAccess:"التعلم الرقمي",
-aiTitle:"المساعد التربوي الذكي",aiDescription:"طرح الأسئلة وطلب التوضيحات والحصول على المساعدة لفهم الموضوعات المدروسة بشكل أفضل.",aiLink:"اكتشف المساعد ←",aiAccess:"مساعدة ذكية",
+
+trainingLabel:"مسار التكوين",
+trainingTitle:"سنتان لتصبح معلماً",
+trainingIntro:"برنامج موجه للحاصلين على شهادة البكالوريا والراغبين في العمل في مجال التعليم الابتدائي.",
+
+yearOne:"السنة الأولى",
+yearOneTitle:"بناء الأسس",
+yearOneDescription:"اكتساب المعارف العامة، والتعرف على علوم التربية، وتعلم المبادئ التربوية، والتدرب على أساسيات ممارسات التدريس.",
+yearOneFooter:"سنة التأسيس",
+
+yearTwo:"السنة الثانية",
+yearTwoTitle:"إتقان الممارسات التربوية",
+yearTwoDescription:"تعميق أساليب التدريس، وإعداد الدروس، وتقييم التعلمات، وتطوير الكفاءات المهنية.",
+yearTwoFooter:"سنة التأهيل المهني",
+
+platformLabel:"البيئة الرقمية",
+platformTitle:"منصة لخدمة التكوين",
+platformIntro:"فضاءات رقمية منظمة لمرافقة المكونين ومعلمي المستقبل في المركز.",
+
+trainerTitle:"فضاء المكونين",
+trainerDescription:"نشر الدروس، ومشاركة الوسائل التعليمية، وتنظيم التمارين، ومتابعة النتائج.",
+trainerAccess:"دخول مهني",
+
+studentTitle:"فضاء المعلمين المستقبليين",
+studentDescription:"الاطلاع على الدروس، وتنزيل الوثائق، وإنجاز التمارين، ومتابعة التقدم في التعلم.",
+studentAccess:"دخول المتعلم",
+
+onlineTitle:"التكوين عبر الإنترنت",
+onlineDescription:"الوصول عن بعد إلى الدروس ومقاطع الفيديو والموارد التربوية وأنشطة التكوين.",
+onlineAccess:"التعلم الرقمي",
+
+aiTitle:"المساعد التربوي الذكي",
+aiDescription:"طرح الأسئلة وطلب التوضيحات والحصول على المساعدة لفهم الموضوعات المدروسة بشكل أفضل.",
+aiLink:"اكتشف المساعد ←",
+aiAccess:"مساعدة ذكية",
+
 platformNotice:"الفضاءات التربوية مخصصة للمتعلمين المسجلين والمعتمدين وللمكونين المرخص لهم من قبل المركز.",
-admissionLabel:"القبول في المركز",admissionTitle:"مستقبلك في مهنة التعليم يبدأ من هنا.",admissionDescription:"هل أنت حاصل على شهادة البكالوريا وترغب في أن تصبح معلماً في مدرسة ابتدائية؟ قدم طلب الالتحاق بالمركز.",admissionButton:"الدخول إلى استمارة التسجيل ←",admissionNote:"يخضع كل طلب للدراسة والموافقة من قبل المركز.",
-contactLabel:"اتصل بنا",contactTitle:"المركز في خدمتكم",contactDescription:"للحصول على معلومات حول القبول أو برنامج التكوين أو أنشطة المركز، يبقى فريقنا رهن إشارتكم.",contactCenter:"المركز التربوي الإقليمي للإيسيسكو في تشاد",contactAddress:"نجامينا، جمهورية تشاد",contactNote:"سيتم نشر بيانات الاتصال الرسمية بعد اعتمادها.",
-footerSlogan:"إعداد معلمي اليوم لبناء مدرسة الغد.",footerAdmission:"طلب الالتحاق ←",rights:"جميع الحقوق محفوظة.",footerCenter:"المركز التربوي الإقليمي للإيسيسكو في تشاد"
+
+admissionLabel:"القبول في المركز",
+admissionTitle:"مستقبلك في مهنة التعليم يبدأ من هنا.",
+admissionDescription:"هل أنت حاصل على شهادة البكالوريا وترغب في أن تصبح معلماً في مدرسة ابتدائية؟ قدم طلب الالتحاق بالمركز.",
+admissionButton:"الدخول إلى استمارة التسجيل ←",
+admissionNote:"يخضع كل طلب للدراسة والموافقة من قبل المركز.",
+
+contactLabel:"اتصل بنا",
+contactTitle:"المركز في خدمتكم",
+contactDescription:"للحصول على معلومات حول القبول أو برنامج التكوين أو أنشطة المركز، يبقى فريقنا رهن إشارتكم.",
+contactCenter:"المركز التربوي الإقليمي للإيسيسكو في تشاد",
+contactAddress:"نجامينا، جمهورية تشاد",
+contactNote:"سيتم نشر بيانات الاتصال الرسمية بعد اعتمادها.",
+
+footerSlogan:"إعداد معلمي اليوم لبناء مدرسة الغد.",
+footerAdmission:"طلب الالتحاق ←",
+rights:"جميع الحقوق محفوظة.",
+footerCenter:"المركز التربوي الإقليمي للإيسيسكو في تشاد"
+
 }
+
 };
+
+/* APPLICATION DE LA LANGUE */
 
 const languageSelect = document.getElementById("languageSelect");
 
 function applyLanguage(language) {
+
   const selected = translations[language] ? language : "fr";
   const words = translations[selected];
+
+  /* Langue et direction générale */
 
   document.documentElement.lang = selected;
   document.documentElement.dir = selected === "ar" ? "rtl" : "ltr";
   document.body.dir = selected === "ar" ? "rtl" : "ltr";
 
+  /* Traduction des textes */
+
   document.querySelectorAll("[data-i18n]").forEach(function(element) {
+
     const key = element.getAttribute("data-i18n");
-    if (words[key] !== undefined) {
+
+    if (Object.prototype.hasOwnProperty.call(words, key)) {
       element.innerHTML = words[key];
     }
+
   });
 
-  languageSelect.value = selected;
+  /* Mise à jour du sélecteur unique */
+
+  if (languageSelect) {
+    languageSelect.value = selected;
+  }
+
+  /* Mémorisation pour toutes les pages */
 
   try {
     localStorage.setItem("cprit_language", selected);
   } catch (error) {
-    console.warn("Language preference could not be saved.");
+    console.warn("La préférence de langue n'a pas pu être enregistrée.");
   }
+
+  /* Titre de la page */
 
   document.title = selected === "ar"
     ? "CPRIT | المركز التربوي الإقليمي للإيسيسكو في تشاد"
     : selected === "en"
     ? "CPRIT | ICESCO Regional Pedagogical Centre in Chad"
     : "CPRIT | Centre pédagogique régional de l'ICESCO au Tchad";
+
+  /* Signal pour les autres fonctionnalités du site */
+
+  document.dispatchEvent(new CustomEvent("cprit:languageChanged", {
+    detail: { language: selected }
+  }));
+
 }
 
-let savedLanguage = "fr";
-try {
-  savedLanguage = localStorage.getItem("cprit_language") || "fr";
-} catch (error) {}
+/* RESTAURATION DE LA LANGUE ENREGISTRÉE */
 
-applyLanguage(savedLanguage);
+function getSavedLanguage() {
 
-languageSelect.addEventListener("change", function() {
-  applyLanguage(this.value);
-});
+  try {
+
+    const saved = localStorage.getItem("cprit_language") || "fr";
+
+    return translations[saved] ? saved : "fr";
+
+  } catch (error) {
+
+    return "fr";
+
+  }
+
+}
+
+/* INITIALISATION */
+
+applyLanguage(getSavedLanguage());
+
+/* UN SEUL ÉVÉNEMENT POUR LE SÉLECTEUR PRINCIPAL */
+
+if (languageSelect) {
+
+  languageSelect.addEventListener("change", function(event) {
+
+    event.stopImmediatePropagation();
+
+    applyLanguage(this.value);
+
+  }, true);
+
+}
+
+/* FONCTION PARTAGÉE POUR LES AUTRES PAGES */
+
+window.CPRITLanguage = {
+
+  get: function() {
+    return getSavedLanguage();
+  },
+
+  set: function(language) {
+    applyLanguage(language);
+  }
+
+};
+
 </script>
 
 </body>
