@@ -124,7 +124,6 @@
     <a href="#admission" data-i18n="navAdmission">Admission</a>
     <a href="#contact" data-i18n="navContact">Contact</a>
 
-    <!-- UNIQUE SÉLECTEUR DE LANGUE DU SITE -->
     <select id="languageSelect" class="language-select" aria-label="Choisir la langue">
       <option value="fr">Français</option>
       <option value="en">English</option>
@@ -574,10 +573,16 @@
 <script src="script.js"></script>
 
 <script>
+(function () {
+"use strict";
+
 /* ANNÉE AUTOMATIQUE */
 
-document.getElementById("year").textContent =
-  new Date().getFullYear();
+const yearElement = document.getElementById("year");
+
+if (yearElement) {
+  yearElement.textContent = new Date().getFullYear();
+}
 
 /* MENU MOBILE */
 
@@ -586,12 +591,12 @@ const nav = document.getElementById("mainNav");
 
 if (toggle && nav) {
 
-  toggle.addEventListener("click", function() {
+  toggle.addEventListener("click", function () {
     nav.classList.toggle("open");
   });
 
-  nav.querySelectorAll("a").forEach(function(link) {
-    link.addEventListener("click", function() {
+  nav.querySelectorAll("a").forEach(function (link) {
+    link.addEventListener("click", function () {
       nav.classList.remove("open");
     });
   });
@@ -919,15 +924,11 @@ function applyLanguage(language) {
   const selected = translations[language] ? language : "fr";
   const words = translations[selected];
 
-  /* Langue et direction générale */
-
   document.documentElement.lang = selected;
   document.documentElement.dir = selected === "ar" ? "rtl" : "ltr";
   document.body.dir = selected === "ar" ? "rtl" : "ltr";
 
-  /* Traduction des textes */
-
-  document.querySelectorAll("[data-i18n]").forEach(function(element) {
+  document.querySelectorAll("[data-i18n]").forEach(function (element) {
 
     const key = element.getAttribute("data-i18n");
 
@@ -937,13 +938,9 @@ function applyLanguage(language) {
 
   });
 
-  /* Mise à jour du sélecteur unique */
-
   if (languageSelect) {
     languageSelect.value = selected;
   }
-
-  /* Mémorisation pour toutes les pages */
 
   try {
     localStorage.setItem("cprit_language", selected);
@@ -951,15 +948,11 @@ function applyLanguage(language) {
     console.warn("La préférence de langue n'a pas pu être enregistrée.");
   }
 
-  /* Titre de la page */
-
   document.title = selected === "ar"
     ? "CPRIT | المركز التربوي الإقليمي للإيسيسكو في تشاد"
     : selected === "en"
     ? "CPRIT | ICESCO Regional Pedagogical Centre in Chad"
     : "CPRIT | Centre pédagogique régional de l'ICESCO au Tchad";
-
-  /* Signal pour les autres fonctionnalités du site */
 
   document.dispatchEvent(new CustomEvent("cprit:languageChanged", {
     detail: { language: selected }
@@ -989,14 +982,13 @@ function getSavedLanguage() {
 
 applyLanguage(getSavedLanguage());
 
-/* UN SEUL ÉVÉNEMENT POUR LE SÉLECTEUR PRINCIPAL */
+/* ÉVÉNEMENT DU SÉLECTEUR PRINCIPAL */
 
 if (languageSelect) {
 
-  languageSelect.addEventListener("change", function(event) {
+  languageSelect.addEventListener("change", function (event) {
 
     event.stopImmediatePropagation();
-
     applyLanguage(this.value);
 
   }, true);
@@ -1007,16 +999,17 @@ if (languageSelect) {
 
 window.CPRITLanguage = {
 
-  get: function() {
+  get: function () {
     return getSavedLanguage();
   },
 
-  set: function(language) {
+  set: function (language) {
     applyLanguage(language);
   }
 
 };
 
+})();
 </script>
 
 </body>
