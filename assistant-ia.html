@@ -1,11 +1,10 @@
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#064B35">
-
 <title>Assistant pédagogique IA | CPRIT</title>
 
 <style>
@@ -31,6 +30,7 @@ body {
   background:var(--bg);
   color:var(--text);
   min-height:100vh;
+  line-height:1.6;
 }
 
 header {
@@ -40,6 +40,7 @@ header {
   align-items:center;
   justify-content:space-between;
   border-bottom:1px solid var(--border);
+  gap:15px;
 }
 
 .brand {
@@ -104,8 +105,6 @@ main {
   line-height:1.6;
 }
 
-/* FONCTIONS FACULTATIVES */
-
 .tools-title {
   color:var(--dark);
   font-size:17px;
@@ -127,7 +126,7 @@ main {
   background:white;
   border:1px solid var(--border);
   border-radius:10px;
-  text-align:left;
+  text-align:start;
   color:var(--dark);
   cursor:pointer;
   font-family:inherit;
@@ -182,8 +181,6 @@ main {
 .free-question:hover {
   background:var(--light);
 }
-
-/* ESPACE DE DISCUSSION */
 
 .chat {
   background:white;
@@ -280,8 +277,6 @@ main {
   background:var(--light);
 }
 
-/* ZONE DE SAISIE */
-
 .composer {
   display:flex;
   gap:10px;
@@ -344,10 +339,69 @@ footer {
   font-size:11px;
 }
 
-/* RESPONSIVE */
+/* MODE ARABE */
+
+html[dir="rtl"] body {
+  direction:rtl;
+  text-align:right;
+}
+
+html[dir="rtl"] header,
+html[dir="rtl"] .brand,
+html[dir="rtl"] .chat-header,
+html[dir="rtl"] .composer {
+  direction:rtl;
+}
+
+html[dir="rtl"] .heading {
+  text-align:center;
+}
+
+html[dir="rtl"] .heading h1 {
+  font-family:"Segoe UI",Arial,sans-serif;
+}
+
+html[dir="rtl"] .tools-title,
+html[dir="rtl"] .selected-mode {
+  text-align:right;
+}
+
+html[dir="rtl"] .tool {
+  text-align:right;
+}
+
+html[dir="rtl"] .bot {
+  align-self:flex-end;
+  border-left:0;
+  border-right:3px solid var(--green);
+}
+
+html[dir="rtl"] .user {
+  align-self:flex-start;
+}
+
+html[dir="rtl"] .message {
+  text-align:right;
+}
+
+html[dir="rtl"] .suggestions {
+  direction:rtl;
+}
+
+html[dir="rtl"] .composer textarea {
+  direction:rtl;
+  text-align:right;
+}
+
+html[dir="rtl"] .language {
+  direction:rtl;
+}
+
+html[dir="rtl"] .back {
+  direction:rtl;
+}
 
 @media(max-width:700px) {
-
   header {
     padding:12px 4%;
   }
@@ -408,7 +462,6 @@ footer {
   .send {
     padding:0 14px;
   }
-
 }
 
 @media(max-width:380px) {
@@ -428,192 +481,96 @@ footer {
 <body>
 
 <header>
-
   <a class="brand" href="index.html">
-
-    <img src="assets/logo-cprit.png" alt="Logo CPRIT">
-
+    <img src="assets/logo-cprit.png" alt="CPRIT">
     <span>
       <strong>CPRIT</strong>
-      <small>Centre pédagogique régional de l'ICESCO au Tchad</small>
+      <small data-i18n="brand">Centre pédagogique régional de l'ICESCO au Tchad</small>
     </span>
-
   </a>
 
-  <a class="back" href="index.html">← Accueil</a>
-
+  <a class="back" href="index.html" data-i18n="back">← Accueil</a>
 </header>
 
 <main>
 
   <div class="heading">
-
-    <span>INTELLIGENCE ARTIFICIELLE ÉDUCATIVE</span>
-
-    <h1>Votre assistant pédagogique intelligent</h1>
-
-    <p>
-      Un accompagnement pédagogique pour les futurs enseignants.
-    </p>
-
+    <span data-i18n="eyebrow">INTELLIGENCE ARTIFICIELLE ÉDUCATIVE</span>
+    <h1 data-i18n="heading">Votre assistant pédagogique intelligent</h1>
+    <p data-i18n="intro">Un accompagnement pédagogique pour les futurs enseignants.</p>
   </div>
 
-  <!-- TROIS FONCTIONS FACULTATIVES -->
-
-  <h2 class="tools-title">
+  <h2 class="tools-title" data-i18n="toolsTitle">
     Que souhaitez-vous préparer ?
   </h2>
 
   <div class="tools">
 
-    <button
-      class="tool"
-      type="button"
-      data-mode="lesson"
-      aria-pressed="false"
-    >
-
-      <strong>Préparer une leçon</strong>
-
-      <small>
-        Fiche pédagogique, objectifs, prérequis et déroulement.
-      </small>
-
+    <button class="tool" type="button" data-mode="lesson" aria-pressed="false">
+      <strong data-i18n="lessonTitle">Préparer une leçon</strong>
+      <small data-i18n="lessonDescription">Fiche pédagogique, objectifs, prérequis et déroulement.</small>
     </button>
 
-    <button
-      class="tool"
-      type="button"
-      data-mode="exercises"
-      aria-pressed="false"
-    >
-
-      <strong>Créer des exercices</strong>
-
-      <small>
-        Activités progressives, exercices et corrigés détaillés.
-      </small>
-
+    <button class="tool" type="button" data-mode="exercises" aria-pressed="false">
+      <strong data-i18n="exerciseTitle">Créer des exercices</strong>
+      <small data-i18n="exerciseDescription">Activités progressives, exercices et corrigés détaillés.</small>
     </button>
 
-    <button
-      class="tool"
-      type="button"
-      data-mode="evaluation"
-      aria-pressed="false"
-    >
-
-      <strong>Préparer une évaluation</strong>
-
-      <small>
-        Interrogation, composition, correction et barème.
-      </small>
-
+    <button class="tool" type="button" data-mode="evaluation" aria-pressed="false">
+      <strong data-i18n="evaluationTitle">Préparer une évaluation</strong>
+      <small data-i18n="evaluationDescription">Interrogation, composition, correction et barème.</small>
     </button>
 
   </div>
 
-  <div class="selected-mode" id="selectedMode">
+  <div class="selected-mode" id="selectedMode" data-i18n="modeDefault">
     Vous pouvez choisir une fonction ci-dessus ou poser directement votre question.
   </div>
 
-  <button
-    type="button"
-    class="free-question"
-    id="freeQuestion"
-  >
+  <button type="button" class="free-question" id="freeQuestion" data-i18n="freeQuestion">
     Poser une autre question
   </button>
-
-  <!-- DISCUSSION AVEC L'IA -->
 
   <section class="chat">
 
     <div class="chat-header">
-
       <div class="chat-title">
-
-        <strong>Assistant pédagogique CPRIT</strong>
-
-        <small>
-          Sciences de l'éducation • Pédagogie • Formation
-        </small>
-
+        <strong data-i18n="chatTitle">Assistant pédagogique CPRIT</strong>
+        <small data-i18n="chatSubtitle">Sciences de l'éducation • Pédagogie • Formation</small>
       </div>
 
-      <select class="language" id="language">
+      <select class="language" id="language" aria-label="Choose language">
         <option value="fr">Français</option>
         <option value="en">English</option>
         <option value="ar">العربية</option>
       </select>
-
     </div>
 
     <div class="messages" id="messages">
-
-      <div class="message bot">
-        Bonjour et bienvenue sur l'assistant pédagogique du CPRIT.
-
-        Je vous accompagne dans vos études, la compréhension de vos cours, la préparation de vos leçons, la création d'exercices et l'élaboration de vos évaluations.
-
-        Vous pouvez choisir l'une des trois fonctions proposées ou me poser directement toute autre question en sciences de l'éducation, pédagogie et formation.
-
-        Quelle est votre question aujourd'hui ?
-      </div>
-
+      <div class="message bot" id="welcomeMessage" data-i18n="welcome"></div>
     </div>
 
     <div class="suggestions">
-
-      <button
-        type="button"
-        data-prompt="Explique-moi les principales sciences de l'éducation."
-      >
-        Sciences de l'éducation
-      </button>
-
-      <button
-        type="button"
-        data-prompt="Comment préparer une bonne leçon pour une classe du primaire ?"
-      >
-        Préparation pédagogique
-      </button>
-
-      <button
-        type="button"
-        data-prompt="Explique les différentes méthodes pédagogiques utilisées à l'école primaire."
-      >
-        Méthodes pédagogiques
-      </button>
-
-      <button
-        type="button"
-        data-prompt="Comment gérer une classe difficile au primaire ?"
-      >
-        Gestion de classe
-      </button>
-
+      <button type="button" data-suggestion="science" data-i18n="suggestScience">Sciences de l'éducation</button>
+      <button type="button" data-suggestion="preparation" data-i18n="suggestPreparation">Préparation pédagogique</button>
+      <button type="button" data-suggestion="methods" data-i18n="suggestMethods">Méthodes pédagogiques</button>
+      <button type="button" data-suggestion="classroom" data-i18n="suggestClassroom">Gestion de classe</button>
     </div>
 
     <form class="composer" id="chatForm">
-
       <textarea
         id="question"
         placeholder="Écrivez librement votre question ici..."
+        data-i18n-placeholder="placeholder"
         required
       ></textarea>
 
-      <button
-        class="send"
-        id="send"
-        type="submit"
-      >
+      <button class="send" id="send" type="submit" data-i18n="send">
         Envoyer
       </button>
-
     </form>
 
-    <div class="chat-footer">
+    <div class="chat-footer" data-i18n="chatFooter">
       Assistant pédagogique du Centre pédagogique régional de l'ICESCO au Tchad.
     </div>
 
@@ -622,7 +579,7 @@ footer {
 </main>
 
 <footer>
-  © <span id="year"></span> CPRIT — Tous droits réservés.
+  © <span id="year"></span> CPRIT — <span data-i18n="rights">Tous droits réservés.</span>
 </footer>
 
 <script type="module">
@@ -639,45 +596,272 @@ const selectedMode = document.getElementById("selectedMode");
 document.getElementById("year").textContent =
   new Date().getFullYear();
 
-/* LES TROIS FONCTIONS */
+/* TRADUCTIONS DE TOUTE L'INTERFACE */
 
-const modes = {
+const translations = {
 
-  lesson: {
-    name: "Préparer une leçon",
+fr: {
+brand:"Centre pédagogique régional de l'ICESCO au Tchad",
+back:"← Accueil",
+eyebrow:"INTELLIGENCE ARTIFICIELLE ÉDUCATIVE",
+heading:"Votre assistant pédagogique intelligent",
+intro:"Un accompagnement pédagogique pour les futurs enseignants.",
+toolsTitle:"Que souhaitez-vous préparer ?",
+lessonTitle:"Préparer une leçon",
+lessonDescription:"Fiche pédagogique, objectifs, prérequis et déroulement.",
+exerciseTitle:"Créer des exercices",
+exerciseDescription:"Activités progressives, exercices et corrigés détaillés.",
+evaluationTitle:"Préparer une évaluation",
+evaluationDescription:"Interrogation, composition, correction et barème.",
+modeDefault:"Vous pouvez choisir une fonction ci-dessus ou poser directement votre question.",
+freeQuestion:"Poser une autre question",
+chatTitle:"Assistant pédagogique CPRIT",
+chatSubtitle:"Sciences de l'éducation • Pédagogie • Formation",
+welcome:"Bonjour et bienvenue sur l'assistant pédagogique du CPRIT.\n\nJe vous accompagne dans vos études, la compréhension de vos cours, la préparation de vos leçons, la création d'exercices et l'élaboration de vos évaluations.\n\nVous pouvez choisir l'une des trois fonctions proposées ou me poser directement toute autre question en sciences de l'éducation, pédagogie et formation.\n\nQuelle est votre question aujourd'hui ?",
+suggestScience:"Sciences de l'éducation",
+suggestPreparation:"Préparation pédagogique",
+suggestMethods:"Méthodes pédagogiques",
+suggestClassroom:"Gestion de classe",
+placeholder:"Écrivez librement votre question ici...",
+send:"Envoyer",
+sending:"En cours...",
+loading:"L'assistant prépare votre réponse...",
+chatFooter:"Assistant pédagogique du Centre pédagogique régional de l'ICESCO au Tchad.",
+rights:"Tous droits réservés.",
+modeSelected:"Fonction choisie : ",
+modeFree:"Question libre : vous pouvez demander ce que vous souhaitez.",
+modeEdit:"Vous pouvez modifier cette demande avant de l'envoyer.",
+error:"Impossible de contacter l'assistant pédagogique.",
+technical:"Détail technique : ",
+emptyError:"Aucune réponse reçue du serveur."
+},
 
-    prompt:
-      "Prépare une fiche pédagogique complète pour une classe de CE1 au Tchad. Indique la discipline, le titre, les objectifs, les prérequis, le matériel, les méthodes, les activités de l'enseignant et des élèves, le déroulement minuté sur 45 minutes, les exercices corrigés, l'évaluation, la remédiation et les devoirs.",
+en: {
+brand:"ICESCO Regional Pedagogical Centre in Chad",
+back:"Home →",
+eyebrow:"EDUCATIONAL ARTIFICIAL INTELLIGENCE",
+heading:"Your intelligent pedagogical assistant",
+intro:"Educational support for future teachers.",
+toolsTitle:"What would you like to prepare?",
+lessonTitle:"Prepare a lesson",
+lessonDescription:"Lesson plan, objectives, prerequisites and lesson stages.",
+exerciseTitle:"Create exercises",
+exerciseDescription:"Progressive activities, exercises and detailed answers.",
+evaluationTitle:"Prepare an assessment",
+evaluationDescription:"Tests, examinations, marking schemes and corrections.",
+modeDefault:"You can select one of the options above or ask your own question.",
+freeQuestion:"Ask another question",
+chatTitle:"CPRIT Pedagogical Assistant",
+chatSubtitle:"Educational sciences • Pedagogy • Teacher training",
+welcome:"Welcome to the CPRIT pedagogical assistant.\n\nI can support you with your studies, understanding your courses, preparing lessons, creating exercises and developing assessments.\n\nYou can choose one of the three options above or ask any other question about educational sciences, pedagogy and teacher training.\n\nWhat would you like to ask today?",
+suggestScience:"Educational sciences",
+suggestPreparation:"Lesson preparation",
+suggestMethods:"Teaching methods",
+suggestClassroom:"Classroom management",
+placeholder:"Write your question here...",
+send:"Send",
+sending:"Processing...",
+loading:"The assistant is preparing your answer...",
+chatFooter:"Pedagogical assistant of the ICESCO Regional Pedagogical Centre in Chad.",
+rights:"All rights reserved.",
+modeSelected:"Selected function: ",
+modeFree:"Open question: you can ask anything.",
+modeEdit:"You can edit this request before sending it.",
+error:"Unable to contact the pedagogical assistant.",
+technical:"Technical details: ",
+emptyError:"No response received from the server."
+},
 
-    instruction:
-      "Tu es en mode préparation de leçon. Produis une fiche pédagogique complète et professionnelle. Présente l'identification, la discipline, le niveau, les compétences, les objectifs, les prérequis, le matériel didactique, les méthodes, le déroulement détaillé, les activités de l'enseignant et des élèves, les exercices corrigés, l'évaluation avec barème, la remédiation et les devoirs. Adapte le contenu au contexte éducatif tchadien. Vérifie le total des durées."
-  },
-
-  exercises: {
-    name: "Créer des exercices",
-
-    prompt:
-      "Crée 10 exercices progressifs de mathématiques pour une classe de CE1 au Tchad, avec des exercices faciles, moyens et difficiles et les corrigés détaillés.",
-
-    instruction:
-      "Tu es en mode création d'exercices. Crée des activités adaptées au niveau demandé. Organise les exercices du plus simple au plus difficile. Présente les consignes, les exercices et les corrigés détaillés. Vérifie toutes les réponses et ajoute un barème si nécessaire."
-  },
-
-  evaluation: {
-    name: "Préparer une évaluation",
-
-    prompt:
-      "Prépare une évaluation complète de mathématiques pour une classe de CE1 au Tchad, avec des questions, une durée, un barème sur 20 et un corrigé destiné à l'enseignant.",
-
-    instruction:
-      "Tu es en mode préparation d'évaluation. Construis une épreuve adaptée au niveau demandé. Présente le titre, la durée, les compétences évaluées, les consignes, les questions, les exercices, le barème détaillé et le corrigé complet destiné à l'enseignant. Vérifie que le total des points correspond exactement au barème annoncé."
-  }
+ar: {
+brand:"المركز التربوي الإقليمي للإيسيسكو في تشاد",
+back:"الرئيسية ←",
+eyebrow:"الذكاء الاصطناعي في التعليم",
+heading:"مساعدك التربوي الذكي",
+intro:"مرافقة تربوية للمعلمين المستقبليين.",
+toolsTitle:"ماذا ترغب في إعداده؟",
+lessonTitle:"إعداد درس",
+lessonDescription:"جذاذة تربوية، الأهداف، المكتسبات القبلية ومراحل الدرس.",
+exerciseTitle:"إنشاء تمارين",
+exerciseDescription:"أنشطة متدرجة وتمارين مع حلول مفصلة.",
+evaluationTitle:"إعداد تقييم",
+evaluationDescription:"اختبارات وتقويمات وتصحيح وسلم التنقيط.",
+modeDefault:"يمكنك اختيار إحدى الوظائف أعلاه أو طرح سؤالك مباشرة.",
+freeQuestion:"طرح سؤال آخر",
+chatTitle:"المساعد التربوي للمركز",
+chatSubtitle:"علوم التربية • البيداغوجيا • التكوين",
+welcome:"مرحباً بكم في المساعد التربوي للمركز.\n\nأرافقكم في دراستكم وفهم دروسكم وإعداد الدروس وإنشاء التمارين وإعداد التقييمات.\n\nيمكنكم اختيار إحدى الوظائف الثلاث المقترحة أو طرح أي سؤال آخر يتعلق بعلوم التربية والبيداغوجيا والتكوين.\n\nما هو سؤالكم اليوم؟",
+suggestScience:"علوم التربية",
+suggestPreparation:"الإعداد التربوي",
+suggestMethods:"الطرائق التربوية",
+suggestClassroom:"تدبير القسم",
+placeholder:"اكتب سؤالك هنا...",
+send:"إرسال",
+sending:"جارٍ التنفيذ...",
+loading:"يقوم المساعد بإعداد الإجابة...",
+chatFooter:"المساعد التربوي للمركز التربوي الإقليمي للإيسيسكو في تشاد.",
+rights:"جميع الحقوق محفوظة.",
+modeSelected:"الوظيفة المختارة: ",
+modeFree:"سؤال مفتوح: يمكنك طرح أي سؤال تريده.",
+modeEdit:"يمكنك تعديل هذا الطلب قبل إرساله.",
+error:"تعذر الاتصال بالمساعد التربوي.",
+technical:"التفاصيل التقنية: ",
+emptyError:"لم يتم تلقي أي إجابة من الخادم."
+}
 
 };
 
-/* AUCUNE FONCTION OBLIGATOIRE */
+/* نصوص الاقتراحات */
+
+const suggestionPrompts = {
+fr: {
+science:"Explique-moi les principales sciences de l'éducation.",
+preparation:"Comment préparer une bonne leçon pour une classe du primaire ?",
+methods:"Explique les différentes méthodes pédagogiques utilisées à l'école primaire.",
+classroom:"Comment gérer une classe difficile au primaire ?"
+},
+en: {
+science:"Explain the main educational sciences.",
+preparation:"How can I prepare a good lesson for a primary school class?",
+methods:"Explain the different teaching methods used in primary schools.",
+classroom:"How can I manage a difficult primary school classroom?"
+},
+ar: {
+science:"اشرح لي أهم علوم التربية.",
+preparation:"كيف يمكنني إعداد درس جيد لقسم في المرحلة الابتدائية؟",
+methods:"اشرح مختلف الطرائق التربوية المستخدمة في التعليم الابتدائي.",
+classroom:"كيف يمكنني تدبير قسم صعب في المرحلة الابتدائية؟"
+}
+};
+
+/* TROIS FONCTIONS FACULTATIVES */
+
+const modes = {
+
+lesson: {
+name: {
+fr:"Préparer une leçon",
+en:"Prepare a lesson",
+ar:"إعداد درس"
+},
+prompt:"Prépare une fiche pédagogique complète pour une classe de CE1 au Tchad. Indique la discipline, le titre, les objectifs, les prérequis, le matériel, les méthodes, les activités de l'enseignant et des élèves, le déroulement minuté sur 45 minutes, les exercices corrigés, l'évaluation, la remédiation et les devoirs.",
+instruction:"Prépare une fiche pédagogique complète et professionnelle. Présente l'identification, la discipline, le niveau, les compétences, les objectifs, les prérequis, le matériel didactique, les méthodes, le déroulement détaillé, les activités de l'enseignant et des élèves, les exercices corrigés, l'évaluation avec barème, la remédiation et les devoirs. Adapte le contenu au contexte éducatif tchadien. Vérifie le total des durées."
+},
+
+exercises: {
+name: {
+fr:"Créer des exercices",
+en:"Create exercises",
+ar:"إنشاء تمارين"
+},
+prompt:"Crée 10 exercices progressifs de mathématiques pour une classe de CE1 au Tchad, avec des exercices faciles, moyens et difficiles et les corrigés détaillés.",
+instruction:"Crée des activités adaptées au niveau demandé. Organise les exercices du plus simple au plus difficile. Présente les consignes, les exercices et les corrigés détaillés. Vérifie toutes les réponses et ajoute un barème si nécessaire."
+},
+
+evaluation: {
+name: {
+fr:"Préparer une évaluation",
+en:"Prepare an assessment",
+ar:"إعداد تقييم"
+},
+prompt:"Prépare une évaluation complète de mathématiques pour une classe de CE1 au Tchad, avec des questions, une durée, un barème sur 20 et un corrigé destiné à l'enseignant.",
+instruction:"Construis une épreuve adaptée au niveau demandé. Présente le titre, la durée, les compétences évaluées, les consignes, les questions, les exercices, le barème détaillé et le corrigé complet destiné à l'enseignant. Vérifie que le total des points correspond exactement au barème annoncé."
+}
+
+};
 
 let currentMode = null;
+let currentLanguage = "fr";
+
+/* APPLICATION DE LA LANGUE */
+
+function applyLanguage(selected) {
+
+  const lang = translations[selected] ? selected : "fr";
+  const words = translations[lang];
+
+  currentLanguage = lang;
+
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+  document.body.dir = lang === "ar" ? "rtl" : "ltr";
+
+  document.querySelectorAll("[data-i18n]").forEach(element => {
+
+    const key = element.dataset.i18n;
+
+    if (words[key] !== undefined) {
+      element.textContent = words[key];
+    }
+
+  });
+
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(element => {
+
+    const key = element.dataset.i18nPlaceholder;
+
+    if (words[key] !== undefined) {
+      element.placeholder = words[key];
+    }
+
+  });
+
+  language.value = lang;
+
+  document.title =
+    lang === "ar"
+      ? "المساعد التربوي الذكي | CPRIT"
+      : lang === "en"
+      ? "AI Pedagogical Assistant | CPRIT"
+      : "Assistant pédagogique IA | CPRIT";
+
+  document.getElementById("menuToggle")?.setAttribute("aria-label", words.back);
+
+  try {
+    localStorage.setItem("cprit_language", lang);
+  } catch (error) {
+    console.warn("Impossible de mémoriser la langue.");
+  }
+
+  updateModeLabel();
+
+}
+
+/* CHOIX INITIAL : LANGUE DU SITE */
+
+let savedLanguage = "fr";
+
+try {
+  savedLanguage = localStorage.getItem("cprit_language") || "fr";
+} catch (error) {}
+
+applyLanguage(savedLanguage);
+
+/* CHANGEMENT DE LANGUE */
+
+language.addEventListener("change", function() {
+
+  applyLanguage(this.value);
+
+});
+
+/* AUCUNE FONCTION OBLIGATOIRE */
+
+function updateModeLabel() {
+
+  const words = translations[currentLanguage];
+
+  if (currentMode && modes[currentMode]) {
+
+    selectedMode.textContent =
+      words.modeSelected + modes[currentMode].name[currentLanguage];
+
+  } else {
+
+    selectedMode.textContent = words.modeDefault;
+
+  }
+
+}
 
 /* AFFICHAGE DES MESSAGES */
 
@@ -691,6 +875,7 @@ function addMessage(content, type) {
   messages.appendChild(div);
 
   messages.scrollTop = messages.scrollHeight;
+
 }
 
 /* SÉLECTION D'UNE FONCTION */
@@ -711,13 +896,12 @@ function selectMode(mode) {
 
   });
 
-  selectedMode.textContent =
-    "Fonction choisie : " + modes[mode].name;
+  updateModeLabel();
 
   question.value = modes[mode].prompt;
 
   question.placeholder =
-    "Vous pouvez modifier cette demande avant de l'envoyer.";
+    translations[currentLanguage].modeEdit;
 
   form.scrollIntoView({
     behavior:"smooth",
@@ -725,6 +909,7 @@ function selectMode(mode) {
   });
 
   question.focus();
+
 }
 
 /* CLIC SUR LES CARTES */
@@ -754,12 +939,12 @@ document.getElementById("freeQuestion").addEventListener("click", function() {
   });
 
   selectedMode.textContent =
-    "Question libre : vous pouvez demander ce que vous souhaitez.";
+    translations[currentLanguage].modeFree;
 
   question.value = "";
 
   question.placeholder =
-    "Écrivez librement votre question ici...";
+    translations[currentLanguage].placeholder;
 
   form.scrollIntoView({
     behavior:"smooth",
@@ -772,7 +957,7 @@ document.getElementById("freeQuestion").addEventListener("click", function() {
 
 /* BOUTONS DE SUGGESTION */
 
-document.querySelectorAll("[data-prompt]").forEach(button => {
+document.querySelectorAll("[data-suggestion]").forEach(button => {
 
   button.addEventListener("click", function() {
 
@@ -787,9 +972,10 @@ document.querySelectorAll("[data-prompt]").forEach(button => {
     });
 
     selectedMode.textContent =
-      "Question libre : vous pouvez modifier votre demande.";
+      translations[currentLanguage].modeFree;
 
-    question.value = this.dataset.prompt;
+    question.value =
+      suggestionPrompts[currentLanguage][this.dataset.suggestion];
 
     form.scrollIntoView({
       behavior:"smooth",
@@ -802,16 +988,24 @@ document.querySelectorAll("[data-prompt]").forEach(button => {
 
 });
 
+/* INSTRUCTION DE LANGUE STRICTE POUR L'IA */
+
+function getLanguageInstruction() {
+
+  if (currentLanguage === "en") {
+    return "IMPORTANT LANGUAGE RULE: You must answer exclusively in English. All explanations, headings, lesson plans, exercises, corrections and examples must be in English. Do not answer in French or Arabic. This rule is mandatory.";
+  }
+
+  if (currentLanguage === "ar") {
+    return "تعليمات لغوية إلزامية: يجب أن تكون إجابتك باللغة العربية الفصحى حصراً. اكتب جميع العناوين والشروحات والدروس والتمارين والتصحيحات باللغة العربية. لا تستخدم الفرنسية أو الإنجليزية في الإجابة، إلا عند الضرورة القصوى لاسم علم أو مصطلح لا يمكن ترجمته. هذه التعليمات إلزامية.";
+  }
+
+  return "INSTRUCTION LINGUISTIQUE OBLIGATOIRE : réponds exclusivement en français. Tous les titres, explications, leçons, exercices et corrigés doivent être en français. N'utilise pas l'anglais ni l'arabe. Cette règle est obligatoire.";
+}
+
 /* CONSTRUCTION DU MESSAGE */
 
 function buildMessage(text) {
-
-  const languageName =
-    language.value === "en"
-      ? "anglais"
-      : language.value === "ar"
-      ? "arabe"
-      : "français";
 
   const generalInstruction =
     "Tu es l'assistant pédagogique officiel du CPRIT au Tchad. " +
@@ -819,12 +1013,15 @@ function buildMessage(text) {
     "Tu maîtrises les sciences de l'éducation, la pédagogie, " +
     "la didactique, la psychologie de l'enfant et la formation. " +
     "Réponds de manière claire, structurée, précise et professionnelle. " +
-    "Adapte tes explications au contexte éducatif tchadien. " +
-    "Réponds en " + languageName + ".";
+    "Adapte tes explications au contexte éducatif tchadien.";
+
+  const languageRule = getLanguageInstruction();
 
   if (currentMode && modes[currentMode]) {
 
     return generalInstruction +
+      "\n\n" +
+      languageRule +
       "\n\n" +
       modes[currentMode].instruction +
       "\n\nDEMANDE :\n" +
@@ -833,6 +1030,8 @@ function buildMessage(text) {
   }
 
   return generalInstruction +
+    "\n\n" +
+    languageRule +
     "\n\nQUESTION DE L'UTILISATEUR :\n" +
     text;
 
@@ -887,13 +1086,13 @@ form.addEventListener("submit", async function(e) {
   question.value = "";
 
   send.disabled = true;
-  send.textContent = "En cours...";
+  send.textContent = translations[currentLanguage].sending;
 
   const loading = document.createElement("div");
 
   loading.className = "message bot";
   loading.textContent =
-    "L'assistant prépare votre réponse...";
+    translations[currentLanguage].loading;
 
   messages.appendChild(loading);
 
@@ -907,7 +1106,7 @@ form.addEventListener("submit", async function(e) {
         {
           body: {
             message: fullMessage,
-            language: language.value
+            language: currentLanguage
           }
         }
       );
@@ -919,7 +1118,7 @@ form.addEventListener("submit", async function(e) {
     if (!data || !data.reply) {
 
       throw new Error(
-        data?.error || "Aucune réponse reçue du serveur."
+        data?.error || translations[currentLanguage].emptyError
       );
 
     }
@@ -937,7 +1136,9 @@ form.addEventListener("submit", async function(e) {
     console.error("Erreur CPRIT IA :", error);
 
     addMessage(
-      "Impossible de contacter l'assistant pédagogique.\n\nDétail technique : " +
+      translations[currentLanguage].error +
+      "\n\n" +
+      translations[currentLanguage].technical +
       details,
       "bot"
     );
@@ -945,7 +1146,7 @@ form.addEventListener("submit", async function(e) {
   } finally {
 
     send.disabled = false;
-    send.textContent = "Envoyer";
+    send.textContent = translations[currentLanguage].send;
 
   }
 
