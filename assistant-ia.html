@@ -5,16 +5,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#064B35">
+
 <title>Assistant pédagogique IA | CPRIT</title>
 
 <style>
 :root {
   --dark:#064B35;
   --green:#087A4B;
+  --green-light:#159766;
   --light:#EAF4EE;
   --bg:#F5F8F6;
   --text:#263B32;
   --muted:#718078;
+  --border:#DFE9E2;
 }
 
 * {
@@ -36,7 +39,7 @@ header {
   display:flex;
   align-items:center;
   justify-content:space-between;
-  border-bottom:1px solid #e1eae4;
+  border-bottom:1px solid var(--border);
 }
 
 .brand {
@@ -78,7 +81,7 @@ main {
 
 .heading {
   text-align:center;
-  margin-bottom:28px;
+  margin-bottom:35px;
 }
 
 .heading span {
@@ -98,39 +101,43 @@ main {
 .heading p {
   color:var(--muted);
   font-size:14px;
+  line-height:1.6;
 }
+
+/* FONCTIONS FACULTATIVES */
 
 .tools-title {
   color:var(--dark);
-  font-size:16px;
+  font-size:17px;
   font-weight:800;
-  margin-bottom:13px;
+  margin-bottom:14px;
 }
 
 .tools {
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:13px;
-  margin-bottom:18px;
+  gap:14px;
+  margin-bottom:15px;
 }
 
 .tool {
-  background:white;
-  border:1px solid #dce9df;
-  border-radius:12px;
-  padding:19px 14px;
-  text-align:left;
-  cursor:pointer;
-  color:var(--dark);
-  transition:.2s;
   width:100%;
+  min-height:125px;
+  padding:20px;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:10px;
+  text-align:left;
+  color:var(--dark);
+  cursor:pointer;
   font-family:inherit;
+  transition:all .2s ease;
 }
 
 .tool:hover {
   border-color:var(--green);
+  background:#F5FAF7;
   transform:translateY(-2px);
-  box-shadow:0 7px 20px rgba(6,75,53,.08);
 }
 
 .tool.active {
@@ -138,40 +145,49 @@ main {
   border:2px solid var(--green);
 }
 
-.tool:focus-visible {
-  outline:3px solid #9bcbb0;
-  outline-offset:3px;
-}
-
-.tool-icon {
-  font-size:27px;
-  display:block;
-  margin-bottom:10px;
-}
-
 .tool strong {
   display:block;
-  font-size:14px;
-  margin-bottom:7px;
+  font-size:15px;
+  margin-bottom:9px;
 }
 
 .tool small {
+  display:block;
   color:var(--muted);
   font-size:12px;
-  line-height:1.5;
-  display:block;
+  line-height:1.6;
 }
 
 .selected-mode {
-  font-size:13px;
   color:var(--green);
-  font-weight:700;
-  margin-bottom:13px;
+  font-size:13px;
+  font-weight:600;
+  margin:14px 0;
+  line-height:1.6;
 }
+
+.free-question {
+  display:inline-block;
+  margin-bottom:22px;
+  padding:10px 16px;
+  background:white;
+  border:1px solid var(--green);
+  border-radius:6px;
+  color:var(--dark);
+  font-weight:600;
+  font-size:12px;
+  cursor:pointer;
+}
+
+.free-question:hover {
+  background:var(--light);
+}
+
+/* ESPACE DE DISCUSSION */
 
 .chat {
   background:white;
-  border:1px solid #e0e9e3;
+  border:1px solid var(--border);
   border-radius:12px;
   overflow:hidden;
   box-shadow:0 15px 45px rgba(6,75,53,.07);
@@ -180,7 +196,7 @@ main {
 .chat-header {
   background:var(--dark);
   color:white;
-  padding:20px 24px;
+  padding:21px 24px;
   display:flex;
   justify-content:space-between;
   align-items:center;
@@ -190,23 +206,27 @@ main {
 .chat-title strong {
   display:block;
   font-size:17px;
+  margin-bottom:5px;
 }
 
 .chat-title small {
   color:#C8DED0;
   font-size:11px;
+  line-height:1.5;
 }
 
 .language {
-  padding:9px 12px;
+  padding:10px 12px;
   border:1px solid #dce7df;
   border-radius:6px;
   color:var(--dark);
   background:white;
   font-size:13px;
+  max-width:130px;
 }
 
 .messages {
+  min-height:300px;
   height:440px;
   overflow-y:auto;
   padding:24px;
@@ -218,10 +238,10 @@ main {
 
 .message {
   max-width:90%;
-  padding:14px 17px;
-  border-radius:10px;
+  padding:15px 18px;
+  border-radius:9px;
   font-size:14px;
-  line-height:1.7;
+  line-height:1.8;
   white-space:pre-wrap;
   overflow-wrap:anywhere;
 }
@@ -260,24 +280,28 @@ main {
   background:var(--light);
 }
 
+/* ZONE DE SAISIE */
+
 .composer {
   display:flex;
   gap:10px;
   padding:17px;
   border-top:1px solid #e5ece7;
+  align-items:stretch;
 }
 
 .composer textarea {
   flex:1;
   min-width:0;
-  resize:vertical;
   min-height:65px;
-  max-height:160px;
+  max-height:180px;
+  resize:vertical;
   border:1px solid #dce7df;
   border-radius:7px;
   padding:14px;
   font-family:inherit;
   font-size:14px;
+  line-height:1.5;
   outline:none;
 }
 
@@ -294,6 +318,10 @@ main {
   font-weight:700;
   cursor:pointer;
   font-size:13px;
+}
+
+.send:hover {
+  background:var(--dark);
 }
 
 .send:disabled {
@@ -316,7 +344,9 @@ footer {
   font-size:11px;
 }
 
-@media(max-width:650px) {
+/* RESPONSIVE */
+
+@media(max-width:700px) {
 
   header {
     padding:12px 4%;
@@ -336,20 +366,17 @@ footer {
   }
 
   main {
-    margin:27px auto;
+    margin:28px auto;
   }
 
   .tools {
     grid-template-columns:1fr;
-    gap:11px;
+    gap:10px;
   }
 
   .tool {
-    padding:16px;
-  }
-
-  .tool-icon {
-    font-size:27px;
+    min-height:auto;
+    padding:17px;
   }
 
   .messages {
@@ -361,16 +388,38 @@ footer {
     max-width:97%;
   }
 
+  .chat-header {
+    padding:15px;
+  }
+
+  .chat-title strong {
+    font-size:15px;
+  }
+
+  .chat-title small {
+    font-size:10px;
+  }
+
   .composer {
     padding:11px;
+    gap:7px;
   }
 
   .send {
     padding:0 14px;
   }
 
+}
+
+@media(max-width:380px) {
   .chat-header {
-    padding:15px;
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .language {
+    width:100%;
+    max-width:none;
   }
 }
 </style>
@@ -381,12 +430,14 @@ footer {
 <header>
 
   <a class="brand" href="index.html">
-    <img src="assets/logo-cprit.png" alt="CPRIT">
+
+    <img src="assets/logo-cprit.png" alt="Logo CPRIT">
 
     <span>
       <strong>CPRIT</strong>
       <small>Centre pédagogique régional de l'ICESCO au Tchad</small>
     </span>
+
   </a>
 
   <a class="back" href="index.html">← Accueil</a>
@@ -396,6 +447,7 @@ footer {
 <main>
 
   <div class="heading">
+
     <span>INTELLIGENCE ARTIFICIELLE ÉDUCATIVE</span>
 
     <h1>Votre assistant pédagogique intelligent</h1>
@@ -403,7 +455,10 @@ footer {
     <p>
       Un accompagnement pédagogique pour les futurs enseignants.
     </p>
+
   </div>
+
+  <!-- TROIS FONCTIONS FACULTATIVES -->
 
   <h2 class="tools-title">
     Que souhaitez-vous préparer ?
@@ -412,18 +467,18 @@ footer {
   <div class="tools">
 
     <button
-      class="tool active"
+      class="tool"
       type="button"
       data-mode="lesson"
-      aria-pressed="true"
+      aria-pressed="false"
     >
-      <span class="tool-icon">📚</span>
 
       <strong>Préparer une leçon</strong>
 
       <small>
         Fiche pédagogique, objectifs, prérequis et déroulement.
       </small>
+
     </button>
 
     <button
@@ -432,13 +487,13 @@ footer {
       data-mode="exercises"
       aria-pressed="false"
     >
-      <span class="tool-icon">✏️</span>
 
       <strong>Créer des exercices</strong>
 
       <small>
         Activités progressives, exercices et corrigés détaillés.
       </small>
+
     </button>
 
     <button
@@ -447,31 +502,43 @@ footer {
       data-mode="evaluation"
       aria-pressed="false"
     >
-      <span class="tool-icon">📝</span>
 
       <strong>Préparer une évaluation</strong>
 
       <small>
         Interrogation, composition, correction et barème.
       </small>
+
     </button>
 
   </div>
 
   <div class="selected-mode" id="selectedMode">
-    Mode sélectionné : Préparer une leçon
+    Vous pouvez choisir une fonction ci-dessus ou poser directement votre question.
   </div>
+
+  <button
+    type="button"
+    class="free-question"
+    id="freeQuestion"
+  >
+    Poser une autre question
+  </button>
+
+  <!-- DISCUSSION AVEC L'IA -->
 
   <section class="chat">
 
     <div class="chat-header">
 
       <div class="chat-title">
+
         <strong>Assistant pédagogique CPRIT</strong>
 
         <small>
           Sciences de l'éducation • Pédagogie • Formation
         </small>
+
       </div>
 
       <select class="language" id="language">
@@ -487,9 +554,11 @@ footer {
       <div class="message bot">
         Bonjour et bienvenue sur l'assistant pédagogique du CPRIT.
 
-        Je vous accompagne dans la préparation des leçons, la création des exercices et l'élaboration des évaluations.
+        Je vous accompagne dans vos études, la compréhension de vos cours, la préparation de vos leçons, la création d'exercices et l'élaboration de vos évaluations.
 
-        Sélectionnez une fonction ci-dessus pour commencer.
+        Vous pouvez choisir l'une des trois fonctions proposées ou me poser directement toute autre question en sciences de l'éducation, pédagogie et formation.
+
+        Quelle est votre question aujourd'hui ?
       </div>
 
     </div>
@@ -498,30 +567,30 @@ footer {
 
       <button
         type="button"
-        data-prompt="Prépare une leçon de français pour le CE2 sur les noms communs."
-      >
-        Leçon de français
-      </button>
-
-      <button
-        type="button"
-        data-prompt="Crée 10 exercices de mathématiques pour le CE1 avec leurs corrigés."
-      >
-        Exercices de mathématiques
-      </button>
-
-      <button
-        type="button"
-        data-prompt="Prépare une évaluation de lecture pour le CM1 avec un barème sur 20."
-      >
-        Évaluation de lecture
-      </button>
-
-      <button
-        type="button"
-        data-prompt="Explique-moi les principales méthodes pédagogiques."
+        data-prompt="Explique-moi les principales sciences de l'éducation."
       >
         Sciences de l'éducation
+      </button>
+
+      <button
+        type="button"
+        data-prompt="Comment préparer une bonne leçon pour une classe du primaire ?"
+      >
+        Préparation pédagogique
+      </button>
+
+      <button
+        type="button"
+        data-prompt="Explique les différentes méthodes pédagogiques utilisées à l'école primaire."
+      >
+        Méthodes pédagogiques
+      </button>
+
+      <button
+        type="button"
+        data-prompt="Comment gérer une classe difficile au primaire ?"
+      >
+        Gestion de classe
       </button>
 
     </div>
@@ -530,12 +599,16 @@ footer {
 
       <textarea
         id="question"
-        placeholder="Sélectionnez une fonction ou écrivez votre demande..."
+        placeholder="Écrivez librement votre question ici..."
         required
       ></textarea>
 
-      <button class="send" id="send" type="submit">
-        Envoyer ↑
+      <button
+        class="send"
+        id="send"
+        type="submit"
+      >
+        Envoyer
       </button>
 
     </form>
@@ -566,7 +639,7 @@ const selectedMode = document.getElementById("selectedMode");
 document.getElementById("year").textContent =
   new Date().getFullYear();
 
-/* MODES PÉDAGOGIQUES */
+/* LES TROIS FONCTIONS */
 
 const modes = {
 
@@ -576,85 +649,35 @@ const modes = {
     prompt:
       "Prépare une fiche pédagogique complète pour une classe de CE1 au Tchad. Indique la discipline, le titre, les objectifs, les prérequis, le matériel, les méthodes, les activités de l'enseignant et des élèves, le déroulement minuté sur 45 minutes, les exercices corrigés, l'évaluation, la remédiation et les devoirs.",
 
-    instruction: `
-MODE : PRÉPARATION D'UNE LEÇON.
-
-Produis une fiche pédagogique professionnelle et complète.
-
-Présente :
-- Identification de la leçon.
-- Discipline et niveau.
-- Compétence et objectifs spécifiques.
-- Prérequis.
-- Matériel didactique.
-- Méthodes pédagogiques.
-- Déroulement détaillé.
-- Activités de l'enseignant.
-- Activités des élèves.
-- Exercices corrigés.
-- Évaluation et barème.
-- Remédiation.
-- Devoirs.
-
-Adapte le contenu au niveau demandé et au contexte tchadien.
-Vérifie que le total des durées correspond exactement
-à la durée annoncée.
-`
+    instruction:
+      "Tu es en mode préparation de leçon. Produis une fiche pédagogique complète et professionnelle. Présente l'identification, la discipline, le niveau, les compétences, les objectifs, les prérequis, le matériel didactique, les méthodes, le déroulement détaillé, les activités de l'enseignant et des élèves, les exercices corrigés, l'évaluation avec barème, la remédiation et les devoirs. Adapte le contenu au contexte éducatif tchadien. Vérifie le total des durées."
   },
 
   exercises: {
     name: "Créer des exercices",
 
     prompt:
-      "Crée 10 exercices progressifs de mathématiques pour une classe de CE1 au Tchad. Donne des exercices faciles, moyens et difficiles, avec des consignes claires et les corrigés détaillés.",
+      "Crée 10 exercices progressifs de mathématiques pour une classe de CE1 au Tchad, avec des exercices faciles, moyens et difficiles et les corrigés détaillés.",
 
-    instruction: `
-MODE : CRÉATION D'EXERCICES.
-
-Crée une série d'exercices adaptés à la classe et à la discipline.
-
-Organise les exercices en quatre niveaux :
-1. Découverte.
-2. Application.
-3. Consolidation.
-4. Approfondissement.
-
-Présente les consignes, les exercices et les corrigés détaillés.
-
-Vérifie toutes les réponses.
-Ajoute un barème lorsque cela est pertinent.
-`
+    instruction:
+      "Tu es en mode création d'exercices. Crée des activités adaptées au niveau demandé. Organise les exercices du plus simple au plus difficile. Présente les consignes, les exercices et les corrigés détaillés. Vérifie toutes les réponses et ajoute un barème si nécessaire."
   },
 
   evaluation: {
     name: "Préparer une évaluation",
 
     prompt:
-      "Prépare une évaluation complète de mathématiques pour une classe de CE1 au Tchad, avec des questions, des exercices, une durée, un barème sur 20 et un corrigé destiné à l'enseignant.",
+      "Prépare une évaluation complète de mathématiques pour une classe de CE1 au Tchad, avec des questions, une durée, un barème sur 20 et un corrigé destiné à l'enseignant.",
 
-    instruction: `
-MODE : PRÉPARATION D'UNE ÉVALUATION.
-
-Construis une épreuve adaptée au niveau et à la discipline.
-
-Présente :
-1. Le titre et la classe.
-2. La durée de l'épreuve.
-3. Les compétences évaluées.
-4. Les consignes destinées aux élèves.
-5. Les questions et exercices.
-6. Le barème détaillé.
-7. Le corrigé complet pour l'enseignant.
-8. Les critères de réussite.
-
-Vérifie que la somme des points correspond exactement
-au total annoncé.
-`
+    instruction:
+      "Tu es en mode préparation d'évaluation. Construis une épreuve adaptée au niveau demandé. Présente le titre, la durée, les compétences évaluées, les consignes, les questions, les exercices, le barème détaillé et le corrigé complet destiné à l'enseignant. Vérifie que le total des points correspond exactement au barème annoncé."
   }
 
 };
 
-let currentMode = "lesson";
+/* AUCUNE FONCTION OBLIGATOIRE */
+
+let currentMode = null;
 
 /* AFFICHAGE DES MESSAGES */
 
@@ -670,7 +693,7 @@ function addMessage(content, type) {
   messages.scrollTop = messages.scrollHeight;
 }
 
-/* SÉLECTION DES TROIS FONCTIONS */
+/* SÉLECTION D'UNE FONCTION */
 
 function selectMode(mode) {
 
@@ -689,25 +712,22 @@ function selectMode(mode) {
   });
 
   selectedMode.textContent =
-    "Mode sélectionné : " + modes[mode].name;
+    "Fonction choisie : " + modes[mode].name;
 
-  // Préparer automatiquement la demande
   question.value = modes[mode].prompt;
 
   question.placeholder =
-    "Votre demande est prête. Vous pouvez la modifier.";
+    "Vous pouvez modifier cette demande avant de l'envoyer.";
 
-  // Descendre vers la zone de saisie
   form.scrollIntoView({
-    behavior: "smooth",
-    block: "center"
+    behavior:"smooth",
+    block:"center"
   });
 
-  // Mettre le curseur dans la zone de saisie
   question.focus();
 }
 
-/* ÉCOUTE DES TROIS CARTES */
+/* CLIC SUR LES CARTES */
 
 document.querySelectorAll(".tool").forEach(button => {
 
@@ -719,17 +739,61 @@ document.querySelectorAll(".tool").forEach(button => {
 
 });
 
+/* QUESTION LIBRE */
+
+document.getElementById("freeQuestion").addEventListener("click", function() {
+
+  currentMode = null;
+
+  document.querySelectorAll(".tool").forEach(button => {
+
+    button.classList.remove("active");
+
+    button.setAttribute("aria-pressed", "false");
+
+  });
+
+  selectedMode.textContent =
+    "Question libre : vous pouvez demander ce que vous souhaitez.";
+
+  question.value = "";
+
+  question.placeholder =
+    "Écrivez librement votre question ici...";
+
+  form.scrollIntoView({
+    behavior:"smooth",
+    block:"center"
+  });
+
+  question.focus();
+
+});
+
 /* BOUTONS DE SUGGESTION */
 
 document.querySelectorAll("[data-prompt]").forEach(button => {
 
   button.addEventListener("click", function() {
 
+    currentMode = null;
+
+    document.querySelectorAll(".tool").forEach(card => {
+
+      card.classList.remove("active");
+
+      card.setAttribute("aria-pressed", "false");
+
+    });
+
+    selectedMode.textContent =
+      "Question libre : vous pouvez modifier votre demande.";
+
     question.value = this.dataset.prompt;
 
     form.scrollIntoView({
-      behavior: "smooth",
-      block: "center"
+      behavior:"smooth",
+      block:"center"
     });
 
     question.focus();
@@ -738,17 +802,55 @@ document.querySelectorAll("[data-prompt]").forEach(button => {
 
 });
 
-/* GESTION DES ERREURS */
+/* CONSTRUCTION DU MESSAGE */
+
+function buildMessage(text) {
+
+  const languageName =
+    language.value === "en"
+      ? "anglais"
+      : language.value === "ar"
+      ? "arabe"
+      : "français";
+
+  const generalInstruction =
+    "Tu es l'assistant pédagogique officiel du CPRIT au Tchad. " +
+    "Tu accompagnes les futurs enseignants du primaire. " +
+    "Tu maîtrises les sciences de l'éducation, la pédagogie, " +
+    "la didactique, la psychologie de l'enfant et la formation. " +
+    "Réponds de manière claire, structurée, précise et professionnelle. " +
+    "Adapte tes explications au contexte éducatif tchadien. " +
+    "Réponds en " + languageName + ".";
+
+  if (currentMode && modes[currentMode]) {
+
+    return generalInstruction +
+      "\n\n" +
+      modes[currentMode].instruction +
+      "\n\nDEMANDE :\n" +
+      text;
+
+  }
+
+  return generalInstruction +
+    "\n\nQUESTION DE L'UTILISATEUR :\n" +
+    text;
+
+}
+
+/* LECTURE DES ERREURS */
 
 async function getErrorDetails(error) {
 
-  let details = error?.message || "Erreur inconnue.";
+  let details =
+    error?.message || "Erreur inconnue.";
 
   if (error?.context instanceof Response) {
 
     try {
 
-      const result = await error.context.clone().json();
+      const result =
+        await error.context.clone().json();
 
       details =
         result.error ||
@@ -757,16 +859,18 @@ async function getErrorDetails(error) {
 
     } catch (_) {
 
-      details = "Erreur HTTP " + error.context.status;
+      details =
+        "Erreur HTTP " + error.context.status;
 
     }
 
   }
 
   return details;
+
 }
 
-/* ENVOI À L'ASSISTANT IA */
+/* ENVOI À SUPABASE */
 
 form.addEventListener("submit", async function(e) {
 
@@ -776,20 +880,14 @@ form.addEventListener("submit", async function(e) {
 
   if (!text || send.disabled) return;
 
-  const fullMessage =
-    modes[currentMode].instruction +
-    "\n\nDEMANDE DE L'UTILISATEUR :\n" +
-    text;
+  const fullMessage = buildMessage(text);
 
-  addMessage(
-    modes[currentMode].name + "\n\n" + text,
-    "user"
-  );
+  addMessage(text, "user");
 
   question.value = "";
 
   send.disabled = true;
-  send.textContent = "...";
+  send.textContent = "En cours...";
 
   const loading = document.createElement("div");
 
@@ -803,15 +901,16 @@ form.addEventListener("submit", async function(e) {
 
   try {
 
-    const { data, error } = await supabase.functions.invoke(
-      "cprit-assistant",
-      {
-        body: {
-          message: fullMessage,
-          language: language.value
+    const { data, error } =
+      await supabase.functions.invoke(
+        "cprit-assistant",
+        {
+          body: {
+            message: fullMessage,
+            language: language.value
+          }
         }
-      }
-    );
+      );
 
     if (error) {
       throw error;
@@ -846,9 +945,7 @@ form.addEventListener("submit", async function(e) {
   } finally {
 
     send.disabled = false;
-    send.textContent = "Envoyer ↑";
-
-    question.focus();
+    send.textContent = "Envoyer";
 
   }
 
@@ -867,10 +964,6 @@ question.addEventListener("keydown", function(e) {
   }
 
 });
-
-/* INITIALISATION */
-
-selectMode("lesson");
 
 </script>
 
