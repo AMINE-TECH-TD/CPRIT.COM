@@ -1,3 +1,4 @@
+
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 const corsHeaders = {
@@ -14,152 +15,212 @@ Centre pédagogique régional de l'ICESCO au Tchad.
 Tu aides les apprenants inscrits et les formateurs autorisés.
 Tu réponds avec précision, pédagogie, respect et professionnalisme.
 
-RÈGLE DE LANGUE :
+LANGUES :
 - fr : réponds exclusivement en français.
 - en : réponds exclusivement en anglais.
 - ar : réponds exclusivement en arabe.
+
 Respecte toujours la langue demandée.
-
-Tu peux répondre aux questions pédagogiques et générales.
-Pour les questions liées aux cours, donne des explications
-claires, structurées et adaptées au niveau de l'apprenant.
-
-Ne révèle jamais le nom des fournisseurs techniques utilisés.
+Explique les notions avec des exemples adaptés aux apprenants.
+Structure les leçons, exercices et corrections clairement.
+Ne révèle jamais les noms des fournisseurs techniques.
+Ne prétends pas avoir consulté un document ou une source
+qui ne t'a pas été fournie.
 `;
+
+async function fetchWithTimeout(
+  url: string,
+  options: RequestInit,
+): Promise<Response> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 30000);
+
+  try {
+    return await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
 
 async function callProvider(
   provider: string,
   message: string,
   language: string,
 ): Promise<string> {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 45000);
+  let response: Response;
+  let data: any;
 
-  try {
-    let response: Response;
-    let data: any;
+  const userMessage =
+    `Langue demandée : ${language}\n\nQuestion : ${message}`;
 
-    const prompt = `${SYSTEM_PROMPT}\n\nLangue demandée : ${language}\n\nQuestion : ${message}`;
+  if (provider === "groq") {
+    const key = Deno.env.get("GROQ_API_KEY");
+    if (!key) throw new Error("Clé Groq absente");
 
-    if (provider === "grok") {
-      const key =
-        Deno.env.get("XAI_API_KEY") ||
-        Deno.env.get("GROK_API_KEY");
-
-      if (!key) throw new Error("Grok indisponible");
-
-      response = await fetch("https://api.x.ai/v1/chat/completions", {
+    response = await fetchWithTimeout(
+      "https://api.groq.com/openai/v1/chat/completions",
+      {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${key}`,
+          Authorization: `Bearer ${key}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "grok-4.7",
-          messages: [{ role: "user", content: prompt }],
+          model: "llama-3.3-70b-versatile",
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: userMessage },
+          ],
           temperature: 0.4,
-          max_tokens: 4000,
+          max_completion_tokens: 3000,
         }),
-        signal: controller.signal,
-      });
+      },
+    );
 
-      if (!response.ok) throw new Error("Grok indisponible");
-
-      data = await response.json();
-      const result = data.choices?.[0]?.message?.content;
-      if (typeof result !== "string" || !result.trim()) {
-        throw new Error("Réponse Grok vide");
-      }
-      return result.trim();
+    if (!response.ok) {
+      throw new Error(`Groq HTTP ${response.status}`);
     }
 
-    if (provider === "gemini") {
-      const key = Deno.env.get("GEMINI_API_KEY");
-      if (!key) throw new Error("Gemini indisponible");
+    data = await response.json();
+    const result = data.choices?.[0]?.message?.content;
 
-      response = await fetch(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",
-        {
-          method: "POST",
-          headers: {
-            "x-goog-api-key": key,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            systemInstruction: {
-              parts: [{ text: SYSTEM_PROMPT }],
-            },
-            contents: [{
-              role: "user",
-              parts: [{
-                text: `Langue demandée : ${language}\n\n${message}`,
-              }],
-            }],
-            generationConfig: {
-              temperature: 0.4,
-              maxOutputTokens: 4000,
-            },
-          }),
-          signal: controller.signal,
-        },
-      );
-
-      if (!response.ok) throw new Error("Gemini indisponible");
-
-      data = await response.json();
-      const result = data.candidates?.[0]?.content?.parts
-        ?.map((part: any) => part.text || "")
-        .join("");
-
-      if (typeof result !== "string" || !result.trim()) {
-        throw new Error("Réponse Gemini vide");
-      }
-      return result.trim();
+    if (typeof result !== "string" || !result.trim()) {
+      throw new Error("Réponse Groq vide");
     }
 
-    if (provider === "mistral") {
-      const key = Deno.env.get("MISTRAL_API_KEY");
-      if (!key) throw new Error("Mistral indisponible");
-
-      response = await fetch(
-        "https://api.mistral.ai/v1/chat/completions",
-        {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${key}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            model: "mistral-large-latest",
-            messages: [
-              { role: "system", content: SYSTEM_PROMPT },
-              {
-                role: "user",
-                content: `Langue demandée : ${language}\n\n${message}`,
-              },
-            ],
-            temperature: 0.4,
-            max_tokens: 4000,
-          }),
-          signal: controller.signal,
-        },
-      );
-
-      if (!response.ok) throw new Error("Mistral indisponible");
-
-      data = await response.json();
-      const result = data.choices?.[0]?.message?.content;
-
-      if (typeof result !== "string" || !result.trim()) {
-        throw new Error("Réponse Mistral vide");
-      }
-      return result.trim();
-    }
-
-    throw new Error("Fournisseur inconnu");
-  } finally {
-    clearTimeout(timeout);
+    return result.trim();
   }
+
+  if (provider === "gemini") {
+    const key = Deno.env.get("GEMINI_API_KEY");
+    if (!key) throw new Error("Clé Gemini absente");
+
+    response = await fetchWithTimeout(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",
+      {
+        method: "POST",
+        headers: {
+          "x-goog-api-key": key,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          systemInstruction: {
+            parts: [{ text: SYSTEM_PROMPT }],
+          },
+          contents: [{
+            role: "user",
+            parts: [{ text: userMessage }],
+          }],
+          generationConfig: {
+            temperature: 0.4,
+            maxOutputTokens: 3000,
+          },
+        }),
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(`Gemini HTTP ${response.status}`);
+    }
+
+    data = await response.json();
+
+    const result = data.candidates?.[0]?.content?.parts
+      ?.map((part: any) => part.text || "")
+      .join("");
+
+    if (typeof result !== "string" || !result.trim()) {
+      throw new Error("Réponse Gemini vide");
+    }
+
+    return result.trim();
+  }
+
+  if (provider === "openrouter") {
+    const key = Deno.env.get("OPENROUTER_API_KEY");
+    if (!key) throw new Error("Clé OpenRouter absente");
+
+    response = await fetchWithTimeout(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${key}`,
+          "Content-Type": "application/json",
+          "X-Title": "CPRIT Formation",
+        },
+        body: JSON.stringify({
+          model: "openrouter/free",
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: userMessage },
+          ],
+          temperature: 0.4,
+          max_tokens: 3000,
+        }),
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(`OpenRouter HTTP ${response.status}`);
+    }
+
+    data = await response.json();
+    const result = data.choices?.[0]?.message?.content;
+
+    if (typeof result !== "string" || !result.trim()) {
+      throw new Error("Réponse OpenRouter vide");
+    }
+
+    return result.trim();
+  }
+
+  if (provider === "cohere") {
+    const key = Deno.env.get("COHERE_API_KEY");
+    if (!key) throw new Error("Clé Cohere absente");
+
+    response = await fetchWithTimeout(
+      "https://api.cohere.com/v2/chat",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${key}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "command-r7b-12-2024",
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: userMessage },
+          ],
+          temperature: 0.4,
+          max_tokens: 3000,
+        }),
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(`Cohere HTTP ${response.status}`);
+    }
+
+    data = await response.json();
+
+    const result = data.message?.content
+      ?.filter((part: any) => part.type === "text")
+      ?.map((part: any) => part.text)
+      ?.join("");
+
+    if (typeof result !== "string" || !result.trim()) {
+      throw new Error("Réponse Cohere vide");
+    }
+
+    return result.trim();
+  }
+
+  throw new Error("Fournisseur inconnu");
 }
 
 Deno.serve(async (req: Request) => {
@@ -167,34 +228,35 @@ Deno.serve(async (req: Request) => {
     return new Response("ok", { headers: corsHeaders });
   }
 
+  const jsonHeaders = {
+    ...corsHeaders,
+    "Content-Type": "application/json",
+  };
+
   if (req.method !== "POST") {
     return new Response(
       JSON.stringify({ error: "Méthode non autorisée" }),
-      {
-        status: 405,
-        headers: {
-          ...corsHeaders,
-          "Content-Type": "application/json",
-        },
-      },
+      { status: 405, headers: jsonHeaders },
     );
   }
 
   try {
     const body = await req.json();
+
     const message = String(body.message || "").trim();
     const language = String(body.language || "fr").toLowerCase();
 
     if (!message) {
       return new Response(
         JSON.stringify({ error: "Veuillez saisir une question." }),
-        {
-          status: 400,
-          headers: {
-            ...corsHeaders,
-            "Content-Type": "application/json",
-          },
-        },
+        { status: 400, headers: jsonHeaders },
+      );
+    }
+
+    if (message.length > 12000) {
+      return new Response(
+        JSON.stringify({ error: "Votre question est trop longue." }),
+        { status: 400, headers: jsonHeaders },
       );
     }
 
@@ -202,7 +264,12 @@ Deno.serve(async (req: Request) => {
       ? language
       : "fr";
 
-    const providers = ["grok", "gemini", "mistral"];
+    const providers = [
+      "groq",
+      "gemini",
+      "openrouter",
+      "cohere",
+    ];
 
     for (const provider of providers) {
       try {
@@ -212,51 +279,40 @@ Deno.serve(async (req: Request) => {
           selectedLanguage,
         );
 
+        console.log(`Réponse obtenue : ${provider}`);
+
         return new Response(
           JSON.stringify({ reply }),
-          {
-            status: 200,
-            headers: {
-              ...corsHeaders,
-              "Content-Type": "application/json",
-            },
-          },
+          { status: 200, headers: jsonHeaders },
         );
       } catch (error) {
-        console.error(`${provider} : échec`, error);
+        console.error(
+          `Échec du fournisseur ${provider}:`,
+          error instanceof Error ? error.message : "Erreur inconnue",
+        );
       }
     }
 
     const fallbackMessages: Record<string, string> = {
-      fr: "Le service d'assistance est momentanément indisponible. Veuillez réessayer dans quelques instants.",
-      en: "The assistance service is temporarily unavailable. Please try again shortly.",
-      ar: "خدمة المساعدة غير متاحة مؤقتًا. يرجى المحاولة مرة أخرى بعد قليل.",
+      fr: "Notre assistant pédagogique est momentanément indisponible. Veuillez réessayer dans quelques instants.",
+      en: "Our educational assistant is temporarily unavailable. Please try again shortly.",
+      ar: "مساعدنا التعليمي غير متاح مؤقتًا. يرجى المحاولة مرة أخرى بعد قليل.",
     };
 
     return new Response(
-      JSON.stringify({ reply: fallbackMessages[selectedLanguage] }),
-      {
-        status: 503,
-        headers: {
-          ...corsHeaders,
-          "Content-Type": "application/json",
-        },
-      },
+      JSON.stringify({
+        reply: fallbackMessages[selectedLanguage],
+      }),
+      { status: 503, headers: jsonHeaders },
     );
   } catch (error) {
-    console.error("Erreur de traitement", error);
+    console.error("Erreur de traitement:", error);
 
     return new Response(
       JSON.stringify({
-        error: "Erreur lors du traitement de la demande.",
+        error: "Une erreur est survenue lors du traitement.",
       }),
-      {
-        status: 500,
-        headers: {
-          ...corsHeaders,
-          "Content-Type": "application/json",
-        },
-      },
+      { status: 500, headers: jsonHeaders },
     );
   }
 });
