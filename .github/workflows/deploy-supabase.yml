@@ -1,3 +1,4 @@
+
 name: Deploy CPRIT Assistant to Supabase
 
 on:
@@ -7,6 +8,7 @@ on:
     paths:
       - "supabase/functions/cprit-assistant/**"
       - ".github/workflows/deploy-supabase.yml"
+
   workflow_dispatch:
 
 jobs:
@@ -23,8 +25,11 @@ jobs:
         with:
           version: latest
 
-      - name: Deploy Edge Function
-        run: supabase functions deploy cprit-assistant --project-ref "$SUPABASE_PROJECT_ID"
+      - name: Deploy CPRIT Assistant
+        run: |
+          supabase functions deploy cprit-assistant \
+            --remote="$SUPABASE_PROJECT_ID" \
+            --yes
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
