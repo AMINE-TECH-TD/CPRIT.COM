@@ -1,11 +1,11 @@
-
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 /* =====================================================
    CPRIT ASSISTANT
    Assistant pédagogique officiel du CPRIT
-   Moteur unique : Gemini
    Langues : Français, English, العربية
+
+   Moteur unique : Gemini
 ===================================================== */
 
 const corsHeaders = {
@@ -348,7 +348,7 @@ function jsonResponse(data: unknown, status = 200) {
 async function fetchWithTimeout(
   url: string,
   options: RequestInit,
-  timeout = 20000,
+  timeout = 30000,
 ): Promise<Response> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeout);
@@ -379,6 +379,7 @@ function getErrorMessage(error: unknown): string {
   if (error instanceof Error) {
     return error.message;
   }
+
   return String(error);
 }
 
@@ -470,14 +471,22 @@ async function callGemini(
   const apiKey = Deno.env.get("GEMINI_API_KEY");
 
   if (!apiKey) {
-    throw new Error("Clé Gemini absente");
+    throw new Error(
+      "Configuration manquante : GEMINI_API_KEY absente dans les secrets Supabase.",
+    );
   }
 
   const model =
     Deno.env.get("GEMINI_MODEL") || "gemini-2.5-flash";
 
+  const url =
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+
+  console.log("Modèle Gemini sélectionné :", model);
+  console.log("Envoi de la demande à Gemini.");
+
   const response = await fetchWithTimeout(
-    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+    url,
     {
       method: "POST",
       headers: {
@@ -512,14 +521,12 @@ async function callGemini(
   const data = await readJson(response);
 
   if (!response.ok) {
-    console.error(
-      "Erreur Gemini HTTP :",
-      response.status,
-      data?.error?.message || "Erreur inconnue",
-    );
+    const apiError =
+      data?.error?.message ||
+      `Erreur HTTP ${response.status}`;
 
     throw new Error(
-      `Gemini HTTP ${response.status}`,
+      `Gemini a refusé la demande (${response.status}) : ${apiError}`,
     );
   }
 
@@ -529,8 +536,20 @@ async function callGemini(
     .trim();
 
   if (!text) {
-    throw new Error("Gemini n'a retourné aucune réponse");
+    const blockReason = data?.promptFeedback?.blockReason;
+
+    if (blockReason) {
+      throw new Error(
+        `Réponse bloquée par Gemini : ${blockReason}`,
+      );
+    }
+
+    throw new Error(
+      "Gemini n'a retourné aucun texte. Vérifier la réponse du modèle.",
+    );
   }
+
+  console.log("Réponse Gemini obtenue avec succès.");
 
   return text;
 }
@@ -540,13 +559,20 @@ async function callGemini(
 ===================================================== */
 
 Deno.serve(async (req: Request) => {
+  // Gestion CORS.
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return new Response("ok", {
+      headers: corsHeaders,
+    });
   }
 
+  // Seules les requêtes POST sont autorisées.
   if (req.method !== "POST") {
     return jsonResponse(
-      { reply: "Méthode non autorisée." },
+      {
+        reply: "Méthode non autorisée.",
+        model: "CPRIT Assistant pédagogique",
+      },
       405,
     );
   }
@@ -554,14 +580,17 @@ Deno.serve(async (req: Request) => {
   try {
     const body = await req.json();
 
-    // Compatibilité avec les trois formats du site.
+    // Compatibilité avec les trois formats utilisés par le site.
     const message = String(
       body.message || body.question || body.prompt || "",
     ).trim();
 
     if (!message) {
       return jsonResponse(
-        { reply: "Veuillez saisir votre question." },
+        {
+          reply: "Veuillez saisir votre question.",
+          model: "CPRIT Assistant pédagogique",
+        },
         400,
       );
     }
@@ -571,6 +600,7 @@ Deno.serve(async (req: Request) => {
         {
           reply:
             "Votre message est trop long. Veuillez le raccourcir.",
+          model: "CPRIT Assistant pédagogique",
         },
         413,
       );
@@ -590,21 +620,23 @@ Deno.serve(async (req: Request) => {
       `Langue de réponse sélectionnée : ${language}`,
     );
 
+    /* ================================================
+       APPEL DIRECT À GEMINI
+    ================================================ */
+
     try {
+      console.log("Début de l'appel Gemini.");
+
       const reply = await callGemini(message, language);
 
-      console.log("Réponse obtenue avec succès.");
-
-      // Format conservé pour ne pas casser le site.
       return jsonResponse({
         reply,
         model: "CPRIT Assistant pédagogique",
       });
     } catch (error) {
-      console.error(
-        "Erreur Gemini :",
-        getErrorMessage(error),
-      );
+      const reason = getErrorMessage(error);
+
+      console.error("DIAGNOSTIC GEMINI :", reason);
 
       const fallbackMessage = language === "ar"
         ? "نعتذر، المساعد غير متاح مؤقتًا. يرجى المحاولة مرة أخرى بعد قليل."
@@ -615,21 +647,22 @@ Deno.serve(async (req: Request) => {
       return jsonResponse(
         {
           reply: fallbackMessage,
+          diagnostic: reason,
           model: "CPRIT Assistant pédagogique",
         },
-        503,
+        502,
       );
     }
   } catch (error) {
-    console.error(
-      "Erreur générale :",
-      getErrorMessage(error),
-    );
+    const reason = getErrorMessage(error);
+
+    console.error("ERREUR GÉNÉRALE :", reason);
 
     return jsonResponse(
       {
         reply:
           "Une erreur est survenue. Veuillez réessayer.",
+        diagnostic: reason,
         model: "CPRIT Assistant pédagogique",
       },
       500,
