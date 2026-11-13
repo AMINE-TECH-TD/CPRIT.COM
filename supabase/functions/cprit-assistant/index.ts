@@ -7,9 +7,7 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
    Ordre des moteurs :
    1. Gemini
-   2. Groq
-   3. OpenRouter
-   4. Cohere
+   
 ===================================================== */
 
 const corsHeaders = {
