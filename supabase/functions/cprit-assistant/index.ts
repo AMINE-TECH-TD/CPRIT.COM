@@ -1,13 +1,11 @@
+
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 /* =====================================================
    CPRIT ASSISTANT
    Assistant pédagogique officiel du CPRIT
+   Moteur unique : Gemini
    Langues : Français, English, العربية
-
-   Ordre des moteurs :
-   1. Gemini
-   
 ===================================================== */
 
 const corsHeaders = {
@@ -462,7 +460,7 @@ Ne mélange pas le français avec l'anglais ou l'arabe.
 }
 
 /* =====================================================
-   GEMINI - MOTEUR PRINCIPAL
+   GEMINI - MOTEUR UNIQUE
 ===================================================== */
 
 async function callGemini(
@@ -514,8 +512,14 @@ async function callGemini(
   const data = await readJson(response);
 
   if (!response.ok) {
+    console.error(
+      "Erreur Gemini HTTP :",
+      response.status,
+      data?.error?.message || "Erreur inconnue",
+    );
+
     throw new Error(
-      data?.error?.message || `Gemini HTTP ${response.status}`,
+      `Gemini HTTP ${response.status}`,
     );
   }
 
@@ -530,208 +534,6 @@ async function callGemini(
 
   return text;
 }
-
-/* =====================================================
-   GROQ - PREMIER SECOURS
-===================================================== */
-
-async function callGroq(
-  message: string,
-  language: string,
-): Promise<string> {
-  const apiKey = Deno.env.get("GROQ_API_KEY");
-
-  if (!apiKey) {
-    throw new Error("Clé Groq absente");
-  }
-
-  const response = await fetchWithTimeout(
-    "https://api.groq.com/openai/v1/chat/completions",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model:
-          Deno.env.get("GROQ_MODEL") ||
-          "llama-3.3-70b-versatile",
-        messages: [
-          {
-            role: "system",
-            content:
-              SYSTEM_PROMPT +
-              "\n\n" +
-              getLanguageInstruction(language),
-          },
-          {
-            role: "user",
-            content: message,
-          },
-        ],
-        temperature: 0.2,
-        max_tokens: 6000,
-      }),
-    },
-  );
-
-  const data = await readJson(response);
-
-  if (!response.ok) {
-    throw new Error(
-      data?.error?.message || `Groq HTTP ${response.status}`,
-    );
-  }
-
-  const text = data?.choices?.[0]?.message?.content?.trim();
-
-  if (!text) {
-    throw new Error("Groq n'a retourné aucune réponse");
-  }
-
-  return text;
-}
-
-/* =====================================================
-   OPENROUTER - DEUXIÈME SECOURS
-===================================================== */
-
-async function callOpenRouter(
-  message: string,
-  language: string,
-): Promise<string> {
-  const apiKey = Deno.env.get("OPENROUTER_API_KEY");
-
-  if (!apiKey) {
-    throw new Error("Clé OpenRouter absente");
-  }
-
-  const response = await fetchWithTimeout(
-    "https://openrouter.ai/api/v1/chat/completions",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-        "HTTP-Referer": "https://amine-tech-td.github.io/CPRIT.COM/",
-        "X-Title": "CPRIT Assistant",
-      },
-      body: JSON.stringify({
-        model:
-          Deno.env.get("OPENROUTER_MODEL") || "openrouter/free",
-        messages: [
-          {
-            role: "system",
-            content:
-              SYSTEM_PROMPT +
-              "\n\n" +
-              getLanguageInstruction(language),
-          },
-          {
-            role: "user",
-            content: message,
-          },
-        ],
-        temperature: 0.2,
-        max_tokens: 6000,
-      }),
-    },
-  );
-
-  const data = await readJson(response);
-
-  if (!response.ok) {
-    throw new Error(
-      data?.error?.message || `OpenRouter HTTP ${response.status}`,
-    );
-  }
-
-  const text = data?.choices?.[0]?.message?.content?.trim();
-
-  if (!text) {
-    throw new Error("OpenRouter n'a retourné aucune réponse");
-  }
-
-  return text;
-}
-
-/* =====================================================
-   COHERE - TROISIÈME SECOURS
-===================================================== */
-
-async function callCohere(
-  message: string,
-  language: string,
-): Promise<string> {
-  const apiKey = Deno.env.get("COHERE_API_KEY");
-
-  if (!apiKey) {
-    throw new Error("Clé Cohere absente");
-  }
-
-  const response = await fetchWithTimeout(
-    "https://api.cohere.com/v2/chat",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model:
-          Deno.env.get("COHERE_MODEL") ||
-          "command-r7b-12-2024",
-        messages: [
-          {
-            role: "system",
-            content:
-              SYSTEM_PROMPT +
-              "\n\n" +
-              getLanguageInstruction(language),
-          },
-          {
-            role: "user",
-            content: message,
-          },
-        ],
-        temperature: 0.2,
-        max_tokens: 6000,
-      }),
-    },
-  );
-
-  const data = await readJson(response);
-
-  if (!response.ok) {
-    throw new Error(
-      data?.message || `Cohere HTTP ${response.status}`,
-    );
-  }
-
-  const text = data?.message?.content
-    ?.filter((part: { type?: string }) => part.type === "text")
-    ?.map((part: { text?: string }) => part.text || "")
-    .join("")
-    .trim();
-
-  if (!text) {
-    throw new Error("Cohere n'a retourné aucune réponse");
-  }
-
-  return text;
-}
-
-/* =====================================================
-   GESTION DES FOURNISSEURS
-===================================================== */
-
-const providers = [
-  { name: "Gemini", call: callGemini },
-  { name: "Groq", call: callGroq },
-  { name: "OpenRouter", call: callOpenRouter },
-  { name: "Cohere", call: callCohere },
-];
 
 /* =====================================================
    POINT D'ENTRÉE SUPABASE
@@ -752,6 +554,7 @@ Deno.serve(async (req: Request) => {
   try {
     const body = await req.json();
 
+    // Compatibilité avec les trois formats du site.
     const message = String(
       body.message || body.question || body.prompt || "",
     ).trim();
@@ -787,53 +590,36 @@ Deno.serve(async (req: Request) => {
       `Langue de réponse sélectionnée : ${language}`,
     );
 
-    const errors: string[] = [];
+    try {
+      const reply = await callGemini(message, language);
 
-    for (const provider of providers) {
-      try {
-        console.log(
-          `Tentative du fournisseur : ${provider.name}`,
-        );
+      console.log("Réponse obtenue avec succès.");
 
-        const reply = await provider.call(message, language);
-
-        console.log(
-          `Réponse obtenue avec succès. Fournisseur : ${provider.name}`,
-        );
-
-        return jsonResponse({
-          reply,
-          model: "CPRIT Assistant pédagogique",
-        });
-      } catch (error) {
-        const reason = getErrorMessage(error);
-
-        console.error(
-          `Échec du fournisseur ${provider.name} : ${reason}`,
-        );
-
-        errors.push(`${provider.name}: ${reason}`);
-      }
-    }
-
-    console.error(
-      "Tous les fournisseurs sont indisponibles.",
-      errors,
-    );
-
-    const fallbackMessage = language === "ar"
-      ? "نعتذر، المساعد غير متاح مؤقتًا. يرجى المحاولة مرة أخرى بعد قليل."
-      : language === "en"
-      ? "Sorry, the assistant is temporarily unavailable. Please try again shortly."
-      : "Nous sommes désolés. L'assistant est momentanément indisponible. Veuillez réessayer dans quelques instants.";
-
-    return jsonResponse(
-      {
-        reply: fallbackMessage,
+      // Format conservé pour ne pas casser le site.
+      return jsonResponse({
+        reply,
         model: "CPRIT Assistant pédagogique",
-      },
-      503,
-    );
+      });
+    } catch (error) {
+      console.error(
+        "Erreur Gemini :",
+        getErrorMessage(error),
+      );
+
+      const fallbackMessage = language === "ar"
+        ? "نعتذر، المساعد غير متاح مؤقتًا. يرجى المحاولة مرة أخرى بعد قليل."
+        : language === "en"
+        ? "Sorry, the assistant is temporarily unavailable. Please try again shortly."
+        : "Nous sommes désolés. L'assistant est momentanément indisponible. Veuillez réessayer dans quelques instants.";
+
+      return jsonResponse(
+        {
+          reply: fallbackMessage,
+          model: "CPRIT Assistant pédagogique",
+        },
+        503,
+      );
+    }
   } catch (error) {
     console.error(
       "Erreur générale :",
