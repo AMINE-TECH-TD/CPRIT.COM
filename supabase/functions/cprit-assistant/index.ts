@@ -1,10 +1,10 @@
+
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 /* =====================================================
    CPRIT ASSISTANT
    Assistant pédagogique officiel du CPRIT
    Langues : Français, English, العربية
-
    Moteur unique : Gemini
 ===================================================== */
 
@@ -14,6 +14,8 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
+
+const PUBLIC_MODEL_NAME = "CPRIT Assistant pédagogique";
 
 /* =====================================================
    DIRECTIVES PÉDAGOGIQUES RENFORCÉES
@@ -348,7 +350,7 @@ function jsonResponse(data: unknown, status = 200) {
 async function fetchWithTimeout(
   url: string,
   options: RequestInit,
-  timeout = 30000,
+  timeout = 45000,
 ): Promise<Response> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeout);
@@ -363,24 +365,31 @@ async function fetchWithTimeout(
   }
 }
 
-async function readJson(response: Response): Promise<any> {
-  const raw = await response.text();
-
-  try {
-    return JSON.parse(raw);
-  } catch {
-    throw new Error(
-      `Réponse serveur invalide (HTTP ${response.status})`,
-    );
-  }
-}
-
 function getErrorMessage(error: unknown): string {
   if (error instanceof Error) {
     return error.message;
   }
 
   return String(error);
+}
+
+async function readApiResponse(response: Response): Promise<any> {
+  const raw = await response.text();
+
+  try {
+    return JSON.parse(raw);
+  } catch {
+    console.error(
+      "Réponse API non JSON. Statut HTTP :",
+      response.status,
+      "Début de réponse :",
+      raw.slice(0, 300),
+    );
+
+    throw new Error(
+      `Réponse API invalide (HTTP ${response.status}).`,
+    );
+  }
 }
 
 /* =====================================================
@@ -393,12 +402,10 @@ function detectLanguage(
 ): string {
   const selected = selectedLanguage.toLowerCase().trim();
 
-  // Le choix explicite du sélecteur est prioritaire.
   if (selected.startsWith("ar")) return "ar";
   if (selected.startsWith("en")) return "en";
   if (selected.startsWith("fr")) return "fr";
 
-  // Instructions linguistiques explicites dans le message.
   if (
     /\b(answer|respond|reply)\s+in\s+english\b/i.test(message)
   ) {
@@ -417,7 +424,6 @@ function detectLanguage(
     return "ar";
   }
 
-  // Détection automatique uniquement si aucun choix n'existe.
   if (/[\u0600-\u06FF]/.test(message)) {
     return "ar";
   }
@@ -471,87 +477,139 @@ async function callGemini(
   const apiKey = Deno.env.get("GEMINI_API_KEY");
 
   if (!apiKey) {
-    throw new Error(
-      "Configuration manquante : GEMINI_API_KEY absente dans les secrets Supabase.",
-    );
+    throw new Error("Configuration API manquante.");
   }
 
   const model =
-    Deno.env.get("GEMINI_MODEL") || "gemini-2.5-flash";
+    Deno.env.get("GEMINI_MODEL") || "gemini-3.8-flash";
 
   const url =
     `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
 
-  console.log("Modèle Gemini sélectionné :", model);
-  console.log("Envoi de la demande à Gemini.");
-
-  const response = await fetchWithTimeout(
-    url,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-goog-api-key": apiKey,
-      },
-      body: JSON.stringify({
-        systemInstruction: {
-          parts: [
-            {
-              text:
-                SYSTEM_PROMPT +
-                "\n\n" +
-                getLanguageInstruction(language),
-            },
-          ],
+  const requestBody = {
+    systemInstruction: {
+      parts: [
+        {
+          text:
+            SYSTEM_PROMPT +
+            "\n\n" +
+            getLanguageInstruction(language),
         },
-        contents: [
-          {
-            role: "user",
-            parts: [{ text: message }],
-          },
-        ],
-        generationConfig: {
-          temperature: 0.2,
-          maxOutputTokens: 8192,
-        },
-      }),
+      ],
     },
-  );
+    contents: [
+      {
+        role: "user",
+        parts: [{ text: message }],
+      },
+    ],
+    generationConfig: {
+      maxOutputTokens: 8192,
+    },
+  };
 
-  const data = await readJson(response);
+  // Deux tentatives supplémentaires en cas de surcharge temporaire.
+  const maxAttempts = 3;
 
-  if (!response.ok) {
-    const apiError =
-      data?.error?.message ||
-      `Erreur HTTP ${response.status}`;
-
-    throw new Error(
-      `Gemini a refusé la demande (${response.status}) : ${apiError}`,
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    console.log(
+      `Appel du moteur pédagogique - tentative ${attempt}/${maxAttempts}.`,
     );
-  }
 
-  const text = data?.candidates?.[0]?.content?.parts
-    ?.map((part: { text?: string }) => part.text || "")
-    .join("")
-    .trim();
+    const response = await fetchWithTimeout(
+      url,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": apiKey,
+        },
+        body: JSON.stringify(requestBody),
+      },
+    );
 
-  if (!text) {
-    const blockReason = data?.promptFeedback?.blockReason;
+    const data = await readApiResponse(response);
 
-    if (blockReason) {
+    if (!response.ok) {
+      const status = response.status;
+
+      // Les erreurs 429 et 503 peuvent être temporaires.
+      if (
+        (status === 429 || status === 503) &&
+        attempt < maxAttempts
+      ) {
+        const delay = attempt * 3000;
+
+        console.warn(
+          `Indisponibilité temporaire. Nouvelle tentative dans ${delay / 1000} secondes.`,
+        );
+
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        continue;
+      }
+
+      const apiError =
+        data?.error?.message || `Erreur HTTP ${status}`;
+
       throw new Error(
-        `Réponse bloquée par Gemini : ${blockReason}`,
+        `Erreur du moteur pédagogique (${status}) : ${apiError}`,
       );
     }
 
-    throw new Error(
-      "Gemini n'a retourné aucun texte. Vérifier la réponse du modèle.",
-    );
+    const text = data?.candidates?.[0]?.content?.parts
+      ?.map((part: { text?: string }) => part.text || "")
+      .join("")
+      .trim();
+
+    if (!text) {
+      const blockReason = data?.promptFeedback?.blockReason;
+
+      if (blockReason) {
+        throw new Error(
+          `Réponse bloquée : ${blockReason}`,
+        );
+      }
+
+      throw new Error("Aucun texte reçu dans la réponse.");
+    }
+
+    console.log("Réponse pédagogique obtenue avec succès.");
+
+    return text;
   }
 
-  console.log("Réponse Gemini obtenue avec succès.");
+  throw new Error("Le service est temporairement indisponible.");
+}
 
-  return text;
+/* =====================================================
+   LECTURE DU MESSAGE ENTRANT
+===================================================== */
+
+async function readIncomingBody(req: Request): Promise<any> {
+  const rawBody = await req.text();
+
+  if (!rawBody.trim()) {
+    return {};
+  }
+
+  try {
+    const parsed = JSON.parse(rawBody);
+
+    if (typeof parsed === "string") {
+      return { message: parsed };
+    }
+
+    if (parsed && typeof parsed === "object") {
+      return parsed;
+    }
+
+    return {};
+  } catch {
+    // Accepte également un message envoyé directement en texte brut.
+    return {
+      message: rawBody.trim(),
+    };
+  }
 }
 
 /* =====================================================
@@ -559,28 +617,27 @@ async function callGemini(
 ===================================================== */
 
 Deno.serve(async (req: Request) => {
-  // Gestion CORS.
   if (req.method === "OPTIONS") {
     return new Response("ok", {
       headers: corsHeaders,
     });
   }
 
-  // Seules les requêtes POST sont autorisées.
   if (req.method !== "POST") {
     return jsonResponse(
       {
         reply: "Méthode non autorisée.",
-        model: "CPRIT Assistant pédagogique",
+        model: PUBLIC_MODEL_NAME,
       },
       405,
     );
   }
 
-  try {
-    const body = await req.json();
+  let language = "fr";
 
-    // Compatibilité avec les trois formats utilisés par le site.
+  try {
+    const body = await readIncomingBody(req);
+
     const message = String(
       body.message || body.question || body.prompt || "",
     ).trim();
@@ -589,7 +646,7 @@ Deno.serve(async (req: Request) => {
       return jsonResponse(
         {
           reply: "Veuillez saisir votre question.",
-          model: "CPRIT Assistant pédagogique",
+          model: PUBLIC_MODEL_NAME,
         },
         400,
       );
@@ -598,45 +655,38 @@ Deno.serve(async (req: Request) => {
     if (message.length > 20000) {
       return jsonResponse(
         {
-          reply:
-            "Votre message est trop long. Veuillez le raccourcir.",
-          model: "CPRIT Assistant pédagogique",
+          reply: "Votre message est trop long. Veuillez le raccourcir.",
+          model: PUBLIC_MODEL_NAME,
         },
         413,
       );
     }
 
-    // La langue choisie sur le site est prioritaire.
     const selectedLanguage = String(
       body.language || "",
     ).toLowerCase();
 
-    const language = detectLanguage(
+    language = detectLanguage(
       message,
       selectedLanguage,
     );
 
-    console.log(
-      `Langue de réponse sélectionnée : ${language}`,
-    );
-
-    /* ================================================
-       APPEL DIRECT À GEMINI
-    ================================================ */
+    console.log("Langue sélectionnée :", language);
+    console.log("Nouvelle demande reçue.");
 
     try {
-      console.log("Début de l'appel Gemini.");
-
       const reply = await callGemini(message, language);
 
       return jsonResponse({
         reply,
-        model: "CPRIT Assistant pédagogique",
+        model: PUBLIC_MODEL_NAME,
       });
     } catch (error) {
-      const reason = getErrorMessage(error);
-
-      console.error("DIAGNOSTIC GEMINI :", reason);
+      // Les détails restent dans les logs Supabase.
+      console.error(
+        "ERREUR DU MOTEUR PÉDAGOGIQUE :",
+        getErrorMessage(error),
+      );
 
       const fallbackMessage = language === "ar"
         ? "نعتذر، المساعد غير متاح مؤقتًا. يرجى المحاولة مرة أخرى بعد قليل."
@@ -647,25 +697,30 @@ Deno.serve(async (req: Request) => {
       return jsonResponse(
         {
           reply: fallbackMessage,
-          diagnostic: reason,
-          model: "CPRIT Assistant pédagogique",
+          model: PUBLIC_MODEL_NAME,
         },
-        502,
+        200,
       );
     }
   } catch (error) {
-    const reason = getErrorMessage(error);
+    // Détails techniques réservés aux administrateurs.
+    console.error(
+      "ERREUR GÉNÉRALE DE LA FONCTION :",
+      getErrorMessage(error),
+    );
 
-    console.error("ERREUR GÉNÉRALE :", reason);
+    const fallbackMessage = language === "ar"
+      ? "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى."
+      : language === "en"
+      ? "An unexpected error occurred. Please try again."
+      : "Une erreur est survenue. Veuillez réessayer.";
 
     return jsonResponse(
       {
-        reply:
-          "Une erreur est survenue. Veuillez réessayer.",
-        diagnostic: reason,
-        model: "CPRIT Assistant pédagogique",
+        reply: fallbackMessage,
+        model: PUBLIC_MODEL_NAME,
       },
-      500,
+      200,
     );
   }
 });
