@@ -1013,3 +1013,29 @@ a {
     flex-direction: column;
   }
 }
+/* CORRECTION DU SÉLECTEUR DE LANGUE */
+
+.navigation .language-select {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative;
+  z-index: 1000;
+  min-width: 125px;
+  width: auto;
+  flex-shrink: 0;
+  background: #ffffff;
+  color: #064B35;
+  border: 1px solid #d5e2dc;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-weight: 700;
+}
+
+@media (max-width: 700px) {
+  .navigation.open .language-select {
+    display: block !important;
+    width: 100%;
+    margin: 10px 0;
+  }
+}
