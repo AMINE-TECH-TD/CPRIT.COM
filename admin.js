@@ -2,7 +2,7 @@
 import { supabase } from './supabase-config.js';
 
 // ==========================================
-// ÉLÉMENTS DE L'INTERFACE
+// ÉLÉMENTS
 // ==========================================
 
 const loginSection = document.getElementById('loginSection');
@@ -12,13 +12,12 @@ const message = document.getElementById('message');
 const loginBtn = document.getElementById('loginBtn');
 const logoutBtn = document.getElementById('logoutBtn');
 
-// Message visible pendant la connexion
 const loginMessage = document.createElement('p');
 loginMessage.id = 'loginMessage';
 loginForm.insertAdjacentElement('afterend', loginMessage);
 
 // ==========================================
-// RÔLES ET RESPONSABILITÉS
+// RÔLES
 // ==========================================
 
 const roles = {
@@ -37,7 +36,7 @@ const roleNames = {
 };
 
 // ==========================================
-// VÉRIFICATION DES AUTORISATIONS
+// VÉRIFICATION UTILISATEUR
 // ==========================================
 
 async function verifyUser() {
@@ -46,9 +45,7 @@ async function verifyUser() {
     error: userError
   } = await supabase.auth.getUser();
 
-  if (userError || !user) {
-    return null;
-  }
+  if (userError || !user) return null;
 
   const { data: profile, error } = await supabase
     .from('profiles')
@@ -85,7 +82,7 @@ function hideAllSpaces() {
 }
 
 // ==========================================
-// AFFICHAGE DU TABLEAU DE BORD
+// TABLEAU DE BORD
 // ==========================================
 
 async function showDashboard() {
@@ -114,8 +111,6 @@ async function showDashboard() {
 
   message.textContent = '';
 
-  // ESPACE DU DIRECTEUR GÉNÉRAL
-
   if (access.role === 'dg') {
     document.getElementById('directorDashboard').hidden = false;
 
@@ -126,54 +121,79 @@ async function showDashboard() {
         <p>Chargement des indicateurs...</p>
       </div>
 
+      <hr>
+
+      <h4>Gestion du personnel de direction</h4>
+
+      <form id="staffForm">
+        <input id="staffName" type="text"
+          placeholder="Nom complet" required>
+
+        <input id="staffEmail" type="email"
+          placeholder="Adresse e-mail professionnelle" required>
+
+        <input id="staffPhone" type="tel"
+          placeholder="Téléphone">
+
+        <input id="staffPassword" type="password"
+          placeholder="Mot de passe provisoire (8 caractères minimum)"
+          minlength="8" required>
+
+        <select id="staffRole" required>
+          <option value="">Choisir une fonction</option>
+          <option value="dga">Directeur général adjoint</option>
+          <option value="daf">Directeur administratif et financier</option>
+          <option value="secretariat">Secrétariat général</option>
+        </select>
+
+        <button id="createStaffBtn" type="submit">
+          Créer le compte
+        </button>
+      </form>
+
+      <p id="staffMessage"></p>
+
+      <h4>Personnel enregistré</h4>
+      <div id="staffList">Chargement du personnel...</div>
+
+      <hr>
+
       <h4>Demandes d'inscription</h4>
       <div id="learners"></div>
     `;
 
+    document.getElementById('staffForm')
+      .addEventListener('submit', createStaff);
+
     await loadDirectorStats();
+    await loadStaff();
     await loadLearners();
   }
-
-  // ESPACE DU DIRECTEUR GÉNÉRAL ADJOINT
 
   if (access.role === 'dga') {
     document.getElementById('deputyDashboard').hidden = false;
 
     document.getElementById('deputyContent').innerHTML = `
       <h4>Coordination générale</h4>
-      <p>
-        Suivi des services, des activités pédagogiques
-        et de l'exécution des orientations de la Direction générale.
-      </p>
+      <p>Suivi des services et des activités pédagogiques.</p>
     `;
   }
-
-  // ESPACE DU DIRECTEUR ADMINISTRATIF ET FINANCIER
 
   if (access.role === 'daf') {
     document.getElementById('financeDashboard').hidden = false;
 
     document.getElementById('financeContent').innerHTML = `
       <h4>Gestion administrative et financière</h4>
-      <p>
-        Espace réservé au suivi des budgets, dépenses,
-        recettes et dossiers administratifs.
-      </p>
+      <p>Suivi des budgets, dépenses, recettes et dossiers administratifs.</p>
     `;
   }
-
-  // ESPACE DU SECRÉTARIAT
 
   if (access.role === 'secretariat') {
     document.getElementById('secretariatDashboard').hidden = false;
 
     document.getElementById('secretariatContent').innerHTML = `
       <h4>Gestion du secrétariat</h4>
-      <p>
-        Suivi des dossiers et traitement des demandes
-        d'inscription des apprenants.
-      </p>
-
+      <p>Suivi des dossiers et des demandes d'inscription.</p>
       <div id="learners"></div>
     `;
 
@@ -212,8 +232,7 @@ loginForm.addEventListener('submit', async (event) => {
       loginMessage.textContent = '';
     }
   } catch (error) {
-    loginMessage.textContent =
-      'Erreur de connexion. Veuillez réessayer.';
+    loginMessage.textContent = 'Erreur de connexion.';
     console.error(error);
   } finally {
     loginBtn.disabled = false;
@@ -221,15 +240,12 @@ loginForm.addEventListener('submit', async (event) => {
 });
 
 // ==========================================
-// INDICATEURS DU DIRECTEUR GÉNÉRAL
+// INDICATEURS DG
 // ==========================================
 
 async function loadDirectorStats() {
   const stats = document.getElementById('directorStats');
-
   if (!stats) return;
-
-  stats.innerHTML = '<p>Chargement des indicateurs...</p>';
 
   const countProfiles = async (role, status = null) => {
     let query = supabase
@@ -237,15 +253,11 @@ async function loadDirectorStats() {
       .select('id', { count: 'exact', head: true })
       .eq('role', role);
 
-    if (status) {
-      query = query.eq('status', status);
-    }
+    if (status) query = query.eq('status', status);
 
     const { count, error } = await query;
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
     return count || 0;
   };
@@ -255,11 +267,11 @@ async function loadDirectorStats() {
       totalLearners,
       activeLearners,
       pendingLearners,
-      activeAdmin,
-      activeDG,
-      activeDGA,
-      activeDAF,
-      activeSecretariat
+      admin,
+      dg,
+      dga,
+      daf,
+      secretariat
     ] = await Promise.all([
       countProfiles('learner'),
       countProfiles('learner', 'active'),
@@ -270,8 +282,6 @@ async function loadDirectorStats() {
       countProfiles('daf', 'active'),
       countProfiles('secretariat', 'active')
     ]);
-
-    const totalDG = activeAdmin + activeDG;
 
     stats.innerHTML = `
       <div class="stat-card">
@@ -291,40 +301,143 @@ async function loadDirectorStats() {
 
       <div class="stat-card">
         <span>Direction générale</span>
-        <strong>${totalDG}</strong>
+        <strong>${admin + dg}</strong>
       </div>
 
       <div class="stat-card">
-        <span>Direction générale adjointe</span>
-        <strong>${activeDGA}</strong>
+        <span>DGA</span>
+        <strong>${dga}</strong>
       </div>
 
       <div class="stat-card">
-        <span>Administration financière</span>
-        <strong>${activeDAF}</strong>
+        <span>DAF</span>
+        <strong>${daf}</strong>
       </div>
 
       <div class="stat-card">
         <span>Secrétariat</span>
-        <strong>${activeSecretariat}</strong>
+        <strong>${secretariat}</strong>
       </div>
     `;
-
   } catch (error) {
-    stats.textContent =
-      'Erreur de chargement des indicateurs : ' + error.message;
-
-    console.error(error);
+    stats.textContent = 'Erreur : ' + error.message;
   }
 }
 
 // ==========================================
-// CHARGEMENT DES DEMANDES D'INSCRIPTION
+// CRÉATION DU PERSONNEL
+// ==========================================
+
+async function createStaff(event) {
+  event.preventDefault();
+
+  const form = document.getElementById('staffForm');
+  const button = document.getElementById('createStaffBtn');
+  const result = document.getElementById('staffMessage');
+
+  button.disabled = true;
+  button.textContent = 'Création en cours...';
+  result.textContent = '';
+
+  const staff = {
+    full_name: document.getElementById('staffName').value.trim(),
+    email: document.getElementById('staffEmail').value.trim(),
+    phone: document.getElementById('staffPhone').value.trim(),
+    password: document.getElementById('staffPassword').value,
+    role: document.getElementById('staffRole').value
+  };
+
+  try {
+    const { data, error } = await supabase.functions.invoke(
+      'creer-personnel',
+      { body: staff }
+    );
+
+    if (error) throw error;
+
+    if (!data || !data.success) {
+      throw new Error(data?.error || 'Création impossible.');
+    }
+
+    result.textContent = 'Compte créé avec succès.';
+    result.style.color = '#087844';
+
+    form.reset();
+
+    await loadStaff();
+    await loadDirectorStats();
+
+  } catch (error) {
+    result.textContent =
+      error.message || 'Erreur lors de la création du compte.';
+
+    result.style.color = '#b52d2d';
+    console.error(error);
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Créer le compte';
+  }
+}
+
+// ==========================================
+// LISTE DU PERSONNEL
+// ==========================================
+
+async function loadStaff() {
+  const staffList = document.getElementById('staffList');
+  if (!staffList) return;
+
+  staffList.textContent = 'Chargement...';
+
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('full_name, phone, role, status, created_at')
+    .in('role', ['admin', 'dg', 'dga', 'daf', 'secretariat'])
+    .order('created_at', { ascending: true });
+
+  if (error) {
+    staffList.textContent =
+      'Erreur de chargement : ' + error.message;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    staffList.textContent = 'Aucun membre du personnel enregistré.';
+    return;
+  }
+
+  staffList.innerHTML = '';
+
+  data.forEach((person) => {
+    const card = document.createElement('article');
+    card.className = 'learner-card';
+
+    const name = document.createElement('h3');
+    name.textContent = person.full_name || 'Nom non renseigné';
+
+    const role = document.createElement('p');
+    role.textContent =
+      'Fonction : ' + (roleNames[roles[person.role]] || person.role);
+
+    const phone = document.createElement('p');
+    phone.textContent =
+      'Téléphone : ' + (person.phone || 'Non renseigné');
+
+    const status = document.createElement('p');
+    status.textContent =
+      'Statut : ' + person.status;
+
+    card.append(name, role, phone, status);
+    staffList.appendChild(card);
+  });
+}
+
+// ==========================================
+// DEMANDES D'INSCRIPTION
 // ==========================================
 
 async function loadLearners() {
   const learners = document.getElementById('learners');
-
   if (!learners) return;
 
   learners.innerHTML = '<p>Chargement des demandes...</p>';
@@ -337,8 +450,7 @@ async function loadLearners() {
     .order('created_at', { ascending: false });
 
   if (error) {
-    learners.textContent =
-      'Impossible de charger les demandes : ' + error.message;
+    learners.textContent = 'Erreur : ' + error.message;
     return;
   }
 
@@ -371,7 +483,6 @@ async function loadLearners() {
     const approve = document.createElement('button');
     approve.className = 'approve';
     approve.textContent = 'Approuver';
-
     approve.addEventListener('click', () => {
       updateLearner(learner.id, 'active');
     });
@@ -379,20 +490,18 @@ async function loadLearners() {
     const reject = document.createElement('button');
     reject.className = 'reject';
     reject.textContent = 'Refuser';
-
     reject.addEventListener('click', () => {
       updateLearner(learner.id, 'rejected');
     });
 
     actions.append(approve, reject);
     card.append(name, phone, date, actions);
-
     learners.appendChild(card);
   });
 }
 
 // ==========================================
-// APPROBATION OU REFUS D'UNE INSCRIPTION
+// APPROBATION / REFUS
 // ==========================================
 
 async function updateLearner(id, status) {
@@ -417,9 +526,7 @@ async function updateLearner(id, status) {
 
   await loadLearners();
 
-  const stats = document.getElementById('directorStats');
-
-  if (stats) {
+  if (document.getElementById('directorStats')) {
     await loadDirectorStats();
   }
 }
@@ -439,7 +546,6 @@ logoutBtn.addEventListener('click', async () => {
     loginMessage.textContent = '';
 
     await showDashboard();
-
   } finally {
     logoutBtn.disabled = false;
   }
