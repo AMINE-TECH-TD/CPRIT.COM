@@ -3,36 +3,72 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Administration CPRIT</title>
+  <meta name="theme-color" content="#064B35">
+  <title>Administration institutionnelle – CPRIT</title>
   <link rel="stylesheet" href="admin.css">
 </head>
 <body>
+
   <header>
     <h1>CPRIT</h1>
-    <p>Administration pédagogique</p>
+    <p>Direction générale et administration</p>
   </header>
 
   <main>
     <section id="loginSection">
-      <h2>Connexion administrateur</h2>
+      <h2>Connexion institutionnelle</h2>
+      <p>Accès réservé au personnel autorisé du CPRIT.</p>
+
       <form id="loginForm">
-        <input id="email" type="email" placeholder="Adresse e-mail" required>
-        <input id="password" type="password" placeholder="Mot de passe" required>
-        <button type="submit">Se connecter</button>
+        <input id="email" type="email"
+          placeholder="Adresse e-mail professionnelle" required>
+
+        <input id="password" type="password"
+          placeholder="Mot de passe" required>
+
+        <button id="loginBtn" type="submit">Se connecter</button>
       </form>
     </section>
 
     <section id="dashboard" hidden>
       <div class="top">
-        <h2>Demandes d'inscription</h2>
-        <button id="logoutBtn">Déconnexion</button>
+        <div>
+          <h2 id="welcomeTitle">Espace institutionnel</h2>
+          <p id="userRole"></p>
+          <p id="userName"></p>
+        </div>
+        <button id="logoutBtn" type="button">Déconnexion</button>
       </div>
+
       <p id="message"></p>
-      <div id="learners"></div>
+
+      <section id="directorDashboard" hidden>
+        <h3>Direction générale</h3>
+        <p>Pilotage général et contrôle de toutes les directions et activités du CPRIT.</p>
+        <div id="directorContent"></div>
+      </section>
+
+      <section id="deputyDashboard" hidden>
+        <h3>Direction générale adjointe</h3>
+        <p>Coordination et suivi des services et activités.</p>
+        <div id="deputyContent"></div>
+      </section>
+
+      <section id="financeDashboard" hidden>
+        <h3>Direction administrative et financière</h3>
+        <p>Suivi administratif, financier et budgétaire.</p>
+        <div id="financeContent"></div>
+      </section>
+
+      <section id="secretariatDashboard" hidden>
+        <h3>Secrétariat</h3>
+        <p>Gestion du courrier, des dossiers et des documents administratifs.</p>
+        <div id="secretariatContent"></div>
+      </section>
+
     </section>
   </main>
 
   <script type="module" src="admin.js"></script>
 </body>
 </html>
-
