@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#064329">
+  <title>Espace du personnel | CPRIT</title>
+  <link rel="stylesheet" href="personnel.css">
+</head>
+<body>
+
+  <header>
+    <h1>CPRIT</h1>
+    <p>Centre pédagogique régional de l'ICESCO au Tchad</p>
+  </header>
+
+  <main>
+    <section class="login-card">
+      <div class="icon">♙</div>
+      <h2>Espace du personnel</h2>
+      <p class="subtitle">Accès réservé au personnel autorisé</p>
+
+      <form id="personnelForm">
+        <label for="email">Adresse e-mail</label>
+        <input
+          id="email"
+          type="email"
+          placeholder="Votre adresse e-mail"
+          autocomplete="username"
+          required
+        >
+
+        <label for="password">Mot de passe</label>
+        <input
+          id="password"
+          type="password"
+          placeholder="Votre mot de passe"
+          autocomplete="current-password"
+          required
+        >
+
+        <button id="loginButton" type="submit">
+          Se connecter
+        </button>
+      </form>
+
+      <p id="message" role="status"></p>
+      <a class="back-link" href="index.html">← Retour au site CPRIT</a>
+    </section>
+  </main>
+
+  <footer>
+    CPRIT — Administration et services pédagogiques
+  </footer>
+
+  <script type="module" src="personnel.js"></script>
+</body>
+</html>
