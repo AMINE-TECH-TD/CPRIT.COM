@@ -288,32 +288,26 @@ async function loadDirectorStats() {
         <span>Total des apprenants</span>
         <strong>${totalLearners}</strong>
       </div>
-
       <div class="stat-card">
         <span>Apprenants actifs</span>
         <strong>${activeLearners}</strong>
       </div>
-
       <div class="stat-card">
         <span>Inscriptions en attente</span>
         <strong>${pendingLearners}</strong>
       </div>
-
       <div class="stat-card">
         <span>Direction générale</span>
         <strong>${admin + dg}</strong>
       </div>
-
       <div class="stat-card">
         <span>DGA</span>
         <strong>${dga}</strong>
       </div>
-
       <div class="stat-card">
         <span>DAF</span>
         <strong>${daf}</strong>
       </div>
-
       <div class="stat-card">
         <span>Secrétariat</span>
         <strong>${secretariat}</strong>
@@ -353,13 +347,31 @@ async function createStaff(event) {
       { body: staff }
     );
 
-    if (error) throw error;
+    if (error) {
+      let detail = error.message || 'Erreur inconnue';
+
+      if (error.context) {
+        try {
+          const response = error.context;
+          const body = typeof response.json === 'function'
+            ? await response.json()
+            : response;
+
+          detail = body?.error || body?.message || JSON.stringify(body);
+        } catch (_) {
+          detail = error.message || detail;
+        }
+      }
+
+      throw new Error(detail);
+    }
 
     if (!data || !data.success) {
       throw new Error(data?.error || 'Création impossible.');
     }
 
-    result.textContent = 'Compte créé avec succès.';
+    result.textContent = data.message ||
+      'Compte créé avec succès.';
     result.style.color = '#087844';
 
     form.reset();
@@ -368,11 +380,11 @@ async function createStaff(event) {
     await loadDirectorStats();
 
   } catch (error) {
-    result.textContent =
-      error.message || 'Erreur lors de la création du compte.';
+    result.textContent = 'ÉCHEC : ' +
+      (error.message || 'Erreur lors de la création du compte.');
 
     result.style.color = '#b52d2d';
-    console.error(error);
+    console.error('Détail erreur création personnel :', error);
   } finally {
     button.disabled = false;
     button.textContent = 'Créer le compte';
@@ -424,8 +436,7 @@ async function loadStaff() {
       'Téléphone : ' + (person.phone || 'Non renseigné');
 
     const status = document.createElement('p');
-    status.textContent =
-      'Statut : ' + person.status;
+    status.textContent = 'Statut : ' + person.status;
 
     card.append(name, role, phone, status);
     staffList.appendChild(card);
