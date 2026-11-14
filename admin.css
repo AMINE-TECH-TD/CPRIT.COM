@@ -1,3 +1,20 @@
+/* =====================================================
+   CPRIT — ADMINISTRATION PÉDAGOGIQUE
+   Interface responsive — Mobile et ordinateur
+   ===================================================== */
+
+:root {
+  --green: #075b36;
+  --green-dark: #064329;
+  --green-light: #eaf4ee;
+  --gold: #c9a447;
+  --red: #b52d2d;
+  --text: #20352a;
+  --muted: #718078;
+  --border: #dce7df;
+  --background: #f3f6f3;
+  --white: #ffffff;
+}
 
 * {
   box-sizing: border-box;
@@ -5,67 +22,130 @@
 
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f2f5f1;
-  color: #183526;
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--background);
+  color: var(--text);
+  min-height: 100vh;
 }
 
+/* EN-TÊTE */
+
 header {
-  background: #075b36;
+  background: linear-gradient(
+    135deg,
+    var(--green-dark),
+    var(--green)
+  );
   color: white;
-  padding: 25px 20px;
+  padding: 30px 20px;
   text-align: center;
+  border-bottom: 4px solid var(--gold);
+  box-shadow: 0 4px 18px #00000018;
 }
 
 header h1 {
   margin: 0;
-  font-size: 30px;
-  letter-spacing: 2px;
+  font-size: 32px;
+  letter-spacing: 3px;
+  font-weight: 800;
 }
 
 header p {
-  margin-bottom: 0;
+  margin: 9px 0 0;
+  color: #e2eee6;
+  font-size: 14px;
+  letter-spacing: 1px;
 }
+
+/* CONTENU PRINCIPAL */
 
 main {
   width: 92%;
-  max-width: 900px;
-  margin: 30px auto;
+  max-width: 1050px;
+  margin: 35px auto;
 }
 
 section {
-  background: white;
-  padding: 25px;
-  border-radius: 14px;
-  box-shadow: 0 4px 18px #00000010;
+  background: var(--white);
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 8px 28px #173d2810;
 }
 
 h2 {
-  color: #075b36;
+  color: var(--green);
+  font-size: 23px;
+  margin-top: 0;
+}
+
+/* CONNEXION */
+
+#loginSection {
+  max-width: 470px;
+  margin: 55px auto;
+  padding: 35px;
+}
+
+#loginSection h2 {
+  text-align: center;
+  margin-bottom: 28px;
 }
 
 input {
   display: block;
   width: 100%;
-  padding: 14px;
-  margin: 15px 0;
+  padding: 15px;
+  margin: 16px 0;
   border: 1px solid #ccd8cf;
-  border-radius: 8px;
+  border-radius: 9px;
+  background: #fbfdfb;
+  color: var(--text);
   font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px #075b3618;
+}
+
+/* BOUTONS */
+
 button {
-  background: #087844;
+  background: var(--green);
   color: white;
   border: 0;
   padding: 13px 20px;
-  border-radius: 8px;
+  border-radius: 9px;
   cursor: pointer;
   font-weight: bold;
+  font-size: 14px;
+  transition: background 0.2s, transform 0.2s;
 }
 
 button:hover {
-  background: #064d2c;
+  background: var(--green-dark);
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+#loginForm button {
+  width: 100%;
+  margin-top: 8px;
+  padding: 15px;
+}
+
+/* TABLEAU DE BORD */
+
+#dashboard {
+  min-height: 300px;
 }
 
 .top {
@@ -73,40 +153,152 @@ button:hover {
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 15px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.top h2 {
+  margin: 0;
 }
 
 #logoutBtn {
-  background: #a52c2c;
+  background: var(--red);
+}
+
+#logoutBtn:hover {
+  background: #852020;
+}
+
+/* MESSAGES */
+
+#message {
+  font-weight: bold;
+  color: var(--green);
+  margin: 18px 0;
+  overflow-wrap: anywhere;
+}
+
+/* CARTES DES APPRENANTS */
+
+#learners {
+  margin-top: 20px;
 }
 
 .learner-card {
-  border: 1px solid #dce7df;
-  border-radius: 10px;
-  padding: 18px;
-  margin-top: 15px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-left: 5px solid var(--gold);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 16px;
+  box-shadow: 0 4px 14px #00000008;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.learner-card:hover {
+  box-shadow: 0 7px 20px #00000012;
+  transform: translateY(-2px);
 }
 
 .learner-card h3 {
-  margin-top: 0;
+  color: var(--green);
+  font-size: 18px;
+  margin: 0 0 13px;
 }
+
+.learner-card p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 7px 0;
+}
+
+/* ACTIONS */
 
 .actions {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  margin-top: 18px;
+  padding-top: 15px;
+  border-top: 1px solid #edf1ed;
 }
 
 .approve {
   background: #087844;
 }
 
-.reject {
-  background: #b52d2d;
+.approve:hover {
+  background: #065b32;
 }
 
-#message {
-  font-weight: bold;
+.reject {
+  background: var(--red);
+}
+
+.reject:hover {
+  background: #852020;
+}
+
+/* RESPONSIVE — TÉLÉPHONE */
+
+@media (max-width: 600px) {
+  header {
+    padding: 24px 15px;
+  }
+
+  header h1 {
+    font-size: 27px;
+  }
+
+  main {
+    width: 94%;
+    margin: 20px auto;
+  }
+
+  section {
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  #loginSection {
+    margin: 30px auto;
+    padding: 24px 18px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  .top {
+    align-items: stretch;
+  }
+
+  .top h2 {
+    width: 100%;
+  }
+
+  #logoutBtn {
+    width: 100%;
+  }
+
+  .learner-card {
+    padding: 16px;
+  }
+
+  .actions button {
+    flex: 1;
+    min-width: 110px;
+  }
+}
+
+/* ACCESSIBILITÉ */
+
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid #c9a44788;
+  outline-offset: 2px;
 }
 
 [hidden] {
