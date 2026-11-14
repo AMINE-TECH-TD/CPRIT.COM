@@ -1,0 +1,225 @@
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f2f5f1;
+  color: #183526;
+}
+
+header {
+  background: #064b35;
+  color: white;
+  padding: 15px 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand img {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+  background: white;
+  border-radius: 9px;
+  padding: 4px;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 23px;
+  letter-spacing: 1px;
+}
+
+.brand p {
+  margin: 5px 0 0;
+  font-size: 12px;
+}
+
+#logoutButton {
+  border: 1px solid white;
+  border-radius: 7px;
+  padding: 11px 16px;
+  background: transparent;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#logoutButton:hover {
+  background: white;
+  color: #064b35;
+}
+
+main {
+  width: 92%;
+  max-width: 1150px;
+  margin: 30px auto;
+}
+
+.welcome {
+  padding: 38px 30px;
+  border-radius: 14px;
+  background: linear-gradient(120deg, #064b35, #0b8050);
+  color: white;
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.welcome h2 {
+  margin: 15px 0;
+  font-size: clamp(23px, 4vw, 34px);
+}
+
+.welcome p:last-child {
+  line-height: 1.6;
+}
+
+.profile,
+.dashboard {
+  margin-top: 25px;
+  padding: 25px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.profile h2,
+.dashboard h2 {
+  margin-top: 0;
+  color: #075b36;
+}
+
+.profile p {
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.status {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background: #e1f5e9;
+  color: #087348;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.card {
+  padding: 23px;
+  border: 1px solid #e0e9e2;
+  border-radius: 12px;
+  background: #fff;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+}
+
+.card-icon {
+  font-size: 30px;
+}
+
+.card h3 {
+  margin: 12px 0;
+  color: #075b36;
+}
+
+.card p {
+  color: #64736a;
+  line-height: 1.6;
+}
+
+.coming {
+  display: inline-block;
+  margin-top: 8px;
+  color: #8a6b20;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.card-link {
+  display: inline-block;
+  margin-top: 8px;
+  color: #087348;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.card-link:hover {
+  text-decoration: underline;
+}
+
+footer {
+  margin-top: 40px;
+  padding: 20px 12px;
+  background: #064b35;
+  color: white;
+  text-align: center;
+  font-size: 12px;
+}
+
+@media (max-width: 650px) {
+  header {
+    padding: 12px;
+  }
+
+  .brand img {
+    width: 45px;
+    height: 45px;
+  }
+
+  .brand h1 {
+    font-size: 19px;
+  }
+
+  .brand p {
+    font-size: 10px;
+  }
+
+  #logoutButton {
+    padding: 9px;
+    font-size: 12px;
+  }
+
+  main {
+    width: 94%;
+    margin: 18px auto;
+  }
+
+  .welcome {
+    padding: 27px 20px;
+  }
+
+  .profile,
+  .dashboard {
+    padding: 19px;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+}
