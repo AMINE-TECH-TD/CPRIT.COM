@@ -3,32 +3,64 @@ import { supabase } from './supabase-config.js';
 const loginSection = document.getElementById('loginSection');
 const dashboard = document.getElementById('dashboard');
 const loginForm = document.getElementById('loginForm');
-const learners = document.getElementById('learners');
 const message = document.getElementById('message');
+const loginBtn = document.getElementById('loginBtn');
 
-async function verifyAdmin() {
-  const { data: { user } } = await supabase.auth.getUser();
+const roles = {
+  admin: 'dg',
+  dg: 'dg',
+  dga: 'dga',
+  daf: 'daf',
+  secretariat: 'secretariat'
+};
 
-  if (!user) return false;
+const roleNames = {
+  dg: 'Directeur général',
+  dga: 'Directeur général adjoint',
+  daf: 'Directeur administratif et financier',
+  secretariat: 'Secrétariat général'
+};
 
-  const { data, error } = await supabase
+async function verifyUser() {
+  const { data: { user }, error: userError } =
+    await supabase.auth.getUser();
+
+  if (userError || !user) return null;
+
+  const { data: profile, error } = await supabase
     .from('profiles')
-    .select('role, status')
+    .select('full_name, role, status')
     .eq('id', user.id)
     .single();
 
-  if (error || data.role !== 'admin' || data.status !== 'active') {
+  if (
+    error ||
+    !profile ||
+    profile.status !== 'active' ||
+    !roles[profile.role]
+  ) {
     await supabase.auth.signOut();
-    return false;
+    return null;
   }
 
-  return true;
+  return {
+    user,
+    profile,
+    role: roles[profile.role]
+  };
+}
+
+function hideAllSpaces() {
+  document.getElementById('directorDashboard').hidden = true;
+  document.getElementById('deputyDashboard').hidden = true;
+  document.getElementById('financeDashboard').hidden = true;
+  document.getElementById('secretariatDashboard').hidden = true;
 }
 
 async function showDashboard() {
-  const valid = await verifyAdmin();
+  const access = await verifyUser();
 
-  if (!valid) {
+  if (!access) {
     loginSection.hidden = false;
     dashboard.hidden = true;
     return;
@@ -37,13 +69,71 @@ async function showDashboard() {
   loginSection.hidden = true;
   dashboard.hidden = false;
 
-  await loadLearners();
+  hideAllSpaces();
+
+  document.getElementById('welcomeTitle').textContent =
+    'Bienvenue dans votre espace';
+
+  document.getElementById('userName').textContent =
+    access.profile.full_name || access.user.email;
+
+  document.getElementById('userRole').textContent =
+    roleNames[access.role];
+
+  if (access.role === 'dg') {
+    document.getElementById('directorDashboard').hidden = false;
+
+    document.getElementById('directorContent').innerHTML = `
+      <h4>Pilotage institutionnel</h4>
+      <p>Contrôle général des activités du CPRIT.</p>
+      <h4>Suivi des inscriptions</h4>
+      <div id="learners"></div>
+    `;
+
+    await loadLearners();
+  }
+
+  if (access.role === 'dga') {
+    document.getElementById('deputyDashboard').hidden = false;
+
+    document.getElementById('deputyContent').innerHTML = `
+      <h4>Coordination générale</h4>
+      <p>Suivi des services, des activités pédagogiques
+      et de l'exécution des orientations de la Direction générale.</p>
+    `;
+  }
+
+  if (access.role === 'daf') {
+    document.getElementById('financeDashboard').hidden = false;
+
+    document.getElementById('financeContent').innerHTML = `
+      <h4>Gestion administrative et financière</h4>
+      <p>Espace réservé au suivi des budgets, dépenses,
+      recettes et dossiers administratifs.</p>
+    `;
+  }
+
+  if (access.role === 'secretariat') {
+    document.getElementById('secretariatDashboard').hidden = false;
+
+    document.getElementById('secretariatContent').innerHTML = `
+      <h4>Gestion du secrétariat</h4>
+      <p>Suivi des dossiers et traitement des demandes
+      d'inscription des apprenants.</p>
+      <div id="learners"></div>
+    `;
+
+    await loadLearners();
+  }
+
+  message.textContent = '';
 }
 
 loginForm.addEventListener('submit', async (event) => {
   event.preventDefault();
 
   message.textContent = 'Connexion en cours...';
+  loginBtn.disabled = true;
 
   const email = document.getElementById('email').value.trim();
   const password = document.getElementById('password').value;
@@ -53,8 +143,10 @@ loginForm.addEventListener('submit', async (event) => {
     password
   });
 
+  loginBtn.disabled = false;
+
   if (error) {
-    message.textContent = 'Erreur : ' + error.message;
+    message.textContent = 'Identifiants incorrects ou accès refusé.';
     return;
   }
 
@@ -62,7 +154,11 @@ loginForm.addEventListener('submit', async (event) => {
 });
 
 async function loadLearners() {
-  learners.innerHTML = '<p>Chargement...</p>';
+  const learners = document.getElementById('learners');
+
+  if (!learners) return;
+
+  learners.innerHTML = '<p>Chargement des demandes...</p>';
 
   const { data, error } = await supabase
     .from('profiles')
@@ -72,11 +168,12 @@ async function loadLearners() {
     .order('created_at', { ascending: false });
 
   if (error) {
-    learners.textContent = 'Erreur de chargement : ' + error.message;
+    learners.textContent =
+      'Impossible de charger les demandes : ' + error.message;
     return;
   }
 
-  if (!data.length) {
+  if (!data || data.length === 0) {
     learners.innerHTML = '<p>Aucune demande en attente.</p>';
     return;
   }
@@ -91,11 +188,12 @@ async function loadLearners() {
     name.textContent = learner.full_name || 'Nom non renseigné';
 
     const phone = document.createElement('p');
-    phone.textContent = 'Téléphone : ' + (learner.phone || 'Non renseigné');
+    phone.textContent =
+      'Téléphone : ' + (learner.phone || 'Non renseigné');
 
     const date = document.createElement('p');
     date.textContent = 'Inscription : ' +
-      new Date(learner.created_at).toLocaleString('fr-FR');
+      new Date(learner.created_at).toLocaleDateString('fr-FR');
 
     const actions = document.createElement('div');
     actions.className = 'actions';
