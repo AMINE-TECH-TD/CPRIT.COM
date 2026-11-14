@@ -351,3 +351,32 @@ input:focus-visible {
 [hidden] {
   display: none !important;
 }
+.director-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+  margin: 20px 0 30px;
+}
+
+.stat-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--gold);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 14px #00000008;
+}
+
+.stat-card span {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.stat-card strong {
+  display: block;
+  color: var(--green);
+  font-size: 30px;
+  margin-top: 10px;
+}
