@@ -4,75 +4,86 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#064b35">
-  <title>Mon espace personnel – CPRIT</title>
+  <title>Espace institutionnel – CPRIT</title>
   <link rel="stylesheet" href="espace-personnel.css">
 </head>
 <body>
 
-  <header>
-    <div class="brand">
-      <img src="assets/logo-cprit.png" alt="Logo CPRIT">
-      <div>
-        <h1>CPRIT</h1>
-        <p>Espace personnel apprenant</p>
-      </div>
+<header>
+  <div class="brand">
+    <img src="assets/logo-cprit.png" alt="Logo CPRIT">
+    <div>
+      <h1>CPRIT</h1>
+      <p id="spaceTitle">Espace personnel</p>
     </div>
-    <button id="logoutButton">Déconnexion</button>
-  </header>
+  </div>
+  <button id="logoutButton">Déconnexion</button>
+</header>
 
-  <main>
-    <section class="welcome">
-      <p class="eyebrow">CENTRE PÉDAGOGIQUE RÉGIONAL DE L’ICESCO AU TCHAD</p>
-      <h2>Bienvenue dans votre espace de formation</h2>
-      <p id="welcomeMessage">Chargement de votre profil...</p>
-    </section>
+<main>
 
-    <section class="profile">
-      <h2>Mon profil</h2>
-      <p><strong>Nom :</strong> <span id="learnerName">Chargement...</span></p>
-      <p><strong>E-mail :</strong> <span id="learnerEmail">Chargement...</span></p>
-      <p><strong>Statut :</strong> <span class="status">Apprenant actif</span></p>
-    </section>
+  <section class="welcome">
+    <p class="eyebrow">CENTRE PÉDAGOGIQUE RÉGIONAL DE L’ICESCO AU TCHAD</p>
+    <h2 id="welcomeTitle">Bienvenue dans votre espace personnel</h2>
+    <p id="welcomeMessage">Chargement de votre profil...</p>
+  </section>
 
-    <section class="dashboard">
-      <h2>Mon espace pédagogique</h2>
+  <section class="profile">
+    <h2>Mon profil</h2>
+    <p><strong>Nom :</strong> <span id="learnerName">Chargement...</span></p>
+    <p><strong>E-mail :</strong> <span id="learnerEmail">Chargement...</span></p>
+    <p><strong>Fonction :</strong> <span id="roleName">Chargement...</span></p>
+    <p><strong>Statut :</strong> <span class="status" id="statusLabel">Vérification...</span></p>
+  </section>
 
-      <div class="cards">
-        <article class="card">
-          <div class="card-icon">📚</div>
-          <h3>Mes formations</h3>
-          <p>Retrouvez vos cours et vos contenus pédagogiques.</p>
-          <span class="coming">Disponible prochainement</span>
-        </article>
+  <section class="dashboard" id="roleDashboard" hidden>
+    <h2 id="dashboardTitle">Tableau de bord institutionnel</h2>
+    <div class="cards" id="dashboardCards"></div>
+  </section>
 
-        <article class="card">
-          <div class="card-icon">📝</div>
-          <h3>Exercices et évaluations</h3>
-          <p>Accédez aux activités et aux évaluations de formation.</p>
-          <span class="coming">Disponible prochainement</span>
-        </article>
+  <section class="dashboard" id="learnerDashboard" hidden>
+    <h2>Mon espace pédagogique</h2>
 
-        <article class="card">
-          <div class="card-icon">📂</div>
-          <h3>Documents pédagogiques</h3>
-          <p>Consultez les supports et ressources de formation.</p>
-          <span class="coming">Disponible prochainement</span>
-        </article>
+    <div class="cards">
 
-        <article class="card">
-          <div class="card-icon">🤖</div>
-          <h3>Assistant pédagogique IA</h3>
-          <p>Bénéficiez d'une assistance pour vos apprentissages.</p>
-          <a href="assistant-ia.html" class="card-link">Accéder à l'assistant</a>
-        </article>
-      </div>
-    </section>
-  </main>
+      <article class="card">
+        <div class="card-icon">📚</div>
+        <h3>Mes formations</h3>
+        <p>Retrouvez vos cours et contenus pédagogiques.</p>
+        <span class="coming">Disponible prochainement</span>
+      </article>
 
-  <footer>
-    © CPRIT – Centre pédagogique régional de l’ICESCO au Tchad
-  </footer>
+      <article class="card">
+        <div class="card-icon">📝</div>
+        <h3>Exercices et évaluations</h3>
+        <p>Accédez aux activités et évaluations de formation.</p>
+        <span class="coming">Disponible prochainement</span>
+      </article>
 
-  <script type="module" src="espace-personnel.js"></script>
+      <article class="card">
+        <div class="card-icon">📂</div>
+        <h3>Documents pédagogiques</h3>
+        <p>Consultez les supports et ressources de formation.</p>
+        <span class="coming">Disponible prochainement</span>
+      </article>
+
+      <article class="card">
+        <div class="card-icon">🤖</div>
+        <h3>Assistant pédagogique IA</h3>
+        <p>Bénéficiez d'une assistance pour vos apprentissages.</p>
+        <a href="assistant-ia.html" class="card-link">Accéder à l'assistant</a>
+      </article>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  © CPRIT – Centre pédagogique régional de l’ICESCO au Tchad
+</footer>
+
+<script type="module" src="espace-personnel.js"></script>
+
 </body>
 </html>
