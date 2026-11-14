@@ -1,19 +1,16 @@
-/* =====================================================
-   CPRIT — ADMINISTRATION PÉDAGOGIQUE
-   Interface responsive — Mobile et ordinateur
-   ===================================================== */
 
 :root {
   --green: #075b36;
-  --green-dark: #064329;
+  --green-dark: #043c29;
   --green-light: #eaf4ee;
   --gold: #c9a447;
   --red: #b52d2d;
   --text: #20352a;
   --muted: #718078;
   --border: #dce7df;
-  --background: #f3f6f3;
+  --background: #f2f6f3;
   --white: #ffffff;
+  --shadow: 0 8px 28px #173d2810;
 }
 
 * {
@@ -28,14 +25,8 @@ body {
   min-height: 100vh;
 }
 
-/* EN-TÊTE */
-
 header {
-  background: linear-gradient(
-    135deg,
-    var(--green-dark),
-    var(--green)
-  );
+  background: linear-gradient(135deg, var(--green-dark), var(--green));
   color: white;
   padding: 30px 20px;
   text-align: center;
@@ -57,29 +48,41 @@ header p {
   letter-spacing: 1px;
 }
 
-/* CONTENU PRINCIPAL */
-
 main {
-  width: 92%;
-  max-width: 1050px;
-  margin: 35px auto;
+  width: 94%;
+  max-width: 1200px;
+  margin: 32px auto;
 }
 
 section {
   background: var(--white);
-  padding: 28px;
+  padding: 26px;
   border: 1px solid var(--border);
   border-radius: 16px;
-  box-shadow: 0 8px 28px #173d2810;
+  box-shadow: var(--shadow);
+}
+
+h2, h3, h4 {
+  color: var(--green);
 }
 
 h2 {
-  color: var(--green);
   font-size: 23px;
   margin-top: 0;
 }
 
-/* CONNEXION */
+h3 {
+  font-size: 20px;
+  margin-top: 0;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+p {
+  line-height: 1.6;
+}
 
 #loginSection {
   max-width: 470px;
@@ -89,7 +92,13 @@ h2 {
 
 #loginSection h2 {
   text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 18px;
+}
+
+#loginSection > p {
+  text-align: center;
+  color: var(--muted);
+  margin-bottom: 25px;
 }
 
 input {
@@ -103,15 +112,12 @@ input {
   color: var(--text);
   font-size: 16px;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 input:focus {
   border-color: var(--green);
   box-shadow: 0 0 0 3px #075b3618;
 }
-
-/* BOUTONS */
 
 button {
   background: var(--green);
@@ -142,8 +148,6 @@ button:disabled {
   padding: 15px;
 }
 
-/* TABLEAU DE BORD */
-
 #dashboard {
   min-height: 300px;
 }
@@ -154,12 +158,22 @@ button:disabled {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 15px;
-  padding-bottom: 18px;
+  padding-bottom: 20px;
   border-bottom: 1px solid var(--border);
 }
 
 .top h2 {
   margin: 0;
+}
+
+.top p {
+  margin: 6px 0;
+  color: var(--muted);
+}
+
+#userRole {
+  color: var(--green) !important;
+  font-weight: bold;
 }
 
 #logoutBtn {
@@ -170,13 +184,62 @@ button:disabled {
   background: #852020;
 }
 
-/* MESSAGES */
-
 #message {
   font-weight: bold;
   color: var(--green);
   margin: 18px 0;
   overflow-wrap: anywhere;
+}
+
+/* ESPACES DES RESPONSABLES */
+
+#directorDashboard,
+#deputyDashboard,
+#financeDashboard,
+#secretariatDashboard {
+  margin-top: 25px;
+  background: #fbfdfb;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 25px;
+  box-shadow: none;
+}
+
+#directorDashboard {
+  border-top: 4px solid var(--gold);
+}
+
+#deputyDashboard {
+  border-top: 4px solid #2878a8;
+}
+
+#financeDashboard {
+  border-top: 4px solid #27815a;
+}
+
+#secretariatDashboard {
+  border-top: 4px solid #7a65a8;
+}
+
+#directorContent,
+#deputyContent,
+#financeContent,
+#secretariatContent {
+  margin-top: 20px;
+}
+
+#directorContent h4,
+#deputyContent h4,
+#financeContent h4,
+#secretariatContent h4 {
+  margin-bottom: 8px;
+}
+
+#directorContent p,
+#deputyContent p,
+#financeContent p,
+#secretariatContent p {
+  color: var(--muted);
 }
 
 /* CARTES DES APPRENANTS */
@@ -186,19 +249,13 @@ button:disabled {
 }
 
 .learner-card {
-  background: #ffffff;
+  background: white;
   border: 1px solid var(--border);
   border-left: 5px solid var(--gold);
   border-radius: 12px;
   padding: 20px;
   margin-top: 16px;
   box-shadow: 0 4px 14px #00000008;
-  transition: box-shadow 0.2s, transform 0.2s;
-}
-
-.learner-card:hover {
-  box-shadow: 0 7px 20px #00000012;
-  transform: translateY(-2px);
 }
 
 .learner-card h3 {
@@ -210,11 +267,8 @@ button:disabled {
 .learner-card p {
   color: var(--muted);
   font-size: 14px;
-  line-height: 1.6;
   margin: 7px 0;
 }
-
-/* ACTIONS */
 
 .actions {
   display: flex;
@@ -229,19 +283,11 @@ button:disabled {
   background: #087844;
 }
 
-.approve:hover {
-  background: #065b32;
-}
-
 .reject {
   background: var(--red);
 }
 
-.reject:hover {
-  background: #852020;
-}
-
-/* RESPONSIVE — TÉLÉPHONE */
+/* RESPONSIVE */
 
 @media (max-width: 600px) {
   header {
@@ -258,7 +304,7 @@ button:disabled {
   }
 
   section {
-    padding: 20px;
+    padding: 19px;
     border-radius: 12px;
   }
 
@@ -275,12 +321,15 @@ button:disabled {
     align-items: stretch;
   }
 
-  .top h2 {
+  #logoutBtn {
     width: 100%;
   }
 
-  #logoutBtn {
-    width: 100%;
+  #directorDashboard,
+  #deputyDashboard,
+  #financeDashboard,
+  #secretariatDashboard {
+    padding: 17px;
   }
 
   .learner-card {
@@ -292,8 +341,6 @@ button:disabled {
     min-width: 110px;
   }
 }
-
-/* ACCESSIBILITÉ */
 
 button:focus-visible,
 input:focus-visible {
