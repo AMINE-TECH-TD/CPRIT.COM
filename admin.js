@@ -27,12 +27,17 @@ const roleNames = {
   secretariat: 'Secrétariat général'
 };
 
-let currentContent = null;
+let currentRole = null;
 
 function money(value) {
   return Number(value || 0).toLocaleString('fr-FR', {
     maximumFractionDigits: 0
   }) + ' FCFA';
+}
+
+function setMessage(text, color = '#087844') {
+  message.textContent = text;
+  message.style.color = color;
 }
 
 async function verifyUser() {
@@ -73,34 +78,22 @@ function hideAllSpaces() {
   document.getElementById('secretariatDashboard').hidden = true;
 }
 
-function dashboardTemplate(isDga = false) {
+// =====================================================
+// TABLEAU DE BORD DU DIRECTEUR GÉNÉRAL
+// =====================================================
+
+function directorTemplate() {
   return `
     <section class="dg-header">
       <div>
-        <p class="dg-eyebrow">
-          ${isDga ? 'DIRECTION GÉNÉRALE ADJOINTE' : 'DIRECTION GÉNÉRALE'}
-        </p>
-        <h2>
-          ${isDga ? 'Tableau de bord du DGA' : 'Tableau de bord du DG'}
-        </h2>
-        <p>
-          Pilotage et suivi du Centre pédagogique régional de l'ICESCO au Tchad.
-        </p>
+        <p class="dg-eyebrow">DIRECTION GÉNÉRALE</p>
+        <h2>Tableau de bord du DG</h2>
+        <p>Pilotage général et contrôle des activités du CPRIT.</p>
       </div>
       <button type="button" id="refreshDirector">
         Actualiser les données
       </button>
     </section>
-
-    ${isDga ? `
-      <section class="dg-section">
-        <h3>Coordination générale</h3>
-        <p>
-          Coordination des services, suivi des activités pédagogiques,
-          accompagnement des responsables et suivi de l'exécution des décisions.
-        </p>
-      </section>
-    ` : ''}
 
     <section class="dg-section">
       <h3>Vue générale du CPRIT</h3>
@@ -114,9 +107,15 @@ function dashboardTemplate(isDga = false) {
       <p>Créer les comptes des responsables et suivre le personnel enregistré.</p>
 
       <form id="staffForm">
-        <input id="staffName" type="text" placeholder="Nom complet" required>
-        <input id="staffEmail" type="email" placeholder="Adresse e-mail professionnelle" required>
-        <input id="staffPhone" type="tel" placeholder="Téléphone">
+        <input id="staffName" type="text"
+          placeholder="Nom complet" required>
+
+        <input id="staffEmail" type="email"
+          placeholder="Adresse e-mail professionnelle" required>
+
+        <input id="staffPhone" type="tel"
+          placeholder="Téléphone">
+
         <input id="staffPassword" type="password"
           placeholder="Mot de passe provisoire (8 caractères minimum)"
           minlength="8" required>
@@ -128,8 +127,11 @@ function dashboardTemplate(isDga = false) {
           <option value="secretariat">Secrétariat général</option>
         </select>
 
-        <button id="createStaffBtn" type="submit">Créer le compte</button>
+        <button id="createStaffBtn" type="submit">
+          Créer le compte
+        </button>
       </form>
+
       <p id="staffMessage" role="status"></p>
     </section>
 
@@ -146,6 +148,78 @@ function dashboardTemplate(isDga = false) {
   `;
 }
 
+// =====================================================
+// TABLEAU DE BORD DU DIRECTEUR GÉNÉRAL ADJOINT
+// =====================================================
+
+function deputyTemplate() {
+  return `
+    <section class="dg-header">
+      <div>
+        <p class="dg-eyebrow">DIRECTION GÉNÉRALE ADJOINTE</p>
+        <h2>Tableau de bord du DGA</h2>
+        <p>Coordination et suivi des services et activités du CPRIT.</p>
+      </div>
+      <button type="button" id="refreshDeputy">
+        Actualiser les données
+      </button>
+    </section>
+
+    <section class="dg-section">
+      <h3>Mission de coordination</h3>
+      <p>
+        Assurer la coordination des services, accompagner les responsables,
+        suivre les activités pédagogiques et veiller à l'exécution
+        des orientations de la Direction générale.
+      </p>
+    </section>
+
+    <section class="dg-section">
+      <h3>Suivi des services</h3>
+
+      <article class="learner-card">
+        <h3>Direction administrative et financière</h3>
+        <p>
+          Coordination du suivi administratif, financier et budgétaire.
+        </p>
+      </article>
+
+      <article class="learner-card">
+        <h3>Secrétariat général</h3>
+        <p>
+          Suivi du courrier, des dossiers et de la circulation
+          des documents administratifs.
+        </p>
+      </article>
+
+      <article class="learner-card">
+        <h3>Activités pédagogiques</h3>
+        <p>
+          Suivi de l'organisation des formations, des activités
+          pédagogiques et de leur mise en œuvre.
+        </p>
+      </article>
+    </section>
+
+    <section class="dg-section">
+      <h3>Vue générale du CPRIT</h3>
+      <div id="deputyStats" class="director-stats">
+        Chargement des indicateurs...
+      </div>
+    </section>
+
+    <section class="dg-section">
+      <h3>Personnel de direction</h3>
+      <p>Consultation du personnel responsable des services.</p>
+      <div id="deputyStaffList">Chargement du personnel...</div>
+    </section>
+  `;
+}
+
+// =====================================================
+// TABLEAU DE BORD DU DAF
+// =====================================================
+
 function financeTemplate() {
   return `
     <section class="dg-header">
@@ -154,7 +228,6 @@ function financeTemplate() {
         <h2>Tableau de bord du DAF</h2>
         <p>Gestion et suivi des finances du CPRIT.</p>
       </div>
-
       <button type="button" id="refreshFinance">
         Actualiser les données
       </button>
@@ -232,6 +305,10 @@ function financeTemplate() {
   `;
 }
 
+// =====================================================
+// AFFICHAGE SELON LE RÔLE
+// =====================================================
+
 async function showDashboard() {
   const access = await verifyUser();
 
@@ -239,13 +316,16 @@ async function showDashboard() {
     loginSection.hidden = false;
     dashboard.hidden = true;
     loginMessage.textContent = '';
-    currentContent = null;
+    currentRole = null;
     return;
   }
 
   loginSection.hidden = true;
   dashboard.hidden = false;
+
   hideAllSpaces();
+
+  currentRole = access.role;
 
   document.getElementById('welcomeTitle').textContent =
     'Bienvenue dans votre espace';
@@ -256,36 +336,41 @@ async function showDashboard() {
   document.getElementById('userRole').textContent =
     roleNames[access.role];
 
-  message.textContent = '';
+  setMessage('');
 
-  if (access.role === 'dg' || access.role === 'dga') {
-    const isDga = access.role === 'dga';
+  // DG
+  if (access.role === 'dg') {
+    document.getElementById('directorDashboard').hidden = false;
 
-    const dashboardId = isDga
-      ? 'deputyDashboard'
-      : 'directorDashboard';
+    const content = document.getElementById('directorContent');
+    content.innerHTML = directorTemplate();
 
-    const contentId = isDga
-      ? 'deputyContent'
-      : 'directorContent';
-
-    document.getElementById(dashboardId).hidden = false;
-
-    currentContent = document.getElementById(contentId);
-    currentContent.innerHTML = dashboardTemplate(isDga);
-
-    currentContent.addEventListener('click', handleDashboardClick);
+    content.addEventListener('click', handleDirectorClick);
     document.getElementById('staffForm')
       .addEventListener('submit', createStaff);
 
     await refreshDirectorDashboard();
   }
 
+  // DGA
+  if (access.role === 'dga') {
+    document.getElementById('deputyDashboard').hidden = false;
+
+    const content = document.getElementById('deputyContent');
+    content.innerHTML = deputyTemplate();
+
+    document.getElementById('refreshDeputy')
+      .addEventListener('click', refreshDeputyDashboard);
+
+    await refreshDeputyDashboard();
+  }
+
+  // DAF
   if (access.role === 'daf') {
     document.getElementById('financeDashboard').hidden = false;
 
-    currentContent = document.getElementById('financeContent');
-    currentContent.innerHTML = financeTemplate();
+    const content = document.getElementById('financeContent');
+    content.innerHTML = financeTemplate();
 
     document.getElementById('refreshFinance')
       .addEventListener('click', loadFinanceDashboard);
@@ -305,22 +390,40 @@ async function showDashboard() {
     await loadFinanceDashboard();
   }
 
+  // SECRÉTARIAT
   if (access.role === 'secretariat') {
     document.getElementById('secretariatDashboard').hidden = false;
 
     document.getElementById('secretariatContent').innerHTML = `
-      <h3>Gestion du secrétariat général</h3>
-      <p>Suivi des dossiers et des demandes d'inscription.</p>
-      <div id="learners">Chargement des demandes...</div>
+      <section class="dg-header">
+        <div>
+          <p class="dg-eyebrow">SECRÉTARIAT GÉNÉRAL</p>
+          <h2>Tableau de bord du Secrétariat</h2>
+          <p>Suivi des dossiers et des demandes d'inscription.</p>
+        </div>
+        <button type="button" id="refreshSecretariat">
+          Actualiser les données
+        </button>
+      </section>
+
+      <section class="dg-section">
+        <h3>Demandes d'inscription</h3>
+        <div id="learners">Chargement des demandes...</div>
+      </section>
     `;
+
+    document.getElementById('refreshSecretariat')
+      .addEventListener('click', loadLearners);
 
     await loadLearners();
   }
 }
 
-// TABLEAU DG ET DGA
+// =====================================================
+// DONNÉES DU DG
+// =====================================================
 
-function handleDashboardClick(event) {
+function handleDirectorClick(event) {
   const button = event.target.closest('#refreshDirector');
   if (!button) return;
 
@@ -336,19 +439,17 @@ async function refreshDirectorDashboard() {
     button.textContent = 'Actualisation en cours...';
   }
 
-  message.textContent = 'Actualisation des données...';
+  setMessage('Actualisation des données...');
 
   try {
     await loadDirectorStats();
     await loadStaff();
     await loadLearners();
 
-    message.textContent = 'Actualisation terminée avec succès.';
-    message.style.color = '#087844';
+    setMessage('Actualisation terminée avec succès.');
 
   } catch (error) {
-    message.textContent = 'Erreur : ' + error.message;
-    message.style.color = '#b52d2d';
+    setMessage('Erreur : ' + error.message, '#b52d2d');
     console.error(error);
 
   } finally {
@@ -398,15 +499,176 @@ async function loadDirectorStats() {
   ]);
 
   stats.innerHTML = `
-    <div class="stat-card"><span>Total des apprenants</span><strong>${totalLearners}</strong></div>
-    <div class="stat-card"><span>Apprenants actifs</span><strong>${activeLearners}</strong></div>
-    <div class="stat-card"><span>Inscriptions en attente</span><strong>${pendingLearners}</strong></div>
-    <div class="stat-card"><span>Direction générale</span><strong>${admin + dg}</strong></div>
-    <div class="stat-card"><span>DGA</span><strong>${dga}</strong></div>
-    <div class="stat-card"><span>DAF</span><strong>${daf}</strong></div>
-    <div class="stat-card"><span>Secrétariat général</span><strong>${secretariat}</strong></div>
+    <div class="stat-card">
+      <span>Total des apprenants</span>
+      <strong>${totalLearners}</strong>
+    </div>
+    <div class="stat-card">
+      <span>Apprenants actifs</span>
+      <strong>${activeLearners}</strong>
+    </div>
+    <div class="stat-card">
+      <span>Inscriptions en attente</span>
+      <strong>${pendingLearners}</strong>
+    </div>
+    <div class="stat-card">
+      <span>Direction générale</span>
+      <strong>${admin + dg}</strong>
+    </div>
+    <div class="stat-card">
+      <span>DGA</span>
+      <strong>${dga}</strong>
+    </div>
+    <div class="stat-card">
+      <span>DAF</span>
+      <strong>${daf}</strong>
+    </div>
+    <div class="stat-card">
+      <span>Secrétariat général</span>
+      <strong>${secretariat}</strong>
+    </div>
   `;
 }
+
+// =====================================================
+// DONNÉES DU DGA
+// =====================================================
+
+async function refreshDeputyDashboard() {
+  const button = document.getElementById('refreshDeputy');
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = 'Actualisation en cours...';
+  }
+
+  setMessage('Actualisation des données de coordination...');
+
+  try {
+    await loadDeputyStats();
+    await loadDeputyStaff();
+
+    setMessage('Données de coordination actualisées.');
+
+  } catch (error) {
+    setMessage('Erreur : ' + error.message, '#b52d2d');
+    console.error(error);
+
+  } finally {
+    if (button) {
+      button.disabled = false;
+      button.textContent = 'Actualiser les données';
+    }
+  }
+}
+
+async function loadDeputyStats() {
+  const stats = document.getElementById('deputyStats');
+  if (!stats) return;
+
+  const countProfiles = async (role, status = null) => {
+    let query = supabase
+      .from('profiles')
+      .select('id', { count: 'exact', head: true })
+      .eq('role', role);
+
+    if (status) query = query.eq('status', status);
+
+    const { count, error } = await query;
+    if (error) throw error;
+
+    return count || 0;
+  };
+
+  const [
+    totalLearners,
+    activeLearners,
+    pendingLearners,
+    dga,
+    daf,
+    secretariat
+  ] = await Promise.all([
+    countProfiles('learner'),
+    countProfiles('learner', 'active'),
+    countProfiles('learner', 'pending'),
+    countProfiles('dga', 'active'),
+    countProfiles('daf', 'active'),
+    countProfiles('secretariat', 'active')
+  ]);
+
+  stats.innerHTML = `
+    <div class="stat-card">
+      <span>Total des apprenants</span>
+      <strong>${totalLearners}</strong>
+    </div>
+    <div class="stat-card">
+      <span>Apprenants actifs</span>
+      <strong>${activeLearners}</strong>
+    </div>
+    <div class="stat-card">
+      <span>Inscriptions en attente</span>
+      <strong>${pendingLearners}</strong>
+    </div>
+    <div class="stat-card">
+      <span>DGA</span>
+      <strong>${dga}</strong>
+    </div>
+    <div class="stat-card">
+      <span>DAF</span>
+      <strong>${daf}</strong>
+    </div>
+    <div class="stat-card">
+      <span>Secrétariat général</span>
+      <strong>${secretariat}</strong>
+    </div>
+  `;
+}
+
+async function loadDeputyStaff() {
+  const list = document.getElementById('deputyStaffList');
+  if (!list) return;
+
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('full_name, phone, role, status')
+    .in('role', ['dga', 'daf', 'secretariat'])
+    .order('created_at', { ascending: true });
+
+  if (error) throw error;
+
+  list.innerHTML = '';
+
+  if (!data || data.length === 0) {
+    list.textContent = 'Aucun responsable enregistré.';
+    return;
+  }
+
+  data.forEach(person => {
+    const card = document.createElement('article');
+    card.className = 'learner-card';
+
+    const name = document.createElement('h3');
+    name.textContent = person.full_name || 'Nom non renseigné';
+
+    const role = document.createElement('p');
+    role.textContent = 'Fonction : ' +
+      (roleNames[roles[person.role]] || person.role);
+
+    const phone = document.createElement('p');
+    phone.textContent = 'Téléphone : ' +
+      (person.phone || 'Non renseigné');
+
+    const status = document.createElement('p');
+    status.textContent = 'Statut : ' + person.status;
+
+    card.append(name, role, phone, status);
+    list.appendChild(card);
+  });
+}
+
+// =====================================================
+// GESTION DU PERSONNEL PAR LE DG
+// =====================================================
 
 async function createStaff(event) {
   event.preventDefault();
@@ -416,7 +678,8 @@ async function createStaff(event) {
   const form = document.getElementById('staffForm');
 
   button.disabled = true;
-  result.textContent = 'Création en cours...';
+  button.textContent = 'Création en cours...';
+  result.textContent = '';
 
   const staff = {
     full_name: document.getElementById('staffName').value.trim(),
@@ -433,11 +696,13 @@ async function createStaff(event) {
     );
 
     if (error) throw error;
+
     if (!data || !data.success) {
       throw new Error(data?.error || 'Création impossible.');
     }
 
-    result.textContent = data.message || 'Compte créé avec succès.';
+    result.textContent =
+      data.message || 'Compte créé avec succès.';
     result.style.color = '#087844';
 
     form.reset();
@@ -448,9 +713,11 @@ async function createStaff(event) {
   } catch (error) {
     result.textContent = 'Échec : ' + error.message;
     result.style.color = '#b52d2d';
+    console.error(error);
 
   } finally {
     button.disabled = false;
+    button.textContent = 'Créer le compte';
   }
 }
 
@@ -485,7 +752,8 @@ async function loadStaff() {
       (roleNames[roles[person.role]] || person.role);
 
     const phone = document.createElement('p');
-    phone.textContent = 'Téléphone : ' + (person.phone || 'Non renseigné');
+    phone.textContent = 'Téléphone : ' +
+      (person.phone || 'Non renseigné');
 
     const status = document.createElement('p');
     status.textContent = 'Statut : ' + person.status;
@@ -494,6 +762,10 @@ async function loadStaff() {
     staffList.appendChild(card);
   });
 }
+
+// =====================================================
+// DEMANDES D'INSCRIPTION
+// =====================================================
 
 async function loadLearners() {
   const learners = document.getElementById('learners');
@@ -508,7 +780,10 @@ async function loadLearners() {
     .eq('status', 'pending')
     .order('created_at', { ascending: false });
 
-  if (error) throw error;
+  if (error) {
+    learners.textContent = 'Erreur : ' + error.message;
+    throw error;
+  }
 
   if (!data || data.length === 0) {
     learners.innerHTML = '<p>Aucune demande en attente.</p>';
@@ -525,7 +800,8 @@ async function loadLearners() {
     name.textContent = learner.full_name || 'Nom non renseigné';
 
     const phone = document.createElement('p');
-    phone.textContent = 'Téléphone : ' + (learner.phone || 'Non renseigné');
+    phone.textContent = 'Téléphone : ' +
+      (learner.phone || 'Non renseigné');
 
     const date = document.createElement('p');
     date.textContent = 'Inscription : ' +
@@ -568,17 +844,19 @@ async function updateLearner(id, status) {
     .eq('status', 'pending');
 
   if (error) {
-    message.textContent = 'Erreur : ' + error.message;
+    setMessage('Erreur : ' + error.message, '#b52d2d');
     return;
   }
 
-  message.textContent = 'Décision enregistrée.';
+  setMessage('Décision enregistrée.');
 
   await loadLearners();
   await loadDirectorStats();
 }
 
-// TABLEAU FINANCIER DAF
+// =====================================================
+// GESTION FINANCIÈRE DU DAF
+// =====================================================
 
 async function loadFinanceDashboard() {
   const stats = document.getElementById('financeStats');
@@ -625,22 +903,18 @@ async function loadFinanceDashboard() {
         <span>Recettes de ${year}</span>
         <strong>${money(recettes)}</strong>
       </div>
-
       <div class="stat-card">
         <span>Dépenses de ${year}</span>
         <strong>${money(depenses)}</strong>
       </div>
-
       <div class="stat-card">
         <span>Solde des opérations</span>
         <strong>${money(solde)}</strong>
       </div>
-
       <div class="stat-card">
         <span>Budget annuel</span>
         <strong>${money(budget)}</strong>
       </div>
-
       <div class="stat-card">
         <span>Budget restant après dépenses</span>
         <strong>${money(budget - depenses)}</strong>
@@ -655,14 +929,12 @@ async function loadFinanceDashboard() {
 
     displayTransactions(transactions || []);
 
-    message.textContent = 'Données financières actualisées.';
-    message.style.color = '#087844';
+    setMessage('Données financières actualisées.');
 
   } catch (error) {
     stats.textContent = 'Erreur de chargement : ' + error.message;
     list.textContent = 'Impossible de charger les opérations.';
-    message.textContent = 'Erreur financière : ' + error.message;
-    message.style.color = '#b52d2d';
+    setMessage('Erreur financière : ' + error.message, '#b52d2d');
     console.error(error);
   }
 }
@@ -715,6 +987,8 @@ async function saveBudget(event) {
   try {
     const { data: { user } } = await supabase.auth.getUser();
 
+    if (!user) throw new Error('Session non valide.');
+
     const budget = {
       budget_year: Number(document.getElementById('budgetYear').value),
       amount: Number(document.getElementById('budgetAmount').value),
@@ -755,6 +1029,8 @@ async function saveTransaction(event) {
   try {
     const { data: { user } } = await supabase.auth.getUser();
 
+    if (!user) throw new Error('Session non valide.');
+
     const transaction = {
       transaction_type: document.getElementById('transactionType').value,
       amount: Number(document.getElementById('transactionAmount').value),
@@ -774,6 +1050,7 @@ async function saveTransaction(event) {
     result.style.color = '#087844';
 
     document.getElementById('transactionForm').reset();
+
     document.getElementById('transactionDate').value =
       new Date().toISOString().slice(0, 10);
 
@@ -788,7 +1065,9 @@ async function saveTransaction(event) {
   }
 }
 
+// =====================================================
 // CONNEXION
+// =====================================================
 
 loginForm.addEventListener('submit', async event => {
   event.preventDefault();
@@ -826,7 +1105,9 @@ loginForm.addEventListener('submit', async event => {
   }
 });
 
+// =====================================================
 // DÉCONNEXION
+// =====================================================
 
 logoutBtn.addEventListener('click', async () => {
   logoutBtn.disabled = true;
@@ -835,7 +1116,7 @@ logoutBtn.addEventListener('click', async () => {
     await supabase.auth.signOut();
 
     loginForm.reset();
-    message.textContent = '';
+    setMessage('');
     loginMessage.textContent = '';
 
     await showDashboard();
