@@ -27,8 +27,13 @@ const roleNames = {
   secretariat: 'Secrétariat général'
 };
 
-let currentRole = null;
 let currentContent = null;
+
+function money(value) {
+  return Number(value || 0).toLocaleString('fr-FR', {
+    maximumFractionDigits: 0
+  }) + ' FCFA';
+}
 
 async function verifyUser() {
   const {
@@ -75,16 +80,13 @@ function dashboardTemplate(isDga = false) {
         <p class="dg-eyebrow">
           ${isDga ? 'DIRECTION GÉNÉRALE ADJOINTE' : 'DIRECTION GÉNÉRALE'}
         </p>
-
         <h2>
           ${isDga ? 'Tableau de bord du DGA' : 'Tableau de bord du DG'}
         </h2>
-
         <p>
           Pilotage et suivi du Centre pédagogique régional de l'ICESCO au Tchad.
         </p>
       </div>
-
       <button type="button" id="refreshDirector">
         Actualiser les données
       </button>
@@ -103,44 +105,21 @@ function dashboardTemplate(isDga = false) {
     <section class="dg-section">
       <h3>Vue générale du CPRIT</h3>
       <div id="directorStats" class="director-stats">
-        <p>Chargement des indicateurs...</p>
+        Chargement des indicateurs...
       </div>
     </section>
 
     <section class="dg-section">
       <h3>Gestion du personnel de direction</h3>
-      <p>
-        Créer les comptes des responsables et suivre le personnel enregistré.
-      </p>
+      <p>Créer les comptes des responsables et suivre le personnel enregistré.</p>
 
       <form id="staffForm">
-        <input
-          id="staffName"
-          type="text"
-          placeholder="Nom complet"
-          required
-        >
-
-        <input
-          id="staffEmail"
-          type="email"
-          placeholder="Adresse e-mail professionnelle"
-          required
-        >
-
-        <input
-          id="staffPhone"
-          type="tel"
-          placeholder="Téléphone"
-        >
-
-        <input
-          id="staffPassword"
-          type="password"
+        <input id="staffName" type="text" placeholder="Nom complet" required>
+        <input id="staffEmail" type="email" placeholder="Adresse e-mail professionnelle" required>
+        <input id="staffPhone" type="tel" placeholder="Téléphone">
+        <input id="staffPassword" type="password"
           placeholder="Mot de passe provisoire (8 caractères minimum)"
-          minlength="8"
-          required
-        >
+          minlength="8" required>
 
         <select id="staffRole" required>
           <option value="">Choisir une fonction</option>
@@ -149,11 +128,8 @@ function dashboardTemplate(isDga = false) {
           <option value="secretariat">Secrétariat général</option>
         </select>
 
-        <button id="createStaffBtn" type="submit">
-          Créer le compte
-        </button>
+        <button id="createStaffBtn" type="submit">Créer le compte</button>
       </form>
-
       <p id="staffMessage" role="status"></p>
     </section>
 
@@ -164,10 +140,94 @@ function dashboardTemplate(isDga = false) {
 
     <section class="dg-section">
       <h3>Demandes d'inscription</h3>
-      <p>
-        Consulter les demandes en attente et prendre une décision.
-      </p>
+      <p>Consulter les demandes en attente et prendre une décision.</p>
       <div id="learners">Chargement des demandes...</div>
+    </section>
+  `;
+}
+
+function financeTemplate() {
+  return `
+    <section class="dg-header">
+      <div>
+        <p class="dg-eyebrow">DIRECTION ADMINISTRATIVE ET FINANCIÈRE</p>
+        <h2>Tableau de bord du DAF</h2>
+        <p>Gestion et suivi des finances du CPRIT.</p>
+      </div>
+
+      <button type="button" id="refreshFinance">
+        Actualiser les données
+      </button>
+    </section>
+
+    <section class="dg-section">
+      <h3>Synthèse financière</h3>
+      <div class="director-stats" id="financeStats">
+        Chargement des données financières...
+      </div>
+    </section>
+
+    <section class="dg-section">
+      <h3>Budget annuel</h3>
+
+      <form id="budgetForm">
+        <label for="budgetYear">Année budgétaire</label>
+        <input id="budgetYear" type="number"
+          min="2020" max="2100" required>
+
+        <label for="budgetAmount">Montant du budget (FCFA)</label>
+        <input id="budgetAmount" type="number"
+          min="0" step="1" placeholder="Exemple : 5000000" required>
+
+        <label for="budgetNotes">Observations</label>
+        <textarea id="budgetNotes"
+          placeholder="Notes sur le budget annuel"></textarea>
+
+        <button id="saveBudgetBtn" type="submit">
+          Enregistrer le budget
+        </button>
+      </form>
+
+      <p id="budgetMessage" role="status"></p>
+    </section>
+
+    <section class="dg-section">
+      <h3>Enregistrer une opération</h3>
+
+      <form id="transactionForm">
+        <label for="transactionType">Type d'opération</label>
+        <select id="transactionType" required>
+          <option value="">Choisir une opération</option>
+          <option value="recette">Recette</option>
+          <option value="depense">Dépense</option>
+        </select>
+
+        <label for="transactionAmount">Montant (FCFA)</label>
+        <input id="transactionAmount" type="number"
+          min="1" step="1" placeholder="Montant" required>
+
+        <label for="transactionCategory">Catégorie</label>
+        <input id="transactionCategory" type="text"
+          placeholder="Exemple : Formation, fournitures, transport" required>
+
+        <label for="transactionDescription">Description</label>
+        <textarea id="transactionDescription"
+          placeholder="Détails de l'opération" required></textarea>
+
+        <label for="transactionDate">Date de l'opération</label>
+        <input id="transactionDate" type="date" required>
+
+        <button id="saveTransactionBtn" type="submit">
+          Enregistrer l'opération
+        </button>
+      </form>
+
+      <p id="transactionMessage" role="status"></p>
+    </section>
+
+    <section class="dg-section">
+      <h3>Historique des opérations</h3>
+      <div id="transactionList">Chargement de l'historique...</div>
     </section>
   `;
 }
@@ -179,17 +239,13 @@ async function showDashboard() {
     loginSection.hidden = false;
     dashboard.hidden = true;
     loginMessage.textContent = '';
-    currentRole = null;
     currentContent = null;
     return;
   }
 
   loginSection.hidden = true;
   dashboard.hidden = false;
-
   hideAllSpaces();
-
-  currentRole = access.role;
 
   document.getElementById('welcomeTitle').textContent =
     'Bienvenue dans votre espace';
@@ -228,12 +284,25 @@ async function showDashboard() {
   if (access.role === 'daf') {
     document.getElementById('financeDashboard').hidden = false;
 
-    document.getElementById('financeContent').innerHTML = `
-      <h3>Gestion administrative et financière</h3>
-      <p>
-        Suivi des budgets, dépenses, recettes et dossiers administratifs.
-      </p>
-    `;
+    currentContent = document.getElementById('financeContent');
+    currentContent.innerHTML = financeTemplate();
+
+    document.getElementById('refreshFinance')
+      .addEventListener('click', loadFinanceDashboard);
+
+    document.getElementById('budgetForm')
+      .addEventListener('submit', saveBudget);
+
+    document.getElementById('transactionForm')
+      .addEventListener('submit', saveTransaction);
+
+    document.getElementById('budgetYear').value =
+      new Date().getFullYear();
+
+    document.getElementById('transactionDate').value =
+      new Date().toISOString().slice(0, 10);
+
+    await loadFinanceDashboard();
   }
 
   if (access.role === 'secretariat') {
@@ -249,9 +318,10 @@ async function showDashboard() {
   }
 }
 
+// TABLEAU DG ET DGA
+
 function handleDashboardClick(event) {
   const button = event.target.closest('#refreshDirector');
-
   if (!button) return;
 
   event.preventDefault();
@@ -267,23 +337,19 @@ async function refreshDirectorDashboard() {
   }
 
   message.textContent = 'Actualisation des données...';
-  message.style.color = '#0755a0';
 
   try {
     await loadDirectorStats();
     await loadStaff();
     await loadLearners();
 
-    message.textContent =
-      'Actualisation terminée avec succès.';
+    message.textContent = 'Actualisation terminée avec succès.';
     message.style.color = '#087844';
 
   } catch (error) {
-    message.textContent =
-      'Erreur d’actualisation : ' + error.message;
+    message.textContent = 'Erreur : ' + error.message;
     message.style.color = '#b52d2d';
-
-    console.error('Erreur actualisation :', error);
+    console.error(error);
 
   } finally {
     if (button) {
@@ -306,86 +372,51 @@ async function loadDirectorStats() {
     if (status) query = query.eq('status', status);
 
     const { count, error } = await query;
-
     if (error) throw error;
 
     return count || 0;
   };
 
-  try {
-    const [
-      totalLearners,
-      activeLearners,
-      pendingLearners,
-      admin,
-      dg,
-      dga,
-      daf,
-      secretariat
-    ] = await Promise.all([
-      countProfiles('learner'),
-      countProfiles('learner', 'active'),
-      countProfiles('learner', 'pending'),
-      countProfiles('admin', 'active'),
-      countProfiles('dg', 'active'),
-      countProfiles('dga', 'active'),
-      countProfiles('daf', 'active'),
-      countProfiles('secretariat', 'active')
-    ]);
+  const [
+    totalLearners,
+    activeLearners,
+    pendingLearners,
+    admin,
+    dg,
+    dga,
+    daf,
+    secretariat
+  ] = await Promise.all([
+    countProfiles('learner'),
+    countProfiles('learner', 'active'),
+    countProfiles('learner', 'pending'),
+    countProfiles('admin', 'active'),
+    countProfiles('dg', 'active'),
+    countProfiles('dga', 'active'),
+    countProfiles('daf', 'active'),
+    countProfiles('secretariat', 'active')
+  ]);
 
-    stats.innerHTML = `
-      <div class="stat-card">
-        <span>Total des apprenants</span>
-        <strong>${totalLearners}</strong>
-      </div>
-
-      <div class="stat-card">
-        <span>Apprenants actifs</span>
-        <strong>${activeLearners}</strong>
-      </div>
-
-      <div class="stat-card">
-        <span>Inscriptions en attente</span>
-        <strong>${pendingLearners}</strong>
-      </div>
-
-      <div class="stat-card">
-        <span>Direction générale</span>
-        <strong>${admin + dg}</strong>
-      </div>
-
-      <div class="stat-card">
-        <span>DGA</span>
-        <strong>${dga}</strong>
-      </div>
-
-      <div class="stat-card">
-        <span>DAF</span>
-        <strong>${daf}</strong>
-      </div>
-
-      <div class="stat-card">
-        <span>Secrétariat général</span>
-        <strong>${secretariat}</strong>
-      </div>
-    `;
-
-  } catch (error) {
-    stats.textContent = 'Erreur de chargement : ' + error.message;
-    throw error;
-  }
+  stats.innerHTML = `
+    <div class="stat-card"><span>Total des apprenants</span><strong>${totalLearners}</strong></div>
+    <div class="stat-card"><span>Apprenants actifs</span><strong>${activeLearners}</strong></div>
+    <div class="stat-card"><span>Inscriptions en attente</span><strong>${pendingLearners}</strong></div>
+    <div class="stat-card"><span>Direction générale</span><strong>${admin + dg}</strong></div>
+    <div class="stat-card"><span>DGA</span><strong>${dga}</strong></div>
+    <div class="stat-card"><span>DAF</span><strong>${daf}</strong></div>
+    <div class="stat-card"><span>Secrétariat général</span><strong>${secretariat}</strong></div>
+  `;
 }
 
 async function createStaff(event) {
   event.preventDefault();
 
-  const form = document.getElementById('staffForm');
   const button = document.getElementById('createStaffBtn');
   const result = document.getElementById('staffMessage');
+  const form = document.getElementById('staffForm');
 
   button.disabled = true;
-  button.textContent = 'Création en cours...';
-  result.textContent = '';
+  result.textContent = 'Création en cours...';
 
   const staff = {
     full_name: document.getElementById('staffName').value.trim(),
@@ -401,26 +432,7 @@ async function createStaff(event) {
       { body: staff }
     );
 
-    if (error) {
-      let detail = error.message || 'Erreur inconnue';
-
-      if (error.context) {
-        try {
-          const response = error.context;
-          const body = typeof response.json === 'function'
-            ? await response.json()
-            : response;
-
-          detail = body?.error || body?.message || JSON.stringify(body);
-
-        } catch (_) {
-          detail = error.message || detail;
-        }
-      }
-
-      throw new Error(detail);
-    }
-
+    if (error) throw error;
     if (!data || !data.success) {
       throw new Error(data?.error || 'Création impossible.');
     }
@@ -434,15 +446,11 @@ async function createStaff(event) {
     await loadDirectorStats();
 
   } catch (error) {
-    result.textContent = 'ÉCHEC : ' +
-      (error.message || 'Erreur lors de la création du compte.');
-
+    result.textContent = 'Échec : ' + error.message;
     result.style.color = '#b52d2d';
-    console.error('Erreur création personnel :', error);
 
   } finally {
     button.disabled = false;
-    button.textContent = 'Créer le compte';
   }
 }
 
@@ -450,27 +458,22 @@ async function loadStaff() {
   const staffList = document.getElementById('staffList');
   if (!staffList) return;
 
-  staffList.textContent = 'Chargement...';
-
   const { data, error } = await supabase
     .from('profiles')
     .select('full_name, phone, role, status, created_at')
     .in('role', ['admin', 'dg', 'dga', 'daf', 'secretariat'])
     .order('created_at', { ascending: true });
 
-  if (error) {
-    staffList.textContent = 'Erreur de chargement : ' + error.message;
-    throw error;
-  }
+  if (error) throw error;
+
+  staffList.innerHTML = '';
 
   if (!data || data.length === 0) {
     staffList.textContent = 'Aucun membre du personnel enregistré.';
     return;
   }
 
-  staffList.innerHTML = '';
-
-  data.forEach((person) => {
+  data.forEach(person => {
     const card = document.createElement('article');
     card.className = 'learner-card';
 
@@ -478,12 +481,11 @@ async function loadStaff() {
     name.textContent = person.full_name || 'Nom non renseigné';
 
     const role = document.createElement('p');
-    role.textContent =
-      'Fonction : ' + (roleNames[roles[person.role]] || person.role);
+    role.textContent = 'Fonction : ' +
+      (roleNames[roles[person.role]] || person.role);
 
     const phone = document.createElement('p');
-    phone.textContent =
-      'Téléphone : ' + (person.phone || 'Non renseigné');
+    phone.textContent = 'Téléphone : ' + (person.phone || 'Non renseigné');
 
     const status = document.createElement('p');
     status.textContent = 'Statut : ' + person.status;
@@ -506,10 +508,7 @@ async function loadLearners() {
     .eq('status', 'pending')
     .order('created_at', { ascending: false });
 
-  if (error) {
-    learners.textContent = 'Erreur : ' + error.message;
-    throw error;
-  }
+  if (error) throw error;
 
   if (!data || data.length === 0) {
     learners.innerHTML = '<p>Aucune demande en attente.</p>';
@@ -518,7 +517,7 @@ async function loadLearners() {
 
   learners.innerHTML = '';
 
-  data.forEach((learner) => {
+  data.forEach(learner => {
     const card = document.createElement('article');
     card.className = 'learner-card';
 
@@ -526,12 +525,10 @@ async function loadLearners() {
     name.textContent = learner.full_name || 'Nom non renseigné';
 
     const phone = document.createElement('p');
-    phone.textContent =
-      'Téléphone : ' + (learner.phone || 'Non renseigné');
+    phone.textContent = 'Téléphone : ' + (learner.phone || 'Non renseigné');
 
     const date = document.createElement('p');
-    date.textContent =
-      'Inscription : ' +
+    date.textContent = 'Inscription : ' +
       new Date(learner.created_at).toLocaleDateString('fr-FR');
 
     const actions = document.createElement('div');
@@ -540,16 +537,16 @@ async function loadLearners() {
     const approve = document.createElement('button');
     approve.className = 'approve';
     approve.textContent = 'Approuver';
-    approve.addEventListener('click', () => {
-      updateLearner(learner.id, 'active');
-    });
+    approve.addEventListener('click', () =>
+      updateLearner(learner.id, 'active')
+    );
 
     const reject = document.createElement('button');
     reject.className = 'reject';
     reject.textContent = 'Refuser';
-    reject.addEventListener('click', () => {
-      updateLearner(learner.id, 'rejected');
-    });
+    reject.addEventListener('click', () =>
+      updateLearner(learner.id, 'rejected')
+    );
 
     actions.append(approve, reject);
     card.append(name, phone, date, actions);
@@ -581,7 +578,219 @@ async function updateLearner(id, status) {
   await loadDirectorStats();
 }
 
-loginForm.addEventListener('submit', async (event) => {
+// TABLEAU FINANCIER DAF
+
+async function loadFinanceDashboard() {
+  const stats = document.getElementById('financeStats');
+  const list = document.getElementById('transactionList');
+
+  if (!stats || !list) return;
+
+  stats.textContent = 'Chargement des données...';
+  list.textContent = 'Chargement de l’historique...';
+
+  try {
+    const year = new Date().getFullYear();
+
+    const { data: transactions, error } = await supabase
+      .from('financial_transactions')
+      .select('*')
+      .gte('transaction_date', `${year}-01-01`)
+      .lte('transaction_date', `${year}-12-31`)
+      .order('transaction_date', { ascending: false });
+
+    if (error) throw error;
+
+    const { data: budgets, error: budgetError } = await supabase
+      .from('financial_budgets')
+      .select('*')
+      .eq('budget_year', year)
+      .maybeSingle();
+
+    if (budgetError) throw budgetError;
+
+    const recettes = (transactions || [])
+      .filter(item => item.transaction_type === 'recette')
+      .reduce((total, item) => total + Number(item.amount), 0);
+
+    const depenses = (transactions || [])
+      .filter(item => item.transaction_type === 'depense')
+      .reduce((total, item) => total + Number(item.amount), 0);
+
+    const budget = Number(budgets?.amount || 0);
+    const solde = recettes - depenses;
+
+    stats.innerHTML = `
+      <div class="stat-card">
+        <span>Recettes de ${year}</span>
+        <strong>${money(recettes)}</strong>
+      </div>
+
+      <div class="stat-card">
+        <span>Dépenses de ${year}</span>
+        <strong>${money(depenses)}</strong>
+      </div>
+
+      <div class="stat-card">
+        <span>Solde des opérations</span>
+        <strong>${money(solde)}</strong>
+      </div>
+
+      <div class="stat-card">
+        <span>Budget annuel</span>
+        <strong>${money(budget)}</strong>
+      </div>
+
+      <div class="stat-card">
+        <span>Budget restant après dépenses</span>
+        <strong>${money(budget - depenses)}</strong>
+      </div>
+    `;
+
+    document.getElementById('budgetAmount').value =
+      budgets?.amount || '';
+
+    document.getElementById('budgetNotes').value =
+      budgets?.notes || '';
+
+    displayTransactions(transactions || []);
+
+    message.textContent = 'Données financières actualisées.';
+    message.style.color = '#087844';
+
+  } catch (error) {
+    stats.textContent = 'Erreur de chargement : ' + error.message;
+    list.textContent = 'Impossible de charger les opérations.';
+    message.textContent = 'Erreur financière : ' + error.message;
+    message.style.color = '#b52d2d';
+    console.error(error);
+  }
+}
+
+function displayTransactions(transactions) {
+  const list = document.getElementById('transactionList');
+  list.innerHTML = '';
+
+  if (transactions.length === 0) {
+    list.textContent = 'Aucune opération enregistrée cette année.';
+    return;
+  }
+
+  transactions.forEach(item => {
+    const card = document.createElement('article');
+    card.className = 'learner-card';
+
+    const title = document.createElement('h3');
+    title.textContent =
+      item.transaction_type === 'recette' ? 'RECETTE' : 'DÉPENSE';
+
+    const amount = document.createElement('p');
+    amount.textContent = 'Montant : ' + money(item.amount);
+
+    const category = document.createElement('p');
+    category.textContent = 'Catégorie : ' + item.category;
+
+    const description = document.createElement('p');
+    description.textContent = 'Description : ' + item.description;
+
+    const date = document.createElement('p');
+    date.textContent = 'Date : ' +
+      new Date(item.transaction_date + 'T00:00:00')
+        .toLocaleDateString('fr-FR');
+
+    card.append(title, amount, category, description, date);
+    list.appendChild(card);
+  });
+}
+
+async function saveBudget(event) {
+  event.preventDefault();
+
+  const button = document.getElementById('saveBudgetBtn');
+  const result = document.getElementById('budgetMessage');
+
+  button.disabled = true;
+  result.textContent = 'Enregistrement en cours...';
+
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+
+    const budget = {
+      budget_year: Number(document.getElementById('budgetYear').value),
+      amount: Number(document.getElementById('budgetAmount').value),
+      notes: document.getElementById('budgetNotes').value.trim(),
+      created_by: user.id,
+      updated_at: new Date().toISOString()
+    };
+
+    const { error } = await supabase
+      .from('financial_budgets')
+      .upsert(budget, { onConflict: 'budget_year' });
+
+    if (error) throw error;
+
+    result.textContent = 'Budget enregistré avec succès.';
+    result.style.color = '#087844';
+
+    await loadFinanceDashboard();
+
+  } catch (error) {
+    result.textContent = 'Erreur : ' + error.message;
+    result.style.color = '#b52d2d';
+
+  } finally {
+    button.disabled = false;
+  }
+}
+
+async function saveTransaction(event) {
+  event.preventDefault();
+
+  const button = document.getElementById('saveTransactionBtn');
+  const result = document.getElementById('transactionMessage');
+
+  button.disabled = true;
+  result.textContent = 'Enregistrement en cours...';
+
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+
+    const transaction = {
+      transaction_type: document.getElementById('transactionType').value,
+      amount: Number(document.getElementById('transactionAmount').value),
+      category: document.getElementById('transactionCategory').value.trim(),
+      description: document.getElementById('transactionDescription').value.trim(),
+      transaction_date: document.getElementById('transactionDate').value,
+      created_by: user.id
+    };
+
+    const { error } = await supabase
+      .from('financial_transactions')
+      .insert(transaction);
+
+    if (error) throw error;
+
+    result.textContent = 'Opération enregistrée avec succès.';
+    result.style.color = '#087844';
+
+    document.getElementById('transactionForm').reset();
+    document.getElementById('transactionDate').value =
+      new Date().toISOString().slice(0, 10);
+
+    await loadFinanceDashboard();
+
+  } catch (error) {
+    result.textContent = 'Erreur : ' + error.message;
+    result.style.color = '#b52d2d';
+
+  } finally {
+    button.disabled = false;
+  }
+}
+
+// CONNEXION
+
+loginForm.addEventListener('submit', async event => {
   event.preventDefault();
 
   loginMessage.textContent = 'Connexion en cours...';
@@ -616,6 +825,8 @@ loginForm.addEventListener('submit', async (event) => {
     loginBtn.disabled = false;
   }
 });
+
+// DÉCONNEXION
 
 logoutBtn.addEventListener('click', async () => {
   logoutBtn.disabled = true;
