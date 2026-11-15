@@ -27,6 +27,9 @@ const roleNames = {
   secretariat: 'Secrétariat général'
 };
 
+let currentRole = null;
+let currentContent = null;
+
 async function verifyUser() {
   const {
     data: { user },
@@ -65,6 +68,110 @@ function hideAllSpaces() {
   document.getElementById('secretariatDashboard').hidden = true;
 }
 
+function dashboardTemplate(isDga = false) {
+  return `
+    <section class="dg-header">
+      <div>
+        <p class="dg-eyebrow">
+          ${isDga ? 'DIRECTION GÉNÉRALE ADJOINTE' : 'DIRECTION GÉNÉRALE'}
+        </p>
+
+        <h2>
+          ${isDga ? 'Tableau de bord du DGA' : 'Tableau de bord du DG'}
+        </h2>
+
+        <p>
+          Pilotage et suivi du Centre pédagogique régional de l'ICESCO au Tchad.
+        </p>
+      </div>
+
+      <button type="button" id="refreshDirector">
+        Actualiser les données
+      </button>
+    </section>
+
+    ${isDga ? `
+      <section class="dg-section">
+        <h3>Coordination générale</h3>
+        <p>
+          Coordination des services, suivi des activités pédagogiques,
+          accompagnement des responsables et suivi de l'exécution des décisions.
+        </p>
+      </section>
+    ` : ''}
+
+    <section class="dg-section">
+      <h3>Vue générale du CPRIT</h3>
+      <div id="directorStats" class="director-stats">
+        <p>Chargement des indicateurs...</p>
+      </div>
+    </section>
+
+    <section class="dg-section">
+      <h3>Gestion du personnel de direction</h3>
+      <p>
+        Créer les comptes des responsables et suivre le personnel enregistré.
+      </p>
+
+      <form id="staffForm">
+        <input
+          id="staffName"
+          type="text"
+          placeholder="Nom complet"
+          required
+        >
+
+        <input
+          id="staffEmail"
+          type="email"
+          placeholder="Adresse e-mail professionnelle"
+          required
+        >
+
+        <input
+          id="staffPhone"
+          type="tel"
+          placeholder="Téléphone"
+        >
+
+        <input
+          id="staffPassword"
+          type="password"
+          placeholder="Mot de passe provisoire (8 caractères minimum)"
+          minlength="8"
+          required
+        >
+
+        <select id="staffRole" required>
+          <option value="">Choisir une fonction</option>
+          <option value="dga">Directeur général adjoint</option>
+          <option value="daf">Directeur administratif et financier</option>
+          <option value="secretariat">Secrétariat général</option>
+        </select>
+
+        <button id="createStaffBtn" type="submit">
+          Créer le compte
+        </button>
+      </form>
+
+      <p id="staffMessage" role="status"></p>
+    </section>
+
+    <section class="dg-section">
+      <h3>Personnel de direction</h3>
+      <div id="staffList">Chargement du personnel...</div>
+    </section>
+
+    <section class="dg-section">
+      <h3>Demandes d'inscription</h3>
+      <p>
+        Consulter les demandes en attente et prendre une décision.
+      </p>
+      <div id="learners">Chargement des demandes...</div>
+    </section>
+  `;
+}
+
 async function showDashboard() {
   const access = await verifyUser();
 
@@ -72,6 +179,8 @@ async function showDashboard() {
     loginSection.hidden = false;
     dashboard.hidden = true;
     loginMessage.textContent = '';
+    currentRole = null;
+    currentContent = null;
     return;
   }
 
@@ -79,6 +188,8 @@ async function showDashboard() {
   dashboard.hidden = false;
 
   hideAllSpaces();
+
+  currentRole = access.role;
 
   document.getElementById('welcomeTitle').textContent =
     'Bienvenue dans votre espace';
@@ -91,99 +202,27 @@ async function showDashboard() {
 
   message.textContent = '';
 
-  if (access.role === 'dg') {
-    document.getElementById('directorDashboard').hidden = false;
+  if (access.role === 'dg' || access.role === 'dga') {
+    const isDga = access.role === 'dga';
 
-    const directorContent =
-      document.getElementById('directorContent');
+    const dashboardId = isDga
+      ? 'deputyDashboard'
+      : 'directorDashboard';
 
-    directorContent.innerHTML = `
-      <section class="dg-header">
-        <div>
-          <p class="dg-eyebrow">DIRECTION GÉNÉRALE</p>
-          <h2>Tableau de bord du DG</h2>
-          <p>Pilotage général du Centre pédagogique régional de l'ICESCO au Tchad.</p>
-        </div>
+    const contentId = isDga
+      ? 'deputyContent'
+      : 'directorContent';
 
-        <button type="button" id="refreshDirector">
-          Actualiser les données
-        </button>
-      </section>
+    document.getElementById(dashboardId).hidden = false;
 
-      <section class="dg-section">
-        <h3>Vue générale du CPRIT</h3>
-        <div id="directorStats" class="director-stats">
-          <p>Chargement des indicateurs...</p>
-        </div>
-      </section>
+    currentContent = document.getElementById(contentId);
+    currentContent.innerHTML = dashboardTemplate(isDga);
 
-      <section class="dg-section">
-        <h3>Gestion du personnel de direction</h3>
-        <p>Créer les comptes des responsables et suivre le personnel enregistré.</p>
-
-        <form id="staffForm">
-          <input id="staffName" type="text"
-            placeholder="Nom complet" required>
-
-          <input id="staffEmail" type="email"
-            placeholder="Adresse e-mail professionnelle" required>
-
-          <input id="staffPhone" type="tel"
-            placeholder="Téléphone">
-
-          <input id="staffPassword" type="password"
-            placeholder="Mot de passe provisoire (8 caractères minimum)"
-            minlength="8" required>
-
-          <select id="staffRole" required>
-            <option value="">Choisir une fonction</option>
-            <option value="dga">Directeur général adjoint</option>
-            <option value="daf">Directeur administratif et financier</option>
-            <option value="secretariat">Secrétariat général</option>
-          </select>
-
-          <button id="createStaffBtn" type="submit">
-            Créer le compte
-          </button>
-        </form>
-
-        <p id="staffMessage" role="status"></p>
-      </section>
-
-      <section class="dg-section">
-        <h3>Personnel de direction</h3>
-        <div id="staffList">Chargement du personnel...</div>
-      </section>
-
-      <section class="dg-section">
-        <h3>Demandes d'inscription</h3>
-        <p>Consulter les demandes en attente et prendre une décision.</p>
-        <div id="learners">Chargement des demandes...</div>
-      </section>
-    `;
-
-    directorContent.addEventListener('click', function (event) {
-      const button = event.target.closest('#refreshDirector');
-
-      if (!button) return;
-
-      event.preventDefault();
-      refreshDirectorDashboard();
-    });
-
+    currentContent.addEventListener('click', handleDashboardClick);
     document.getElementById('staffForm')
       .addEventListener('submit', createStaff);
 
     await refreshDirectorDashboard();
-  }
-
-  if (access.role === 'dga') {
-    document.getElementById('deputyDashboard').hidden = false;
-
-    document.getElementById('deputyContent').innerHTML = `
-      <h3>Coordination générale</h3>
-      <p>Suivi des services et des activités pédagogiques.</p>
-    `;
   }
 
   if (access.role === 'daf') {
@@ -191,7 +230,9 @@ async function showDashboard() {
 
     document.getElementById('financeContent').innerHTML = `
       <h3>Gestion administrative et financière</h3>
-      <p>Suivi des budgets, dépenses, recettes et dossiers administratifs.</p>
+      <p>
+        Suivi des budgets, dépenses, recettes et dossiers administratifs.
+      </p>
     `;
   }
 
@@ -201,11 +242,20 @@ async function showDashboard() {
     document.getElementById('secretariatContent').innerHTML = `
       <h3>Gestion du secrétariat général</h3>
       <p>Suivi des dossiers et des demandes d'inscription.</p>
-      <div id="learners"></div>
+      <div id="learners">Chargement des demandes...</div>
     `;
 
     await loadLearners();
   }
+}
+
+function handleDashboardClick(event) {
+  const button = event.target.closest('#refreshDirector');
+
+  if (!button) return;
+
+  event.preventDefault();
+  refreshDirectorDashboard();
 }
 
 async function refreshDirectorDashboard() {
@@ -233,7 +283,7 @@ async function refreshDirectorDashboard() {
       'Erreur d’actualisation : ' + error.message;
     message.style.color = '#b52d2d';
 
-    console.error('Erreur actualisation DG :', error);
+    console.error('Erreur actualisation :', error);
 
   } finally {
     if (button) {
@@ -242,42 +292,6 @@ async function refreshDirectorDashboard() {
     }
   }
 }
-
-loginForm.addEventListener('submit', async (event) => {
-  event.preventDefault();
-
-  loginMessage.textContent = 'Connexion en cours...';
-  loginBtn.disabled = true;
-
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
-
-  try {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if (error) {
-      loginMessage.textContent =
-        'Identifiants incorrects ou accès refusé.';
-      return;
-    }
-
-    await showDashboard();
-
-    if (!dashboard.hidden) {
-      loginMessage.textContent = '';
-    }
-
-  } catch (error) {
-    loginMessage.textContent = 'Erreur de connexion.';
-    console.error(error);
-
-  } finally {
-    loginBtn.disabled = false;
-  }
-});
 
 async function loadDirectorStats() {
   const stats = document.getElementById('directorStats');
@@ -566,6 +580,42 @@ async function updateLearner(id, status) {
   await loadLearners();
   await loadDirectorStats();
 }
+
+loginForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  loginMessage.textContent = 'Connexion en cours...';
+  loginBtn.disabled = true;
+
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+
+  try {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) {
+      loginMessage.textContent =
+        'Identifiants incorrects ou accès refusé.';
+      return;
+    }
+
+    await showDashboard();
+
+    if (!dashboard.hidden) {
+      loginMessage.textContent = '';
+    }
+
+  } catch (error) {
+    loginMessage.textContent = 'Erreur de connexion.';
+    console.error(error);
+
+  } finally {
+    loginBtn.disabled = false;
+  }
+});
 
 logoutBtn.addEventListener('click', async () => {
   logoutBtn.disabled = true;
