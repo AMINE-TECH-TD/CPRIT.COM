@@ -1,9 +1,4 @@
-
 import { supabase } from './supabase-config.js';
-
-// ==========================================
-// ÉLÉMENTS
-// ==========================================
 
 const loginSection = document.getElementById('loginSection');
 const dashboard = document.getElementById('dashboard');
@@ -15,10 +10,6 @@ const logoutBtn = document.getElementById('logoutBtn');
 const loginMessage = document.createElement('p');
 loginMessage.id = 'loginMessage';
 loginForm.insertAdjacentElement('afterend', loginMessage);
-
-// ==========================================
-// RÔLES
-// ==========================================
 
 const roles = {
   admin: 'dg',
@@ -34,10 +25,6 @@ const roleNames = {
   daf: 'Directeur administratif et financier',
   secretariat: 'Secrétariat général'
 };
-
-// ==========================================
-// VÉRIFICATION UTILISATEUR
-// ==========================================
 
 async function verifyUser() {
   const {
@@ -70,20 +57,12 @@ async function verifyUser() {
   };
 }
 
-// ==========================================
-// MASQUER LES ESPACES
-// ==========================================
-
 function hideAllSpaces() {
   document.getElementById('directorDashboard').hidden = true;
   document.getElementById('deputyDashboard').hidden = true;
   document.getElementById('financeDashboard').hidden = true;
   document.getElementById('secretariatDashboard').hidden = true;
 }
-
-// ==========================================
-// TABLEAU DE BORD
-// ==========================================
 
 async function showDashboard() {
   const access = await verifyUser();
@@ -115,66 +94,83 @@ async function showDashboard() {
     document.getElementById('directorDashboard').hidden = false;
 
     document.getElementById('directorContent').innerHTML = `
-      <h4>Vue générale du CPRIT</h4>
-
-      <div id="directorStats" class="director-stats">
-        <p>Chargement des indicateurs...</p>
-      </div>
-
-      <hr>
-
-      <h4>Gestion du personnel de direction</h4>
-
-      <form id="staffForm">
-        <input id="staffName" type="text"
-          placeholder="Nom complet" required>
-
-        <input id="staffEmail" type="email"
-          placeholder="Adresse e-mail professionnelle" required>
-
-        <input id="staffPhone" type="tel"
-          placeholder="Téléphone">
-
-        <input id="staffPassword" type="password"
-          placeholder="Mot de passe provisoire (8 caractères minimum)"
-          minlength="8" required>
-
-        <select id="staffRole" required>
-          <option value="">Choisir une fonction</option>
-          <option value="dga">Directeur général adjoint</option>
-          <option value="daf">Directeur administratif et financier</option>
-          <option value="secretariat">Secrétariat général</option>
-        </select>
-
-        <button id="createStaffBtn" type="submit">
-          Créer le compte
+      <section class="dg-header">
+        <div>
+          <p class="dg-eyebrow">DIRECTION GÉNÉRALE</p>
+          <h2>Tableau de bord du DG</h2>
+          <p>Pilotage général du Centre pédagogique régional de l'ICESCO au Tchad.</p>
+        </div>
+        <button type="button" id="refreshDirector">
+          Actualiser les données
         </button>
-      </form>
+      </section>
 
-      <p id="staffMessage"></p>
+      <section class="dg-section">
+        <h3>Vue générale du CPRIT</h3>
+        <div id="directorStats" class="director-stats">
+          <p>Chargement des indicateurs...</p>
+        </div>
+      </section>
 
-      <h4>Personnel enregistré</h4>
-      <div id="staffList">Chargement du personnel...</div>
+      <section class="dg-section">
+        <h3>Gestion du personnel de direction</h3>
+        <p>Créer les comptes des responsables et suivre le personnel enregistré.</p>
 
-      <hr>
+        <form id="staffForm">
+          <input id="staffName" type="text"
+            placeholder="Nom complet" required>
 
-      <h4>Demandes d'inscription</h4>
-      <div id="learners"></div>
+          <input id="staffEmail" type="email"
+            placeholder="Adresse e-mail professionnelle" required>
+
+          <input id="staffPhone" type="tel"
+            placeholder="Téléphone">
+
+          <input id="staffPassword" type="password"
+            placeholder="Mot de passe provisoire (8 caractères minimum)"
+            minlength="8" required>
+
+          <select id="staffRole" required>
+            <option value="">Choisir une fonction</option>
+            <option value="dga">Directeur général adjoint</option>
+            <option value="daf">Directeur administratif et financier</option>
+            <option value="secretariat">Secrétariat général</option>
+          </select>
+
+          <button id="createStaffBtn" type="submit">
+            Créer le compte
+          </button>
+        </form>
+
+        <p id="staffMessage" role="status"></p>
+      </section>
+
+      <section class="dg-section">
+        <h3>Personnel de direction</h3>
+        <div id="staffList">Chargement du personnel...</div>
+      </section>
+
+      <section class="dg-section">
+        <h3>Demandes d'inscription</h3>
+        <p>Consulter les demandes en attente et prendre une décision.</p>
+        <div id="learners">Chargement des demandes...</div>
+      </section>
     `;
 
     document.getElementById('staffForm')
       .addEventListener('submit', createStaff);
 
-    await loadDirectorStats();
-    await loadStaff();
-    await loadLearners();
+    document.getElementById('refreshDirector')
+      .addEventListener('click', refreshDirectorDashboard);
+
+    await refreshDirectorDashboard();
   }
 
   if (access.role === 'dga') {
     document.getElementById('deputyDashboard').hidden = false;
 
     document.getElementById('deputyContent').innerHTML = `
-      <h4>Coordination générale</h4>
+      <h3>Coordination générale</h3>
       <p>Suivi des services et des activités pédagogiques.</p>
     `;
   }
@@ -183,7 +179,7 @@ async function showDashboard() {
     document.getElementById('financeDashboard').hidden = false;
 
     document.getElementById('financeContent').innerHTML = `
-      <h4>Gestion administrative et financière</h4>
+      <h3>Gestion administrative et financière</h3>
       <p>Suivi des budgets, dépenses, recettes et dossiers administratifs.</p>
     `;
   }
@@ -192,7 +188,7 @@ async function showDashboard() {
     document.getElementById('secretariatDashboard').hidden = false;
 
     document.getElementById('secretariatContent').innerHTML = `
-      <h4>Gestion du secrétariat</h4>
+      <h3>Gestion du secrétariat général</h3>
       <p>Suivi des dossiers et des demandes d'inscription.</p>
       <div id="learners"></div>
     `;
@@ -201,9 +197,25 @@ async function showDashboard() {
   }
 }
 
-// ==========================================
-// CONNEXION
-// ==========================================
+async function refreshDirectorDashboard() {
+  const button = document.getElementById('refreshDirector');
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = 'Actualisation...';
+  }
+
+  await Promise.all([
+    loadDirectorStats(),
+    loadStaff(),
+    loadLearners()
+  ]);
+
+  if (button) {
+    button.disabled = false;
+    button.textContent = 'Actualiser les données';
+  }
+}
 
 loginForm.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -238,10 +250,6 @@ loginForm.addEventListener('submit', async (event) => {
     loginBtn.disabled = false;
   }
 });
-
-// ==========================================
-// INDICATEURS DG
-// ==========================================
 
 async function loadDirectorStats() {
   const stats = document.getElementById('directorStats');
@@ -288,39 +296,41 @@ async function loadDirectorStats() {
         <span>Total des apprenants</span>
         <strong>${totalLearners}</strong>
       </div>
+
       <div class="stat-card">
         <span>Apprenants actifs</span>
         <strong>${activeLearners}</strong>
       </div>
+
       <div class="stat-card">
         <span>Inscriptions en attente</span>
         <strong>${pendingLearners}</strong>
       </div>
+
       <div class="stat-card">
         <span>Direction générale</span>
         <strong>${admin + dg}</strong>
       </div>
+
       <div class="stat-card">
         <span>DGA</span>
         <strong>${dga}</strong>
       </div>
+
       <div class="stat-card">
         <span>DAF</span>
         <strong>${daf}</strong>
       </div>
+
       <div class="stat-card">
-        <span>Secrétariat</span>
+        <span>Secrétariat général</span>
         <strong>${secretariat}</strong>
       </div>
     `;
   } catch (error) {
-    stats.textContent = 'Erreur : ' + error.message;
+    stats.textContent = 'Erreur de chargement : ' + error.message;
   }
 }
-
-// ==========================================
-// CRÉATION DU PERSONNEL
-// ==========================================
 
 async function createStaff(event) {
   event.preventDefault();
@@ -370,8 +380,7 @@ async function createStaff(event) {
       throw new Error(data?.error || 'Création impossible.');
     }
 
-    result.textContent = data.message ||
-      'Compte créé avec succès.';
+    result.textContent = data.message || 'Compte créé avec succès.';
     result.style.color = '#087844';
 
     form.reset();
@@ -384,16 +393,12 @@ async function createStaff(event) {
       (error.message || 'Erreur lors de la création du compte.');
 
     result.style.color = '#b52d2d';
-    console.error('Détail erreur création personnel :', error);
+    console.error('Erreur création personnel :', error);
   } finally {
     button.disabled = false;
     button.textContent = 'Créer le compte';
   }
 }
-
-// ==========================================
-// LISTE DU PERSONNEL
-// ==========================================
 
 async function loadStaff() {
   const staffList = document.getElementById('staffList');
@@ -408,8 +413,7 @@ async function loadStaff() {
     .order('created_at', { ascending: true });
 
   if (error) {
-    staffList.textContent =
-      'Erreur de chargement : ' + error.message;
+    staffList.textContent = 'Erreur de chargement : ' + error.message;
     return;
   }
 
@@ -442,10 +446,6 @@ async function loadStaff() {
     staffList.appendChild(card);
   });
 }
-
-// ==========================================
-// DEMANDES D'INSCRIPTION
-// ==========================================
 
 async function loadLearners() {
   const learners = document.getElementById('learners');
@@ -511,10 +511,6 @@ async function loadLearners() {
   });
 }
 
-// ==========================================
-// APPROBATION / REFUS
-// ==========================================
-
 async function updateLearner(id, status) {
   const action = status === 'active' ? 'approuver' : 'refuser';
 
@@ -536,15 +532,8 @@ async function updateLearner(id, status) {
   message.textContent = 'Décision enregistrée.';
 
   await loadLearners();
-
-  if (document.getElementById('directorStats')) {
-    await loadDirectorStats();
-  }
+  await loadDirectorStats();
 }
-
-// ==========================================
-// DÉCONNEXION
-// ==========================================
 
 logoutBtn.addEventListener('click', async () => {
   logoutBtn.disabled = true;
@@ -561,9 +550,5 @@ logoutBtn.addEventListener('click', async () => {
     logoutBtn.disabled = false;
   }
 });
-
-// ==========================================
-// INITIALISATION
-// ==========================================
 
 showDashboard();
