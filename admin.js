@@ -94,13 +94,17 @@ async function showDashboard() {
   if (access.role === 'dg') {
     document.getElementById('directorDashboard').hidden = false;
 
-    document.getElementById('directorContent').innerHTML = `
+    const directorContent =
+      document.getElementById('directorContent');
+
+    directorContent.innerHTML = `
       <section class="dg-header">
         <div>
           <p class="dg-eyebrow">DIRECTION GÉNÉRALE</p>
           <h2>Tableau de bord du DG</h2>
           <p>Pilotage général du Centre pédagogique régional de l'ICESCO au Tchad.</p>
         </div>
+
         <button type="button" id="refreshDirector">
           Actualiser les données
         </button>
@@ -158,11 +162,17 @@ async function showDashboard() {
       </section>
     `;
 
+    directorContent.addEventListener('click', function (event) {
+      const button = event.target.closest('#refreshDirector');
+
+      if (!button) return;
+
+      event.preventDefault();
+      refreshDirectorDashboard();
+    });
+
     document.getElementById('staffForm')
       .addEventListener('submit', createStaff);
-
-    document.getElementById('refreshDirector')
-      .addEventListener('click', refreshDirectorDashboard);
 
     await refreshDirectorDashboard();
   }
@@ -206,38 +216,25 @@ async function refreshDirectorDashboard() {
     button.textContent = 'Actualisation en cours...';
   }
 
-  if (message) {
-    message.textContent = 'Actualisation des données...';
-    message.style.color = '#0755a0';
-  }
+  message.textContent = 'Actualisation des données...';
+  message.style.color = '#0755a0';
 
   try {
-    const results = await Promise.allSettled([
-      loadDirectorStats(),
-      loadStaff(),
-      loadLearners()
-    ]);
+    await loadDirectorStats();
+    await loadStaff();
+    await loadLearners();
 
-    const failed = results.filter(
-      result => result.status === 'rejected'
-    );
+    message.textContent =
+      'Actualisation terminée avec succès.';
+    message.style.color = '#087844';
 
-    if (failed.length > 0) {
-      throw failed[0].reason;
-    }
-
-    if (message) {
-      message.textContent = 'Les données ont été actualisées.';
-      message.style.color = '#087844';
-    }
   } catch (error) {
-    if (message) {
-      message.textContent =
-        'Erreur d’actualisation : ' + error.message;
-      message.style.color = '#b52d2d';
-    }
+    message.textContent =
+      'Erreur d’actualisation : ' + error.message;
+    message.style.color = '#b52d2d';
 
     console.error('Erreur actualisation DG :', error);
+
   } finally {
     if (button) {
       button.disabled = false;
@@ -272,9 +269,11 @@ loginForm.addEventListener('submit', async (event) => {
     if (!dashboard.hidden) {
       loginMessage.textContent = '';
     }
+
   } catch (error) {
     loginMessage.textContent = 'Erreur de connexion.';
     console.error(error);
+
   } finally {
     loginBtn.disabled = false;
   }
@@ -325,31 +324,38 @@ async function loadDirectorStats() {
         <span>Total des apprenants</span>
         <strong>${totalLearners}</strong>
       </div>
+
       <div class="stat-card">
         <span>Apprenants actifs</span>
         <strong>${activeLearners}</strong>
       </div>
+
       <div class="stat-card">
         <span>Inscriptions en attente</span>
         <strong>${pendingLearners}</strong>
       </div>
+
       <div class="stat-card">
         <span>Direction générale</span>
         <strong>${admin + dg}</strong>
       </div>
+
       <div class="stat-card">
         <span>DGA</span>
         <strong>${dga}</strong>
       </div>
+
       <div class="stat-card">
         <span>DAF</span>
         <strong>${daf}</strong>
       </div>
+
       <div class="stat-card">
         <span>Secrétariat général</span>
         <strong>${secretariat}</strong>
       </div>
     `;
+
   } catch (error) {
     stats.textContent = 'Erreur de chargement : ' + error.message;
     throw error;
@@ -392,6 +398,7 @@ async function createStaff(event) {
             : response;
 
           detail = body?.error || body?.message || JSON.stringify(body);
+
         } catch (_) {
           detail = error.message || detail;
         }
@@ -418,6 +425,7 @@ async function createStaff(event) {
 
     result.style.color = '#b52d2d';
     console.error('Erreur création personnel :', error);
+
   } finally {
     button.disabled = false;
     button.textContent = 'Créer le compte';
@@ -570,6 +578,7 @@ logoutBtn.addEventListener('click', async () => {
     loginMessage.textContent = '';
 
     await showDashboard();
+
   } finally {
     logoutBtn.disabled = false;
   }
