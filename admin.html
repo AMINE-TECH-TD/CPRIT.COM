@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#064B35">
   <title>Administration institutionnelle – CPRIT</title>
-  <link rel="stylesheet" href="admin.css?v=3">
+  <link rel="stylesheet" href="admin.css?v=4">
 </head>
 <body>
 
@@ -21,31 +21,48 @@
       <p>Accès réservé au personnel autorisé du CPRIT.</p>
 
       <form id="loginForm">
-        <input id="email" type="email"
-          placeholder="Adresse e-mail professionnelle" required>
+        <input
+          id="email"
+          type="email"
+          placeholder="Adresse e-mail professionnelle"
+          required
+        >
 
-        <input id="password" type="password"
-          placeholder="Mot de passe" required>
+        <input
+          id="password"
+          type="password"
+          placeholder="Mot de passe"
+          required
+        >
 
-        <button id="loginBtn" type="submit">Se connecter</button>
+        <button id="loginBtn" type="submit">
+          Se connecter
+        </button>
       </form>
     </section>
 
     <section id="dashboard" hidden>
+
       <div class="top">
         <div>
           <h2 id="welcomeTitle">Espace institutionnel</h2>
           <p id="userRole"></p>
           <p id="userName"></p>
         </div>
-        <button id="logoutBtn" type="button">Déconnexion</button>
+
+        <button id="logoutBtn" type="button">
+          Déconnexion
+        </button>
       </div>
 
-      <p id="message"></p>
+      <p id="message" role="status"></p>
 
       <section id="directorDashboard" hidden>
         <h3>Direction générale</h3>
-        <p>Pilotage général et contrôle de toutes les directions et activités du CPRIT.</p>
+        <p>
+          Pilotage général et contrôle de toutes les directions
+          et activités du CPRIT.
+        </p>
         <div id="directorContent"></div>
       </section>
 
@@ -55,19 +72,24 @@
 
       <section id="financeDashboard" hidden>
         <h3>Direction administrative et financière</h3>
-        <p>Suivi administratif, financier et budgétaire.</p>
+        <p>
+          Suivi administratif, financier et budgétaire.
+        </p>
         <div id="financeContent"></div>
       </section>
 
       <section id="secretariatDashboard" hidden>
-        <h3>Secrétariat</h3>
-        <p>Gestion du courrier, des dossiers et des documents administratifs.</p>
+        <h3>Secrétariat général</h3>
+        <p>
+          Gestion du courrier, des dossiers et des documents administratifs.
+        </p>
         <div id="secretariatContent"></div>
       </section>
 
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=3"></script>
+  <script type="module" src="admin.js?v=4"></script>
+
 </body>
 </html>
