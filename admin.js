@@ -84,11 +84,8 @@ function dashboardTemplate(isDga = false) {
         <div>
           <p class="dg-eyebrow">DIRECTION GÉNÉRALE ADJOINTE</p>
           <h2>Tableau de bord du DGA</h2>
-          <p>
-            Coordination et suivi des services et activités du CPRIT.
-          </p>
+          <p>Coordination et suivi des services et activités du CPRIT.</p>
         </div>
-
         <button type="button" id="refreshDirector">
           Actualiser les données
         </button>
@@ -98,13 +95,12 @@ function dashboardTemplate(isDga = false) {
         <h3>Coordination générale</h3>
         <p>
           Coordination des services, suivi des activités pédagogiques,
-          accompagnement des responsables et suivi de l'exécution des décisions.
+          accompagnement des responsables et suivi des décisions.
         </p>
       </section>
 
       <section class="dg-section">
         <h3>Enregistrer une activité</h3>
-
         <form id="activityForm">
           <label for="activityTitle">Titre de l'activité</label>
           <input id="activityTitle" type="text"
@@ -137,7 +133,6 @@ function dashboardTemplate(isDga = false) {
             Enregistrer l'activité
           </button>
         </form>
-
         <p id="activityMessage" role="status"></p>
       </section>
 
@@ -159,7 +154,6 @@ function dashboardTemplate(isDga = false) {
           Pilotage et suivi du Centre pédagogique régional de l'ICESCO au Tchad.
         </p>
       </div>
-
       <button type="button" id="refreshDirector">
         Actualiser les données
       </button>
@@ -169,6 +163,35 @@ function dashboardTemplate(isDga = false) {
       <h3>Vue générale du CPRIT</h3>
       <div id="directorStats" class="director-stats">
         Chargement des indicateurs...
+      </div>
+    </section>
+
+    <section class="dg-section">
+      <h3>Situation financière du CPRIT</h3>
+      <p>
+        Consultation des budgets et des opérations financières.
+        Les modifications restent réservées au DAF.
+      </p>
+
+      <button type="button" id="refreshDirectorFinance">
+        Actualiser la situation financière
+      </button>
+
+      <div id="directorFinanceMessage" role="status"></div>
+
+      <h4>Indicateurs financiers de l'année en cours</h4>
+      <div id="directorFinanceStats" class="director-stats">
+        Chargement des données financières...
+      </div>
+
+      <h4>Budgets annuels</h4>
+      <div id="directorBudgetList">
+        Chargement des budgets...
+      </div>
+
+      <h4>Historique de toutes les opérations</h4>
+      <div id="directorTransactionList">
+        Chargement des opérations...
       </div>
     </section>
 
@@ -201,7 +224,6 @@ function dashboardTemplate(isDga = false) {
           Créer le compte
         </button>
       </form>
-
       <p id="staffMessage" role="status"></p>
     </section>
 
@@ -228,7 +250,6 @@ function financeTemplate() {
         <h2>Tableau de bord du DAF</h2>
         <p>Gestion et suivi des finances du CPRIT.</p>
       </div>
-
       <button type="button" id="refreshFinance">
         Actualiser les données
       </button>
@@ -243,7 +264,6 @@ function financeTemplate() {
 
     <section class="dg-section">
       <h3>Budget annuel</h3>
-
       <form id="budgetForm">
         <label for="budgetYear">Année budgétaire</label>
         <input id="budgetYear" type="number"
@@ -261,13 +281,11 @@ function financeTemplate() {
           Enregistrer le budget
         </button>
       </form>
-
       <p id="budgetMessage" role="status"></p>
     </section>
 
     <section class="dg-section">
       <h3>Enregistrer une opération</h3>
-
       <form id="transactionForm">
         <label for="transactionType">Type d'opération</label>
         <select id="transactionType" required>
@@ -295,7 +313,6 @@ function financeTemplate() {
           Enregistrer l'opération
         </button>
       </form>
-
       <p id="transactionMessage" role="status"></p>
     </section>
 
@@ -334,8 +351,6 @@ async function showDashboard() {
 
   message.textContent = '';
 
-  // DG ET DGA
-
   if (access.role === 'dg' || access.role === 'dga') {
     const isDga = access.role === 'dga';
 
@@ -351,7 +366,6 @@ async function showDashboard() {
 
     currentContent = document.getElementById(contentId);
     currentContent.innerHTML = dashboardTemplate(isDga);
-
     currentContent.onclick = handleDashboardClick;
 
     if (isDga) {
@@ -359,7 +373,6 @@ async function showDashboard() {
         .addEventListener('submit', createCoordinationActivity);
 
       await loadCoordinationActivities();
-
     } else {
       document.getElementById('staffForm')
         .addEventListener('submit', createStaff);
@@ -367,8 +380,6 @@ async function showDashboard() {
       await refreshDirectorDashboard();
     }
   }
-
-  // DAF
 
   if (access.role === 'daf') {
     document.getElementById('financeDashboard').hidden = false;
@@ -393,8 +404,6 @@ async function showDashboard() {
 
     await loadFinanceDashboard();
   }
-
-  // SECRÉTARIAT
 
   if (access.role === 'secretariat') {
     document.getElementById('secretariatDashboard').hidden = false;
@@ -424,7 +433,14 @@ function handleDashboardClick(event) {
     } else {
       refreshDirectorDashboard();
     }
+    return;
+  }
 
+  const financeButton = event.target.closest('#refreshDirectorFinance');
+
+  if (financeButton) {
+    event.preventDefault();
+    loadDirectorFinance();
     return;
   }
 
@@ -458,15 +474,14 @@ async function refreshDirectorDashboard() {
     await loadDirectorStats();
     await loadStaff();
     await loadLearners();
+    await loadDirectorFinance();
 
     message.textContent = 'Actualisation terminée avec succès.';
     message.style.color = '#087844';
-
   } catch (error) {
     message.textContent = 'Erreur : ' + error.message;
     message.style.color = '#b52d2d';
     console.error(error);
-
   } finally {
     if (button) {
       button.disabled = false;
@@ -520,37 +535,219 @@ async function loadDirectorStats() {
       <span>Total des apprenants</span>
       <strong>${totalLearners}</strong>
     </div>
-
     <div class="stat-card">
       <span>Apprenants actifs</span>
       <strong>${activeLearners}</strong>
     </div>
-
     <div class="stat-card">
       <span>Inscriptions en attente</span>
       <strong>${pendingLearners}</strong>
     </div>
-
     <div class="stat-card">
       <span>Direction générale</span>
       <strong>${admin + dg}</strong>
     </div>
-
     <div class="stat-card">
       <span>DGA</span>
       <strong>${dga}</strong>
     </div>
-
     <div class="stat-card">
       <span>DAF</span>
       <strong>${daf}</strong>
     </div>
-
     <div class="stat-card">
       <span>Secrétariat général</span>
       <strong>${secretariat}</strong>
     </div>
   `;
+}
+
+// SITUATION FINANCIÈRE DG : CONSULTATION UNIQUEMENT
+
+async function loadDirectorFinance() {
+  const stats = document.getElementById('directorFinanceStats');
+  const budgetList = document.getElementById('directorBudgetList');
+  const transactionList = document.getElementById('directorTransactionList');
+  const result = document.getElementById('directorFinanceMessage');
+  const button = document.getElementById('refreshDirectorFinance');
+
+  if (!stats || !budgetList || !transactionList) return;
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = 'Chargement...';
+  }
+
+  stats.textContent = 'Chargement des données financières...';
+  budgetList.textContent = 'Chargement des budgets...';
+  transactionList.textContent = 'Chargement des opérations...';
+
+  try {
+    const [
+      { data: budgets, error: budgetError },
+      { data: transactions, error: transactionError }
+    ] = await Promise.all([
+      supabase
+        .from('financial_budgets')
+        .select('*')
+        .order('budget_year', { ascending: false }),
+
+      supabase
+        .from('financial_transactions')
+        .select('*')
+        .order('transaction_date', { ascending: false })
+    ]);
+
+    if (budgetError) throw budgetError;
+    if (transactionError) throw transactionError;
+
+    const currentYear = new Date().getFullYear();
+
+    const currentTransactions = (transactions || []).filter(item =>
+      String(item.transaction_date || '').startsWith(String(currentYear))
+    );
+
+    const recettes = currentTransactions
+      .filter(item => item.transaction_type === 'recette')
+      .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+
+    const depenses = currentTransactions
+      .filter(item => item.transaction_type === 'depense')
+      .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+
+    const currentBudget = (budgets || []).find(item =>
+      Number(item.budget_year) === currentYear
+    );
+
+    const budgetAmount = Number(currentBudget?.amount || 0);
+
+    stats.innerHTML = `
+      <div class="stat-card">
+        <span>Recettes ${currentYear}</span>
+        <strong>${money(recettes)}</strong>
+      </div>
+      <div class="stat-card">
+        <span>Dépenses ${currentYear}</span>
+        <strong>${money(depenses)}</strong>
+      </div>
+      <div class="stat-card">
+        <span>Solde des opérations</span>
+        <strong>${money(recettes - depenses)}</strong>
+      </div>
+      <div class="stat-card">
+        <span>Budget annuel ${currentYear}</span>
+        <strong>${money(budgetAmount)}</strong>
+      </div>
+      <div class="stat-card">
+        <span>Budget restant après dépenses</span>
+        <strong>${money(budgetAmount - depenses)}</strong>
+      </div>
+      <div class="stat-card">
+        <span>Nombre total d'opérations</span>
+        <strong>${(transactions || []).length}</strong>
+      </div>
+    `;
+
+    displayDirectorBudgets(budgets || []);
+    displayDirectorTransactions(transactions || []);
+
+    if (result) {
+      result.textContent = 'Situation financière actualisée.';
+      result.style.color = '#087844';
+    }
+  } catch (error) {
+    stats.textContent = 'Impossible de charger les indicateurs financiers.';
+    budgetList.textContent = 'Erreur : ' + error.message;
+    transactionList.textContent = 'Erreur : ' + error.message;
+
+    if (result) {
+      result.textContent =
+        'Accès financier non autorisé ou erreur : ' + error.message;
+      result.style.color = '#b52d2d';
+    }
+
+    console.error('Erreur finance DG :', error);
+  } finally {
+    if (button) {
+      button.disabled = false;
+      button.textContent = 'Actualiser la situation financière';
+    }
+  }
+}
+
+// BUDGETS VISIBLES PAR LE DG
+
+function displayDirectorBudgets(budgets) {
+  const list = document.getElementById('directorBudgetList');
+  if (!list) return;
+
+  list.innerHTML = '';
+
+  if (!budgets.length) {
+    list.textContent = 'Aucun budget enregistré.';
+    return;
+  }
+
+  budgets.forEach(budget => {
+    const card = document.createElement('article');
+    card.className = 'learner-card';
+
+    const title = document.createElement('h3');
+    title.textContent = 'Budget annuel ' + budget.budget_year;
+
+    const amount = document.createElement('p');
+    amount.textContent = 'Montant : ' + money(budget.amount);
+
+    const notes = document.createElement('p');
+    notes.textContent = 'Observations : ' + (budget.notes || 'Aucune');
+
+    card.append(title, amount, notes);
+    list.appendChild(card);
+  });
+}
+
+// OPÉRATIONS VISIBLES PAR LE DG
+
+function displayDirectorTransactions(transactions) {
+  const list = document.getElementById('directorTransactionList');
+  if (!list) return;
+
+  list.innerHTML = '';
+
+  if (!transactions.length) {
+    list.textContent = 'Aucune opération financière enregistrée.';
+    return;
+  }
+
+  transactions.forEach(item => {
+    const card = document.createElement('article');
+    card.className = 'learner-card';
+
+    const title = document.createElement('h3');
+    title.textContent =
+      item.transaction_type === 'recette' ? 'RECETTE' : 'DÉPENSE';
+
+    const amount = document.createElement('p');
+    amount.textContent = 'Montant : ' + money(item.amount);
+
+    const category = document.createElement('p');
+    category.textContent = 'Catégorie : ' + (item.category || 'Non précisée');
+
+    const description = document.createElement('p');
+    description.textContent =
+      'Description : ' + (item.description || 'Aucune');
+
+    const date = document.createElement('p');
+    date.textContent = 'Date : ' + (
+      item.transaction_date
+        ? new Date(item.transaction_date + 'T00:00:00')
+            .toLocaleDateString('fr-FR')
+        : 'Non précisée'
+    );
+
+    card.append(title, amount, category, description, date);
+    list.appendChild(card);
+  });
 }
 
 // CRÉATION DU PERSONNEL PAR LE DG
@@ -580,7 +777,6 @@ async function createStaff(event) {
     );
 
     if (error) throw error;
-
     if (!data || !data.success) {
       throw new Error(data?.error || 'Création impossible.');
     }
@@ -589,14 +785,11 @@ async function createStaff(event) {
     result.style.color = '#087844';
 
     form.reset();
-
     await loadStaff();
     await loadDirectorStats();
-
   } catch (error) {
     result.textContent = 'Échec : ' + error.message;
     result.style.color = '#b52d2d';
-
   } finally {
     button.disabled = false;
   }
@@ -725,7 +918,6 @@ async function updateLearner(id, status) {
   }
 
   message.textContent = 'Décision enregistrée.';
-
   await loadLearners();
   await loadDirectorStats();
 }
@@ -738,8 +930,6 @@ const activityStatuses = {
   completed: 'Terminée',
   cancelled: 'Annulée'
 };
-
-// ENREGISTRER UNE ACTIVITÉ
 
 async function createCoordinationActivity(event) {
   event.preventDefault();
@@ -780,24 +970,18 @@ async function createCoordinationActivity(event) {
     result.style.color = '#087844';
 
     document.getElementById('activityForm').reset();
-
     await loadCoordinationActivities();
-
   } catch (error) {
     result.textContent = 'Erreur : ' + error.message;
     result.style.color = '#b52d2d';
     console.error(error);
-
   } finally {
     button.disabled = false;
   }
 }
 
-// AFFICHER LES ACTIVITÉS
-
 async function loadCoordinationActivities() {
   const list = document.getElementById('coordinationActivityList');
-
   if (!list) return;
 
   list.textContent = 'Chargement des activités...';
@@ -864,26 +1048,17 @@ async function loadCoordinationActivities() {
       updateButton.textContent = 'Mettre à jour le statut';
 
       card.append(
-        title,
-        service,
-        type,
-        description,
-        dueDate,
-        statusLabel,
-        select,
-        updateButton
+        title, service, type, description, dueDate,
+        statusLabel, select, updateButton
       );
 
       list.appendChild(card);
     });
-
   } catch (error) {
     list.textContent = 'Erreur de chargement : ' + error.message;
     console.error(error);
   }
 }
-
-// MODIFIER LE STATUT D'UNE ACTIVITÉ
 
 async function updateCoordinationActivity(id, status) {
   const button = document.querySelector(
@@ -911,7 +1086,6 @@ async function updateCoordinationActivity(id, status) {
     }
 
     await loadCoordinationActivities();
-
   } catch (error) {
     const result = document.getElementById('activityMessage');
 
@@ -921,7 +1095,6 @@ async function updateCoordinationActivity(id, status) {
     }
 
     console.error(error);
-
   } finally {
     if (button) button.disabled = false;
   }
@@ -974,22 +1147,18 @@ async function loadFinanceDashboard() {
         <span>Recettes de ${year}</span>
         <strong>${money(recettes)}</strong>
       </div>
-
       <div class="stat-card">
         <span>Dépenses de ${year}</span>
         <strong>${money(depenses)}</strong>
       </div>
-
       <div class="stat-card">
         <span>Solde des opérations</span>
         <strong>${money(solde)}</strong>
       </div>
-
       <div class="stat-card">
         <span>Budget annuel</span>
         <strong>${money(budget)}</strong>
       </div>
-
       <div class="stat-card">
         <span>Budget restant après dépenses</span>
         <strong>${money(budget - depenses)}</strong>
@@ -1006,7 +1175,6 @@ async function loadFinanceDashboard() {
 
     message.textContent = 'Données financières actualisées.';
     message.style.color = '#087844';
-
   } catch (error) {
     stats.textContent = 'Erreur de chargement : ' + error.message;
     list.textContent = 'Impossible de charger les opérations.';
@@ -1015,8 +1183,6 @@ async function loadFinanceDashboard() {
     console.error(error);
   }
 }
-
-// HISTORIQUE FINANCIER
 
 function displayTransactions(transactions) {
   const list = document.getElementById('transactionList');
@@ -1053,8 +1219,6 @@ function displayTransactions(transactions) {
     list.appendChild(card);
   });
 }
-
-// ENREGISTRER LE BUDGET
 
 async function saveBudget(event) {
   event.preventDefault();
@@ -1093,17 +1257,13 @@ async function saveBudget(event) {
     result.style.color = '#087844';
 
     await loadFinanceDashboard();
-
   } catch (error) {
     result.textContent = 'Erreur : ' + error.message;
     result.style.color = '#b52d2d';
-
   } finally {
     button.disabled = false;
   }
 }
-
-// ENREGISTRER UNE OPÉRATION FINANCIÈRE
 
 async function saveTransaction(event) {
   event.preventDefault();
@@ -1148,11 +1308,9 @@ async function saveTransaction(event) {
       new Date().toISOString().slice(0, 10);
 
     await loadFinanceDashboard();
-
   } catch (error) {
     result.textContent = 'Erreur : ' + error.message;
     result.style.color = '#b52d2d';
-
   } finally {
     button.disabled = false;
   }
@@ -1186,11 +1344,9 @@ loginForm.addEventListener('submit', async event => {
     if (!dashboard.hidden) {
       loginMessage.textContent = '';
     }
-
   } catch (error) {
     loginMessage.textContent = 'Erreur de connexion.';
     console.error(error);
-
   } finally {
     loginBtn.disabled = false;
   }
@@ -1209,7 +1365,6 @@ logoutBtn.addEventListener('click', async () => {
     loginMessage.textContent = '';
 
     await showDashboard();
-
   } finally {
     logoutBtn.disabled = false;
   }
