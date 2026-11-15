@@ -1,3 +1,4 @@
+
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 /* =====================================================
@@ -366,8 +367,6 @@ function jsonResponse(data: unknown, status = 200) {
   });
 }
 
-/* Délai augmenté à 90 secondes */
-
 async function fetchWithTimeout(
   url: string,
   options: RequestInit,
@@ -392,25 +391,6 @@ function getErrorMessage(error: unknown): string {
   }
 
   return String(error);
-}
-
-async function readApiResponse(response: Response): Promise<any> {
-  const raw = await response.text();
-
-  try {
-    return JSON.parse(raw);
-  } catch {
-    console.error(
-      "Réponse API non JSON. Statut HTTP :",
-      response.status,
-      "Début de réponse :",
-      raw.slice(0, 300),
-    );
-
-    throw new Error(
-      `Réponse API invalide (HTTP ${response.status}).`,
-    );
-  }
 }
 
 /* =====================================================
@@ -489,6 +469,7 @@ Ne mélange pas le français avec l'anglais ou l'arabe.
 
 /* =====================================================
    GEMINI - MOTEUR UNIQUE
+   JOURNALISATION DÉTAILLÉE DES ERREURS
 ===================================================== */
 
 async function callGemini(
@@ -498,7 +479,9 @@ async function callGemini(
   const apiKey = Deno.env.get("GEMINI_API_KEY");
 
   if (!apiKey) {
-    throw new Error("Configuration API manquante.");
+    throw new Error(
+      "Configuration API manquante : GEMINI_API_KEY.",
+    );
   }
 
   const model =
@@ -529,52 +512,94 @@ async function callGemini(
     },
   };
 
-  // Deux tentatives supplémentaires en cas de surcharge temporaire.
   const maxAttempts = 3;
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     console.log(
-      `Appel du moteur pédagogique - tentative ${attempt}/${maxAttempts}.`,
+      `Appel Gemini : modèle=${model}, tentative=${attempt}/${maxAttempts}`,
     );
 
-    const response = await fetchWithTimeout(
-      url,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-goog-api-key": apiKey,
+    let response: Response;
+
+    try {
+      response = await fetchWithTimeout(
+        url,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-goog-api-key": apiKey,
+          },
+          body: JSON.stringify(requestBody),
         },
-        body: JSON.stringify(requestBody),
-      },
-      90000,
-    );
+        90000,
+      );
+    } catch (error) {
+      console.error(
+        "ERREUR DE CONNEXION GEMINI :",
+        getErrorMessage(error),
+      );
 
-    const data = await readApiResponse(response);
+      throw error;
+    }
+
+    const raw = await response.text();
+
+    let data: any;
+
+    try {
+      data = JSON.parse(raw);
+    } catch {
+      console.error(
+        "RÉPONSE GEMINI NON JSON :",
+        JSON.stringify({
+          status: response.status,
+          model,
+          body: raw.slice(0, 3000),
+        }),
+      );
+
+      throw new Error(
+        `Réponse Gemini non JSON. HTTP ${response.status}.`,
+      );
+    }
 
     if (!response.ok) {
-      const status = response.status;
+      const errorDetails = {
+        httpStatus: response.status,
+        model,
+        googleError: data?.error ?? data,
+      };
 
-      // Les erreurs 429 et 503 peuvent être temporaires.
+      console.error(
+        "DÉTAIL COMPLET ERREUR GEMINI :",
+        JSON.stringify(errorDetails),
+      );
+
       if (
-        (status === 429 || status === 503) &&
+        (response.status === 429 || response.status === 503) &&
         attempt < maxAttempts
       ) {
         const delay = attempt * 3000;
 
         console.warn(
-          `Indisponibilité temporaire. Nouvelle tentative dans ${delay / 1000} secondes.`,
+          `Nouvelle tentative dans ${delay / 1000} secondes.`,
         );
 
-        await new Promise((resolve) => setTimeout(resolve, delay));
+        await new Promise((resolve) =>
+          setTimeout(resolve, delay)
+        );
+
         continue;
       }
 
-      const apiError =
-        data?.error?.message || `Erreur HTTP ${status}`;
+      const apiMessage =
+        data?.error?.message ||
+        data?.error?.status ||
+        `Erreur HTTP ${response.status}`;
 
       throw new Error(
-        `Erreur du moteur pédagogique (${status}) : ${apiError}`,
+        `Gemini HTTP ${response.status} : ${apiMessage}`,
       );
     }
 
@@ -584,30 +609,40 @@ async function callGemini(
       .trim();
 
     if (!text) {
-      const blockReason = data?.promptFeedback?.blockReason;
+      console.error(
+        "RÉPONSE GEMINI SANS TEXTE :",
+        JSON.stringify(data),
+      );
 
-      if (blockReason) {
-        throw new Error(
-          `Réponse bloquée : ${blockReason}`,
-        );
-      }
+      const reason =
+        data?.promptFeedback?.blockReason ||
+        data?.candidates?.[0]?.finishReason ||
+        "Aucune explication fournie";
 
-      throw new Error("Aucun texte reçu dans la réponse.");
+      throw new Error(
+        `Gemini n'a retourné aucun texte : ${reason}`,
+      );
     }
 
-    console.log("Réponse pédagogique obtenue avec succès.");
+    console.log(
+      "Réponse pédagogique obtenue avec succès.",
+    );
 
     return text;
   }
 
-  throw new Error("Le service est temporairement indisponible.");
+  throw new Error(
+    "Le service Gemini est temporairement indisponible.",
+  );
 }
 
 /* =====================================================
    LECTURE DU MESSAGE ENTRANT
 ===================================================== */
 
-async function readIncomingBody(req: Request): Promise<any> {
+async function readIncomingBody(
+  req: Request,
+): Promise<any> {
   const rawBody = await req.text();
 
   if (!rawBody.trim()) {
@@ -627,7 +662,6 @@ async function readIncomingBody(req: Request): Promise<any> {
 
     return {};
   } catch {
-    // Accepte également un message envoyé directement en texte brut.
     return {
       message: rawBody.trim(),
     };
@@ -677,7 +711,8 @@ Deno.serve(async (req: Request) => {
     if (message.length > 20000) {
       return jsonResponse(
         {
-          reply: "Votre message est trop long. Veuillez le raccourcir.",
+          reply:
+            "Votre message est trop long. Veuillez le raccourcir.",
           model: PUBLIC_MODEL_NAME,
         },
         413,
@@ -697,24 +732,27 @@ Deno.serve(async (req: Request) => {
     console.log("Nouvelle demande reçue.");
 
     try {
-      const reply = await callGemini(message, language);
+      const reply = await callGemini(
+        message,
+        language,
+      );
 
       return jsonResponse({
         reply,
         model: PUBLIC_MODEL_NAME,
       });
     } catch (error) {
-      // Les détails techniques restent dans les logs Supabase.
       console.error(
         "ERREUR DU MOTEUR PÉDAGOGIQUE :",
         getErrorMessage(error),
       );
 
-      const fallbackMessage = language === "ar"
-        ? "نعتذر، المساعد غير متاح مؤقتًا. يرجى المحاولة مرة أخرى بعد قليل."
-        : language === "en"
-        ? "Sorry, the assistant is temporarily unavailable. Please try again shortly."
-        : "Nous sommes désolés. L'assistant est momentanément indisponible. Veuillez réessayer dans quelques instants.";
+      const fallbackMessage =
+        language === "ar"
+          ? "نعتذر، المساعد غير متاح مؤقتًا. يرجى المحاولة مرة أخرى بعد قليل."
+          : language === "en"
+          ? "Sorry, the assistant is temporarily unavailable. Please try again shortly."
+          : "Nous sommes désolés. L'assistant est momentanément indisponible. Veuillez réessayer dans quelques instants.";
 
       return jsonResponse(
         {
@@ -725,17 +763,17 @@ Deno.serve(async (req: Request) => {
       );
     }
   } catch (error) {
-    // Détails techniques réservés aux administrateurs.
     console.error(
       "ERREUR GÉNÉRALE DE LA FONCTION :",
       getErrorMessage(error),
     );
 
-    const fallbackMessage = language === "ar"
-      ? "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى."
-      : language === "en"
-      ? "An unexpected error occurred. Please try again."
-      : "Une erreur est survenue. Veuillez réessayer.";
+    const fallbackMessage =
+      language === "ar"
+        ? "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى."
+        : language === "en"
+        ? "An unexpected error occurred. Please try again."
+        : "Une erreur est survenue. Veuillez réessayer.";
 
     return jsonResponse(
       {
@@ -746,4 +784,3 @@ Deno.serve(async (req: Request) => {
     );
   }
 });
-
