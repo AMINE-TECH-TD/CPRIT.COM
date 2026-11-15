@@ -1,3 +1,4 @@
+
 import { supabase } from './supabase-config.js';
 
 const loginSection = document.getElementById('loginSection');
@@ -202,18 +203,46 @@ async function refreshDirectorDashboard() {
 
   if (button) {
     button.disabled = true;
-    button.textContent = 'Actualisation...';
+    button.textContent = 'Actualisation en cours...';
   }
 
-  await Promise.all([
-    loadDirectorStats(),
-    loadStaff(),
-    loadLearners()
-  ]);
+  if (message) {
+    message.textContent = 'Actualisation des données...';
+    message.style.color = '#0755a0';
+  }
 
-  if (button) {
-    button.disabled = false;
-    button.textContent = 'Actualiser les données';
+  try {
+    const results = await Promise.allSettled([
+      loadDirectorStats(),
+      loadStaff(),
+      loadLearners()
+    ]);
+
+    const failed = results.filter(
+      result => result.status === 'rejected'
+    );
+
+    if (failed.length > 0) {
+      throw failed[0].reason;
+    }
+
+    if (message) {
+      message.textContent = 'Les données ont été actualisées.';
+      message.style.color = '#087844';
+    }
+  } catch (error) {
+    if (message) {
+      message.textContent =
+        'Erreur d’actualisation : ' + error.message;
+      message.style.color = '#b52d2d';
+    }
+
+    console.error('Erreur actualisation DG :', error);
+  } finally {
+    if (button) {
+      button.disabled = false;
+      button.textContent = 'Actualiser les données';
+    }
   }
 }
 
@@ -296,32 +325,26 @@ async function loadDirectorStats() {
         <span>Total des apprenants</span>
         <strong>${totalLearners}</strong>
       </div>
-
       <div class="stat-card">
         <span>Apprenants actifs</span>
         <strong>${activeLearners}</strong>
       </div>
-
       <div class="stat-card">
         <span>Inscriptions en attente</span>
         <strong>${pendingLearners}</strong>
       </div>
-
       <div class="stat-card">
         <span>Direction générale</span>
         <strong>${admin + dg}</strong>
       </div>
-
       <div class="stat-card">
         <span>DGA</span>
         <strong>${dga}</strong>
       </div>
-
       <div class="stat-card">
         <span>DAF</span>
         <strong>${daf}</strong>
       </div>
-
       <div class="stat-card">
         <span>Secrétariat général</span>
         <strong>${secretariat}</strong>
@@ -329,6 +352,7 @@ async function loadDirectorStats() {
     `;
   } catch (error) {
     stats.textContent = 'Erreur de chargement : ' + error.message;
+    throw error;
   }
 }
 
@@ -414,7 +438,7 @@ async function loadStaff() {
 
   if (error) {
     staffList.textContent = 'Erreur de chargement : ' + error.message;
-    return;
+    throw error;
   }
 
   if (!data || data.length === 0) {
@@ -462,7 +486,7 @@ async function loadLearners() {
 
   if (error) {
     learners.textContent = 'Erreur : ' + error.message;
-    return;
+    throw error;
   }
 
   if (!data || data.length === 0) {
