@@ -5,7 +5,12 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
    CPRIT ASSISTANT
    Assistant pédagogique officiel du CPRIT
    Langues : Français, English, العربية
-   Moteur unique : Gemini
+
+   ORDRE DES MOTEURS :
+   1. Gemini
+   2. Groq
+   3. OpenRouter
+   4. Cohere
 ===================================================== */
 
 const corsHeaders = {
@@ -18,7 +23,7 @@ const corsHeaders = {
 const PUBLIC_MODEL_NAME = "CPRIT Assistant pédagogique";
 
 /* =====================================================
-   DIRECTIVES PÉDAGOGIQUES RENFORCÉES
+   DIRECTIVES PÉDAGOGIQUES OFFICIELLES
 ===================================================== */
 
 const SYSTEM_PROMPT = `
@@ -370,7 +375,7 @@ function jsonResponse(data: unknown, status = 200) {
 async function fetchWithTimeout(
   url: string,
   options: RequestInit,
-  timeout = 90000,
+  timeout = 30000,
 ): Promise<Response> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeout);
@@ -391,6 +396,39 @@ function getErrorMessage(error: unknown): string {
   }
 
   return String(error);
+}
+
+function getSystemInstruction(language: string): string {
+  return SYSTEM_PROMPT + "\n\n" + getLanguageInstruction(language);
+}
+
+async function readProviderResponse(response: Response): Promise<any> {
+  const raw = await response.text();
+
+  try {
+    return JSON.parse(raw);
+  } catch {
+    throw new Error(
+      `Réponse non JSON. HTTP ${response.status} : ${raw.slice(0, 1000)}`,
+    );
+  }
+}
+
+function extractOpenAIText(data: any): string {
+  const content = data?.choices?.[0]?.message?.content;
+
+  if (typeof content === "string") {
+    return content.trim();
+  }
+
+  if (Array.isArray(content)) {
+    return content
+      .map((part: any) => part?.text || "")
+      .join("")
+      .trim();
+  }
+
+  return "";
 }
 
 /* =====================================================
@@ -468,8 +506,7 @@ Ne mélange pas le français avec l'anglais ou l'arabe.
 }
 
 /* =====================================================
-   GEMINI - MOTEUR UNIQUE
-   JOURNALISATION DÉTAILLÉE DES ERREURS
+   GEMINI
 ===================================================== */
 
 async function callGemini(
@@ -479,160 +516,336 @@ async function callGemini(
   const apiKey = Deno.env.get("GEMINI_API_KEY");
 
   if (!apiKey) {
-    throw new Error(
-      "Configuration API manquante : GEMINI_API_KEY.",
-    );
+    throw new Error("GEMINI_API_KEY absente.");
   }
 
   const model =
-    Deno.env.get("GEMINI_MODEL") || "gemini-3.8-flash";
+    Deno.env.get("GEMINI_MODEL") || "gemini-2.5-flash";
 
   const url =
     `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
 
-  const requestBody = {
-    systemInstruction: {
-      parts: [
-        {
-          text:
-            SYSTEM_PROMPT +
-            "\n\n" +
-            getLanguageInstruction(language),
-        },
-      ],
-    },
-    contents: [
-      {
-        role: "user",
-        parts: [{ text: message }],
+  const response = await fetchWithTimeout(
+    url,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-goog-api-key": apiKey,
       },
-    ],
-    generationConfig: {
-      maxOutputTokens: 4096,
-    },
-  };
-
-  const maxAttempts = 3;
-
-  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    console.log(
-      `Appel Gemini : modèle=${model}, tentative=${attempt}/${maxAttempts}`,
-    );
-
-    let response: Response;
-
-    try {
-      response = await fetchWithTimeout(
-        url,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-goog-api-key": apiKey,
-          },
-          body: JSON.stringify(requestBody),
+      body: JSON.stringify({
+        systemInstruction: {
+          parts: [{ text: getSystemInstruction(language) }],
         },
-        90000,
-      );
-    } catch (error) {
-      console.error(
-        "ERREUR DE CONNEXION GEMINI :",
-        getErrorMessage(error),
-      );
+        contents: [
+          {
+            role: "user",
+            parts: [{ text: message }],
+          },
+        ],
+        generationConfig: {
+          temperature: 0.3,
+          maxOutputTokens: 4096,
+        },
+      }),
+    },
+    30000,
+  );
 
-      throw error;
-    }
+  const data = await readProviderResponse(response);
 
-    const raw = await response.text();
-
-    let data: any;
-
-    try {
-      data = JSON.parse(raw);
-    } catch {
-      console.error(
-        "RÉPONSE GEMINI NON JSON :",
-        JSON.stringify({
-          status: response.status,
-          model,
-          body: raw.slice(0, 3000),
-        }),
-      );
-
-      throw new Error(
-        `Réponse Gemini non JSON. HTTP ${response.status}.`,
-      );
-    }
-
-    if (!response.ok) {
-      const errorDetails = {
-        httpStatus: response.status,
-        model,
-        googleError: data?.error ?? data,
-      };
-
-      console.error(
-        "DÉTAIL COMPLET ERREUR GEMINI :",
-        JSON.stringify(errorDetails),
-      );
-
-      if (
-        (response.status === 429 || response.status === 503) &&
-        attempt < maxAttempts
-      ) {
-        const delay = attempt * 3000;
-
-        console.warn(
-          `Nouvelle tentative dans ${delay / 1000} secondes.`,
-        );
-
-        await new Promise((resolve) =>
-          setTimeout(resolve, delay)
-        );
-
-        continue;
-      }
-
-      const apiMessage =
-        data?.error?.message ||
-        data?.error?.status ||
-        `Erreur HTTP ${response.status}`;
-
-      throw new Error(
-        `Gemini HTTP ${response.status} : ${apiMessage}`,
-      );
-    }
-
-    const text = data?.candidates?.[0]?.content?.parts
-      ?.map((part: { text?: string }) => part.text || "")
-      .join("")
-      .trim();
-
-    if (!text) {
-      console.error(
-        "RÉPONSE GEMINI SANS TEXTE :",
-        JSON.stringify(data),
-      );
-
-      const reason =
-        data?.promptFeedback?.blockReason ||
-        data?.candidates?.[0]?.finishReason ||
-        "Aucune explication fournie";
-
-      throw new Error(
-        `Gemini n'a retourné aucun texte : ${reason}`,
-      );
-    }
-
-    console.log(
-      "Réponse pédagogique obtenue avec succès.",
+  if (!response.ok) {
+    throw new Error(
+      `Gemini HTTP ${response.status} : ${
+        data?.error?.message || JSON.stringify(data)
+      }`,
     );
-
-    return text;
   }
 
+  const text = data?.candidates?.[0]?.content?.parts
+    ?.map((part: any) => part.text || "")
+    .join("")
+    .trim();
+
+  if (!text) {
+    throw new Error(
+      `Gemini sans réponse textuelle : ${
+        data?.promptFeedback?.blockReason ||
+        data?.candidates?.[0]?.finishReason ||
+        "réponse vide"
+      }`,
+    );
+  }
+
+  return text;
+}
+
+/* =====================================================
+   GROQ
+===================================================== */
+
+async function callGroq(
+  message: string,
+  language: string,
+): Promise<string> {
+  const apiKey = Deno.env.get("GROQ_API_KEY");
+
+  if (!apiKey) {
+    throw new Error("GROQ_API_KEY absente.");
+  }
+
+  const model =
+    Deno.env.get("GROQ_MODEL") ||
+    "llama-3.3-70b-versatile";
+
+  const response = await fetchWithTimeout(
+    "https://api.groq.com/openai/v1/chat/completions",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model,
+        messages: [
+          {
+            role: "system",
+            content: getSystemInstruction(language),
+          },
+          {
+            role: "user",
+            content: message,
+          },
+        ],
+        temperature: 0.3,
+        max_tokens: 6000,
+      }),
+    },
+    30000,
+  );
+
+  const data = await readProviderResponse(response);
+
+  if (!response.ok) {
+    throw new Error(
+      `Groq HTTP ${response.status} : ${
+        data?.error?.message || JSON.stringify(data)
+      }`,
+    );
+  }
+
+  const text = extractOpenAIText(data);
+
+  if (!text) {
+    throw new Error("Groq a retourné une réponse vide.");
+  }
+
+  return text;
+}
+
+/* =====================================================
+   OPENROUTER
+===================================================== */
+
+async function callOpenRouter(
+  message: string,
+  language: string,
+): Promise<string> {
+  const apiKey = Deno.env.get("OPENROUTER_API_KEY");
+
+  if (!apiKey) {
+    throw new Error("OPENROUTER_API_KEY absente.");
+  }
+
+  const model =
+    Deno.env.get("OPENROUTER_MODEL") || "openrouter/free";
+
+  const response = await fetchWithTimeout(
+    "https://openrouter.ai/api/v1/chat/completions",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+        "HTTP-Referer":
+          "https://amine-tech-td.github.io/CPRIT.COM/",
+        "X-Title": "CPRIT Assistant pédagogique",
+      },
+      body: JSON.stringify({
+        model,
+        messages: [
+          {
+            role: "system",
+            content: getSystemInstruction(language),
+          },
+          {
+            role: "user",
+            content: message,
+          },
+        ],
+        temperature: 0.3,
+        max_tokens: 6000,
+      }),
+    },
+    30000,
+  );
+
+  const data = await readProviderResponse(response);
+
+  if (!response.ok) {
+    throw new Error(
+      `OpenRouter HTTP ${response.status} : ${
+        data?.error?.message || JSON.stringify(data)
+      }`,
+    );
+  }
+
+  const text = extractOpenAIText(data);
+
+  if (!text) {
+    throw new Error("OpenRouter a retourné une réponse vide.");
+  }
+
+  return text;
+}
+
+/* =====================================================
+   COHERE
+===================================================== */
+
+async function callCohere(
+  message: string,
+  language: string,
+): Promise<string> {
+  const apiKey = Deno.env.get("COHERE_API_KEY");
+
+  if (!apiKey) {
+    throw new Error("COHERE_API_KEY absente.");
+  }
+
+  const model =
+    Deno.env.get("COHERE_MODEL") ||
+    "command-r7b-12-2024";
+
+  const response = await fetchWithTimeout(
+    "https://api.cohere.com/v2/chat",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model,
+        messages: [
+          {
+            role: "system",
+            content: getSystemInstruction(language),
+          },
+          {
+            role: "user",
+            content: message,
+          },
+        ],
+        temperature: 0.3,
+        max_tokens: 6000,
+      }),
+    },
+    30000,
+  );
+
+  const data = await readProviderResponse(response);
+
+  if (!response.ok) {
+    throw new Error(
+      `Cohere HTTP ${response.status} : ${
+        data?.message || JSON.stringify(data)
+      }`,
+    );
+  }
+
+  const text = Array.isArray(data?.message?.content)
+    ? data.message.content
+        .map((part: any) => part?.text || "")
+        .join("")
+        .trim()
+    : "";
+
+  if (!text) {
+    throw new Error("Cohere a retourné une réponse vide.");
+  }
+
+  return text;
+}
+
+/* =====================================================
+   SYSTÈME AUTOMATIQUE DE BASCULEMENT
+===================================================== */
+
+async function getPedagogicalResponse(
+  message: string,
+  language: string,
+): Promise<string> {
+  const providers = [
+    {
+      name: "Gemini",
+      call: () => callGemini(message, language),
+    },
+    {
+      name: "Groq",
+      call: () => callGroq(message, language),
+    },
+    {
+      name: "OpenRouter",
+      call: () => callOpenRouter(message, language),
+    },
+    {
+      name: "Cohere",
+      call: () => callCohere(message, language),
+    },
+  ];
+
+  const errors: string[] = [];
+
+  for (const provider of providers) {
+    console.log(`Démarrage du moteur : ${provider.name}`);
+
+    try {
+      const reply = await provider.call();
+
+      if (!reply || !reply.trim()) {
+        throw new Error("Réponse vide.");
+      }
+
+      console.log(
+        `Réponse obtenue avec succès : ${provider.name}`,
+      );
+
+      return reply;
+    } catch (error) {
+      const details = getErrorMessage(error);
+
+      errors.push(`${provider.name}: ${details}`);
+
+      console.error(
+        `ÉCHEC DU MOTEUR ${provider.name} :`,
+        details,
+      );
+
+      console.warn(
+        `Passage automatique au moteur suivant.`,
+      );
+    }
+  }
+
+  console.error(
+    "ÉCHEC DE TOUS LES MOTEURS :",
+    JSON.stringify(errors),
+  );
+
   throw new Error(
-    "Le service Gemini est temporairement indisponible.",
+    "Tous les moteurs pédagogiques sont indisponibles.",
   );
 }
 
@@ -729,10 +942,10 @@ Deno.serve(async (req: Request) => {
     );
 
     console.log("Langue sélectionnée :", language);
-    console.log("Nouvelle demande reçue.");
+    console.log("Nouvelle demande pédagogique reçue.");
 
     try {
-      const reply = await callGemini(
+      const reply = await getPedagogicalResponse(
         message,
         language,
       );
