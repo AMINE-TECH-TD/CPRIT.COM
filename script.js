@@ -391,3 +391,22 @@ Object.assign(translations.ar, {
 const currentCPRITLanguage = window.CPRITLanguage.get();
 setLanguage(currentCPRITLanguage);
 
+
+/* CORRECTION AUTOMATIQUE DE L'ORDRE DES SECTIONS */
+(function () {
+  const formation = document.getElementById("formation");
+  const publications = document.getElementById("publications");
+  const annonces = document.getElementById("announcementsGrid");
+
+  if (formation) {
+    if (publications) {
+      formation.before(publications);
+    }
+
+    if (annonces) {
+      formation.before(annonces);
+    }
+  }
+})();
+
+
