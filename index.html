@@ -1645,5 +1645,33 @@
 
 </div>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const training = [...document.querySelectorAll("h2")]
+    .find(el => el.textContent.includes("La formation au cœur de notre action"));
+
+  const publications = document.getElementById("publications");
+
+  const directorMessage = document
+    .querySelector('[data-i18n="directorMessage"]');
+
+  const announcements = directorMessage
+    ? directorMessage.closest(".formation-grid")
+    : null;
+
+  if (training) {
+    const target = training.closest("section");
+
+    if (publications) {
+      target.before(publications);
+    }
+
+    if (announcements) {
+      target.before(announcements);
+    }
+  }
+});
+</script>
+
 </body>
 </html>
