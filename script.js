@@ -343,3 +343,51 @@ window.CPRITLanguage = {
     setLanguage(language);
   }
 };
+
+/* =====================================================
+   TRADUCTIONS COMPLÉMENTAIRES — CPRIT
+===================================================== */
+
+Object.assign(translations.fr, {
+  contestTag: "COMMUNIQUÉ OFFICIEL",
+  contestTitle: "Lancement du concours d'entrée — jeudi 19 novembre 2026",
+  contestText: "Le Centre pédagogique régional de l'ICESCO au Tchad informe les candidats du lancement de son concours d'entrée le jeudi 19 novembre 2026.",
+  reentryTitle: "Rentrée de la formation :",
+  reentryText: "La rentrée est prévue en décembre 2026. Les informations pratiques seront communiquées officiellement par le CPRIT.",
+  directorTag: "MESSAGE DU DIRECTEUR GÉNÉRAL",
+  directorTitle: "Un message aux futurs candidats",
+  directorMessage: "À l'occasion du lancement du concours du jeudi 19 novembre 2026, j'adresse mes encouragements à toutes les candidates et à tous les candidats. Cette étape marque une avancée importante dans notre engagement en faveur de la formation des futurs enseignants du primaire. Le CPRIT se prépare à accueillir la nouvelle promotion pour une rentrée prévue en décembre 2026. Ensemble, faisons de la qualité de l'éducation une priorité nationale.",
+  directorName: "Monsieur Youssouf Hassane Taha",
+  directorRole: "Directeur général du CPRIT"
+});
+
+Object.assign(translations.en, {
+  contestTag: "OFFICIAL ANNOUNCEMENT",
+  contestTitle: "Entrance competition launch — Thursday, 19 November 2026",
+  contestText: "The ICESCO Regional Pedagogical Centre in Chad announces the launch of its entrance competition on Thursday, 19 November 2026.",
+  reentryTitle: "Start of the academic year:",
+  reentryText: "The academic year is scheduled to begin in December 2026. Practical information will be officially communicated by CPRIT.",
+  directorTag: "MESSAGE FROM THE DIRECTOR GENERAL",
+  directorTitle: "A message to future candidates",
+  directorMessage: "On the occasion of the competition launch on Thursday, 19 November 2026, I extend my encouragement to all candidates. This is an important step in our commitment to training future primary school teachers. CPRIT is preparing to welcome the new class for an academic year scheduled to begin in December 2026. Together, let us make quality education a national priority.",
+  directorName: "Mr Youssouf Hassane Taha",
+  directorRole: "Director General of CPRIT"
+});
+
+Object.assign(translations.ar, {
+  contestTag: "إعلان رسمي",
+  contestTitle: "إطلاق مسابقة القبول — الخميس 19 نوفمبر 2026",
+  contestText: "يعلن المركز التربوي الإقليمي للإيسيسكو في تشاد عن إطلاق مسابقة القبول يوم الخميس 19 نوفمبر 2026.",
+  reentryTitle: "بداية السنة الدراسية:",
+  reentryText: "من المقرر أن تبدأ السنة الدراسية في ديسمبر 2026. وسيعلن المركز رسمياً عن المعلومات العملية.",
+  directorTag: "رسالة المدير العام",
+  directorTitle: "رسالة إلى المترشحين",
+  directorMessage: "بمناسبة إطلاق المسابقة يوم الخميس 19 نوفمبر 2026، أتقدم بالتشجيع إلى جميع المترشحات والمترشحين. وتمثل هذه الخطوة تقدماً مهماً في التزامنا بتكوين معلمي التعليم الابتدائي في المستقبل. ويستعد المركز لاستقبال الدفعة الجديدة خلال دخول دراسي مقرر في ديسمبر 2026. معاً، لنجعل جودة التعليم أولوية وطنية.",
+  directorName: "السيد يوسف حسن طه",
+  directorRole: "المدير العام للمركز"
+});
+
+/* إعادة تطبيق اللغة المختارة */
+const currentCPRITLanguage = window.CPRITLanguage.get();
+setLanguage(currentCPRITLanguage);
+
