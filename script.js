@@ -410,3 +410,45 @@ setLanguage(currentCPRITLanguage);
 })();
 
 
+/* CORRECTION FINALE CPRIT */
+(function () {
+  "use strict";
+
+  const langue = document.getElementById("languageSelect");
+  const centre = document.getElementById("centre");
+  const formation = document.getElementById("formation");
+  const annonces = document.getElementById("announcementsGrid");
+  const publications = document.getElementById("publications");
+
+  /* PLACEMENT : APRÈS LA PRÉSENTATION */
+  if (centre && annonces) {
+    centre.after(annonces);
+  }
+
+  /* PUBLICATIONS APRÈS LA PLATEFORME */
+  const plateforme = document.getElementById("espaces");
+  if (plateforme && publications) {
+    plateforme.after(publications);
+  }
+
+  /* TRADUCTION APRÈS LE CHARGEMENT */
+  function actualiserLangue(code) {
+    if (window.CPRITLanguage) {
+      window.CPRITLanguage.set(code);
+    }
+  }
+
+  if (langue) {
+    langue.addEventListener("change", function () {
+      actualiserLangue(langue.value);
+    });
+  }
+
+  const langueEnregistree =
+    localStorage.getItem("cprit_language") || "fr";
+
+  actualiserLangue(langueEnregistree);
+})();
+
+
+
