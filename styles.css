@@ -1809,4 +1809,30 @@ html[dir="rtl"] .director-card {
   border-right: 5px solid var(--gold);
 }
 
+/* CPRIT — CENTRAGE DU BLOC DOMAINES D'APPRENTISSAGE */
+
+.formation-grid:has(img) {
+  display: grid;
+  grid-template-columns: minmax(0, 900px);
+  justify-content: center;
+  width: 100%;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.formation-grid:has(img) > .formation-card {
+  width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 700px) {
+  .formation-grid:has(img) {
+    grid-template-columns: minmax(0, 1fr);
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+
 
