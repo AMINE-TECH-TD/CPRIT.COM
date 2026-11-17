@@ -1278,3 +1278,535 @@ html[dir="rtl"] .contact-details {
   }
 }
 
+/* =====================================================
+   CPRIT — REFONTE VISUELLE
+   Référence : maquette validée par l'utilisateur
+   Fonctionnalités existantes préservées
+===================================================== */
+
+:root {
+  --green-dark: #064B35;
+  --green: #087A4B;
+  --green-light: #159766;
+  --gold: #D5AE48;
+  --background: #F7FAF8;
+}
+
+/* EN-TÊTE INSTITUTIONNEL */
+
+.header {
+  min-height: 0;
+  padding: 12px 4%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 20px;
+  background: #fff;
+  box-shadow: 0 3px 14px rgba(0,0,0,.07);
+}
+
+.brand {
+  gap: 12px;
+}
+
+.brand img {
+  width: 68px;
+  height: 68px;
+}
+
+.brand-text strong {
+  font-family: Georgia, serif;
+  font-size: 25px;
+  letter-spacing: .5px;
+}
+
+.brand-text small {
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.header-controls {
+  gap: 8px;
+}
+
+/* BARRE DE NAVIGATION VERTE */
+
+.navigation {
+  order: 5;
+  flex: 0 0 calc(100% + 8.4%);
+  width: calc(100% + 8.4%);
+  margin: 0 -4.2% -12px;
+  padding: 11px 3%;
+  justify-content: center;
+  gap: 19px;
+  background: var(--green-dark);
+}
+
+.navigation a {
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  transition: background .2s ease;
+}
+
+.navigation a:hover {
+  color: #F6D77C;
+}
+
+.navigation .nav-button {
+  background: var(--green-light);
+  border-radius: 20px;
+  padding: 8px 14px;
+}
+
+/* ACCUEIL : GRANDE PHOTO DU CENTRE */
+
+.hero {
+  position: relative;
+  min-height: 440px;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.94) 0%,
+      rgba(255,255,255,.83) 43%,
+      rgba(255,255,255,.12) 100%
+    ),
+    url("assets/images/cprit-principal.jpg") center 48% / cover no-repeat;
+  color: var(--green-dark);
+}
+
+.hero-inner {
+  min-height: 440px;
+  max-width: 1450px;
+  padding: 55px 6%;
+  display: flex;
+  align-items: center;
+}
+
+.hero-copy {
+  max-width: 590px;
+  width: 55%;
+}
+
+.eyebrow {
+  display: inline-block;
+  padding: 6px 13px;
+  border-radius: 5px;
+  background: var(--green);
+  color: white;
+  letter-spacing: 1px;
+  font-size: 11px;
+}
+
+.hero h1 {
+  color: var(--green-dark);
+  font-family: Georgia, serif;
+  font-size: clamp(34px, 4vw, 53px);
+  line-height: 1.12;
+  margin: 17px 0;
+  font-weight: 700;
+}
+
+.hero h1 span {
+  color: var(--green);
+}
+
+.hero-copy > p {
+  color: #29483A;
+  font-family: Georgia, serif;
+  font-size: 16px;
+  font-weight: 600;
+  max-width: 480px;
+}
+
+.hero-actions {
+  gap: 10px;
+}
+
+.primary-button {
+  background: var(--green);
+  color: white;
+  border-radius: 25px;
+  padding: 12px 21px;
+  box-shadow: 0 5px 15px rgba(8,122,75,.18);
+}
+
+.primary-button:hover {
+  background: var(--green-dark);
+  color: white;
+}
+
+.secondary-button {
+  color: var(--green-dark);
+  border: 1px solid var(--green);
+  background: rgba(255,255,255,.85);
+  border-radius: 25px;
+}
+
+.hero-note {
+  color: var(--green-dark);
+  font-weight: 600;
+}
+
+.note-dot {
+  background: var(--gold);
+}
+
+/* ANCIEN VISUEL DÉCORATIF */
+
+.hero-visual {
+  display: none;
+}
+
+/* BANDEAU DES ATOUTS */
+
+.trust-strip {
+  padding: 20px 5%;
+  gap: clamp(20px, 6vw, 85px);
+  box-shadow: 0 4px 16px rgba(0,0,0,.035);
+}
+
+.trust-item strong {
+  color: var(--green);
+}
+
+.trust-item span {
+  color: #52665A;
+}
+
+/* SECTIONS */
+
+.section {
+  padding: 68px 7%;
+}
+
+.section-heading {
+  margin-bottom: 32px;
+}
+
+.section h2 {
+  color: var(--green-dark);
+  font-size: clamp(27px, 3vw, 38px);
+}
+
+.section-label {
+  color: var(--green);
+  background: #EAF4EE;
+  padding: 5px 11px;
+  border-radius: 4px;
+  letter-spacing: 1.5px;
+}
+
+.section-heading p {
+  line-height: 1.7;
+}
+
+/* CARTES PLUS MODERNES */
+
+.formation-card,
+.platform-card,
+.contact-card,
+.news-card,
+.publication-card,
+.gallery-item {
+  border: 1px solid #E1EAE3;
+  border-radius: 12px;
+  box-shadow: 0 7px 24px rgba(6,75,53,.055);
+  transition: transform .25s, box-shadow .25s;
+}
+
+.formation-card:hover,
+.platform-card:hover,
+.news-card:hover,
+.publication-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 13px 30px rgba(6,75,53,.11);
+}
+
+.formation-card {
+  padding: 30px;
+}
+
+.formation-card.featured {
+  border-top: 4px solid var(--gold);
+}
+
+.platform-card {
+  padding: 25px;
+}
+
+.platform-icon {
+  border-radius: 10px;
+  background: #E8F4EC;
+  color: var(--green);
+}
+
+.ai-platform {
+  background: #EFF8F2;
+  border: 1px solid #BFDCC8;
+}
+
+/* GALERIE */
+
+.gallery-item {
+  overflow: hidden;
+}
+
+.gallery-item img {
+  height: 280px;
+  object-fit: cover;
+}
+
+/* MESSAGE DU DIRECTEUR */
+
+.director-card {
+  border-radius: 12px;
+  border-left: 5px solid var(--gold);
+  box-shadow: 0 10px 30px rgba(6,75,53,.07);
+}
+
+/* ADMISSION */
+
+.admission-section {
+  background:
+    linear-gradient(110deg, #043B2B, #087A4B);
+}
+
+.admission-button {
+  border-radius: 25px;
+}
+
+/* CONTACT */
+
+.contact-card {
+  border-radius: 12px;
+}
+
+/* PIED DE PAGE */
+
+.footer {
+  background: #033A29;
+  padding-top: 40px;
+}
+
+/* ASSISTANT : NE PAS MODIFIER SON POSITIONNEMENT
+   ni ses dimensions ou ses fonctions */
+
+/* RESPONSIVE TABLETTE */
+
+@media (max-width: 1100px) {
+  .navigation {
+    gap: 10px;
+  }
+
+  .navigation a {
+    font-size: 10px;
+  }
+
+  .hero-copy {
+    width: 65%;
+  }
+}
+
+/* RESPONSIVE MOBILE */
+
+@media (max-width: 850px) {
+  .header {
+    padding: 9px 4%;
+    gap: 8px;
+  }
+
+  .brand img {
+    width: 48px;
+    height: 48px;
+  }
+
+  .brand-text strong {
+    font-size: 19px;
+  }
+
+  .brand-text small {
+    font-size: 9px;
+  }
+
+  .header-controls {
+    gap: 6px;
+  }
+
+  .menu-toggle {
+    display: block;
+    font-size: 25px;
+  }
+
+  .navigation {
+    order: initial;
+    flex: initial;
+    width: 100%;
+    margin: 0;
+    padding: 15px 5%;
+    top: 100%;
+    background: white;
+    border-top: 2px solid var(--green);
+    border-radius: 0 0 10px 10px;
+    gap: 3px;
+  }
+
+  .navigation a {
+    color: var(--green-dark);
+    font-size: 13px;
+    padding: 11px;
+  }
+
+  .navigation a:hover {
+    background: #EAF4EE;
+    color: var(--green);
+  }
+
+  .navigation .nav-button {
+    color: white;
+    background: var(--green);
+  }
+
+  .hero {
+    min-height: 410px;
+    background:
+      linear-gradient(
+        90deg,
+        rgba(255,255,255,.94),
+        rgba(255,255,255,.77)
+      ),
+      url("assets/images/cprit-principal.jpg") center / cover no-repeat;
+  }
+
+  .hero-inner {
+    min-height: 410px;
+    padding: 42px 6%;
+  }
+
+  .hero-copy {
+    width: 100%;
+    max-width: 560px;
+  }
+
+  .hero h1 {
+    font-size: clamp(30px, 7vw, 42px);
+  }
+
+  .hero-copy > p {
+    font-size: 14px;
+  }
+
+  .hero-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .hero-actions a {
+    text-align: center;
+  }
+
+  .trust-strip {
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 18px;
+  }
+}
+
+/* PETITS ÉCRANS */
+
+@media (max-width: 480px) {
+  .brand {
+    gap: 7px;
+  }
+
+  .brand img {
+    width: 42px;
+    height: 42px;
+  }
+
+  .brand-text strong {
+    font-size: 17px;
+  }
+
+  .brand-text small {
+    font-size: 8px;
+  }
+
+  .header-controls .language-select {
+    min-width: 75px;
+    max-width: 85px;
+    font-size: 11px;
+    padding: 8px 4px;
+  }
+
+  .hero {
+    min-height: 390px;
+  }
+
+  .hero-inner {
+    min-height: 390px;
+    padding: 35px 5%;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+  }
+
+  .hero-copy > p {
+    font-size: 13px;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-actions a {
+    width: fit-content;
+  }
+
+  .section {
+    padding: 48px 5%;
+  }
+
+  .trust-strip {
+    align-items: flex-start;
+  }
+
+  .trust-item strong {
+    font-size: 22px;
+  }
+}
+
+/* ARABE : ALIGNEMENT RTL */
+
+html[dir="rtl"] .hero {
+  background:
+    linear-gradient(
+      270deg,
+      rgba(255,255,255,.94),
+      rgba(255,255,255,.77),
+      rgba(255,255,255,.12)
+    ),
+    url("assets/images/cprit-principal.jpg") center / cover no-repeat;
+}
+
+html[dir="rtl"] .hero-copy {
+  text-align: right;
+}
+
+html[dir="rtl"] .hero-actions {
+  justify-content: flex-start;
+}
+
+html[dir="rtl"] .navigation {
+  direction: rtl;
+}
+
+html[dir="rtl"] .director-card {
+  border-left: 1px solid var(--border);
+  border-right: 5px solid var(--gold);
+}
+
+
