@@ -1,9 +1,11 @@
+
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Résumé des activités du Centre Pédagogique Régional de l'ICESCO au Tchad de 2021 à 2025.">
+<meta name="theme-color" content="#14532D">
 <title>Rapports et bilans d'activités | CPRIT</title>
 
 <style>
@@ -84,15 +86,16 @@ header p{margin:5px 0;color:#e5f3e9}
 
 .paper{
   background:white;
-  padding:clamp(20px,5vw,55px);
+  padding:0;
   border-radius:10px;
   box-shadow:0 5px 25px rgba(20,83,45,.08);
+  overflow:hidden;
 }
 
 .contact{
   text-align:center;
   padding:18px;
-  margin-bottom:28px;
+  margin:0 25px 28px;
   border-bottom:2px solid var(--gold);
   color:var(--navy);
   font-size:14px;
@@ -128,7 +131,7 @@ header p{margin:5px 0;color:#e5f3e9}
   background:#f1f7f2;
   border-left:4px solid var(--gold);
   padding:22px;
-  margin:25px 0 35px;
+  margin:25px;
   border-radius:5px;
 }
 
@@ -136,6 +139,40 @@ header p{margin:5px 0;color:#e5f3e9}
 .toc ul{padding-left:22px}
 .toc a{color:var(--blue);text-decoration:none}
 .toc a:hover{text-decoration:underline}
+
+#rapportDocument{
+  margin:20px 25px 35px;
+}
+
+#rapportDocument>summary{
+  background:#176B3A;
+  color:white;
+  padding:18px 22px;
+  border-radius:7px;
+  cursor:pointer;
+  font-weight:bold;
+  list-style:none;
+}
+
+#rapportDocument>summary::-webkit-details-marker{
+  display:none;
+}
+
+#rapportDocument>summary::after{
+  content:"+";
+  float:right;
+  color:#f2d28a;
+  font-size:22px;
+  line-height:1;
+}
+
+#rapportDocument[open]>summary::after{
+  content:"−";
+}
+
+.document-content{
+  padding:20px 0;
+}
 
 section{margin:35px 0;scroll-margin-top:20px}
 
@@ -196,7 +233,11 @@ footer{
 }
 
 @media(max-width:600px){
-  .paper{padding:20px 15px}
+  .paper{padding:0}
+  .contact{margin:0 15px 20px}
+  .toc{margin:15px}
+  #rapportDocument{margin:15px}
+  .document-content{padding:15px}
   .data{font-size:12px}
   .data th,.data td{padding:7px}
   header{padding:28px 14px}
@@ -210,10 +251,17 @@ footer{
     border-bottom:2px solid #c49a42
   }
   header p{color:#14532D}
-  .actions,.back{display:none!important}
+  .actions,.back,#rapportDocument>summary{display:none!important}
   .container{max-width:100%;margin:0;padding:0}
   .paper{box-shadow:none;padding:15px}
   .toc a{color:#14532D}
+  #rapportDocument{margin:0}
+  #rapportDocument:not([open])>.document-content{
+    display:block!important
+  }
+  #rapportDocument[open]>.document-content{
+    display:block!important
+  }
   section{break-inside:avoid}
   footer{
     background:white;
@@ -231,7 +279,7 @@ footer{
   <h1>RAPPORTS ET BILANS D'ACTIVITÉS</h1>
   <p>Document institutionnel officiel</p>
   <div class="actions">
-    <a href="index.html" class="secondary">← Accueil du site</a>
+    <a href="index.html" class="secondary">← Retour au site principal</a>
     <button onclick="window.print()">Imprimer / Enregistrer en PDF</button>
   </div>
 </header>
@@ -304,6 +352,10 @@ footer{
   <li><a href="#conclusion">CONCLUSION</a></li>
 </ul>
 </nav>
+
+<details id="rapportDocument">
+<summary>OUVRIR LE RAPPORT COMPLET — 2021–2025</summary>
+<div class="document-content">
 
 <section id="presentation">
 <h2 class="section-title">1. PRÉSENTATION GÉNÉRALE DU CPRIT</h2>
@@ -558,6 +610,9 @@ footer{
 <p>Avec le soutien continu de ses partenaires et l'engagement du gouvernement, le CPRIT est bien positionné pour mettre en œuvre son ambitieux Plan Stratégique 2026-2030 et réaliser sa vision d'être un centre d'excellence régional pour l'éducation, la formation et le développement des capacités.</p>
 </section>
 
+</div>
+</details>
+
 <a class="back" href="#sommaire">↑ Retour à la table des matières</a>
 
 </div>
@@ -566,7 +621,7 @@ footer{
 <footer>
   Centre Pédagogique Régional de l'ICESCO au Tchad (CPRIT)<br>
   Rue de 30M, Quartier Repo IV, N’Djamena, Tchad — B.P : 4150<br>
-  Tél/WhatsApp : 00235 66 20 97 96 — Email : isescotchad@yahoo.com
+  Tél/WhatsApp : 00235  — Email : isescotchad@yahoo.com
 </footer>
 
 </body>
