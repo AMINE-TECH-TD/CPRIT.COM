@@ -1723,17 +1723,12 @@ document.addEventListener("DOMContentLoaded", function () {
 }
 </style>
 
+
 <section class="cprit-photos" id="cpritPhotos">
-  <h2>
-  <span>Le CPRIT en images</span>
-  <span>CPRIT in Pictures</span>
-  <span dir="rtl">المركز بالصور</span>
+
+  <h2 data-i18n="galleryTitle">
+    Le CPRIT en images
   </h2>
-  .cprit-gallery-title span {
-  display: block;
-  margin: 8px 0;
-  text-align: center;
-}
 
   <img
     class="cprit-main-photo"
@@ -1741,25 +1736,40 @@ document.addEventListener("DOMContentLoaded", function () {
     alt="Bâtiment principal du CPRIT"
   >
 
-  <p class="cprit-photo-caption">
-    Notre établissement | Our institution | مؤسستنا
+  <p
+    class="cprit-photo-caption"
+    data-i18n="galleryCaption"
+  >
+    Notre établissement
   </p>
 
   <div class="cprit-photo-grid">
+
     <div>
-      <img src="assets/images/cprit-cour-1.jpg"
-           alt="Vue du CPRIT, première photographie">
+      <img
+        src="assets/images/cprit-cour-1.jpg"
+        alt="Vue du CPRIT"
+      >
     </div>
+
     <div>
-      <img src="assets/images/cprit-cour-2.jpg"
-           alt="Vue du CPRIT, deuxième photographie">
+      <img
+        src="assets/images/cprit-cour-2.jpg"
+        alt="Vue du CPRIT"
+      >
     </div>
+
     <div>
-      <img src="assets/images/cprit-cour-3.jpg"
-           alt="Vue du CPRIT, troisième photographie">
+      <img
+        src="assets/images/cprit-cour-3.jpg"
+        alt="Vue du CPRIT"
+      >
     </div>
+
   </div>
+
 </section>
+
 
 <script>
 (function () {
