@@ -1093,7 +1093,7 @@
 
       pubLabel: "SAVOIR ET DOCUMENTATION",
       pubTitle: "Ressources et publications pédagogiques",
-      pubIntro: "Un espace consacré à la documentation, aux connaissances et au partage des pratiques éducatives.",
+      pubIntro: "Un espace consacré à la documentation, au savoir et au partage des pratiques éducatives.",
       pubTitle1: "Bibliothèque pédagogique",
       pubText1: "Guides, documents de référence, ressources didactiques et supports de formation.",
       pubTitle2: "Recherche et innovation",
@@ -1676,8 +1676,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-</body>
-
 <style>
 .cprit-photos {
   padding: 55px 6%;
@@ -1726,7 +1724,6 @@ document.addEventListener("DOMContentLoaded", function () {
 }
 </style>
 
-
 <section class="cprit-photos" id="cpritPhotos">
 
   <h2 data-i18n="galleryTitle">
@@ -1773,7 +1770,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 </section>
 
-
 <script>
 (function () {
   const accueil = document.getElementById("accueil");
@@ -1785,4 +1781,35 @@ document.addEventListener("DOMContentLoaded", function () {
 })();
 </script>
 
+<script>
+(function () {
+    const reportLink = document.querySelector(
+        '#mainNav a[href="rapport-activites.html"]'
+    );
+
+    if (!reportLink) return;
+
+    function updateReportLanguage() {
+        const lang = document.documentElement.lang.toLowerCase();
+
+        if (lang.startsWith('ar')) {
+            reportLink.textContent = 'تقارير الأنشطة';
+        } else if (lang.startsWith('en')) {
+            reportLink.textContent = 'Activity Reports';
+        } else {
+            reportLink.textContent = 'Rapports d\'activités';
+        }
+    }
+
+    updateReportLanguage();
+
+    const observer = new MutationObserver(updateReportLanguage);
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['lang']
+    });
+})();
+</script>
+
+</body>
 </html>
