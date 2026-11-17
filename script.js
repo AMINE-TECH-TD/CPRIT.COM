@@ -450,5 +450,24 @@ setLanguage(currentCPRITLanguage);
   actualiserLangue(langueEnregistree);
 })();
 
+/* GALERIE CPRIT — TRADUCTIONS */
+Object.assign(translations.fr, {
+  galleryTitle: "Le CPRIT en images",
+  galleryCaption: "Notre établissement"
+});
+
+Object.assign(translations.en, {
+  galleryTitle: "CPRIT in Pictures",
+  galleryCaption: "Our Institution"
+});
+
+Object.assign(translations.ar, {
+  galleryTitle: "المركز بالصور",
+  galleryCaption: "مؤسستنا"
+});
+
+/* Actualiser la galerie dans la langue sélectionnée */
+setLanguage(window.CPRITLanguage.get());
+
 
 
