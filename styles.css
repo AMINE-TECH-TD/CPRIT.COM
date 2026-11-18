@@ -1807,3 +1807,70 @@ html[dir="rtl"] .director-card {
   border-right: 5px solid var(--gold);
 }
 
+/* =====================================================
+   CPRIT — CORRECTION RÉELLE DES DOMAINES D'APPRENTISSAGE
+===================================================== */
+
+@media (max-width: 700px) {
+
+  /* La section utilise toute la largeur disponible */
+  .platform-section {
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+  }
+
+  /* Titre et introduction */
+  .platform-section .section-heading {
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
+  /* CORRECTION DE LA GRILLE PARENTE */
+  .platform-section .platform-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    gap: 18px !important;
+    align-items: stretch !important;
+  }
+
+  /* CORRECTION DE CHAQUE CARTE */
+  .platform-section .platform-card {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Images à la bonne largeur */
+  .platform-section .platform-card img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+}
+
+/* ÉCRANS TRÈS ÉTROITS */
+@media (max-width: 380px) {
+
+  .platform-section {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+
+  .platform-section .platform-card {
+    padding: 18px !important;
+  }
+
+}
