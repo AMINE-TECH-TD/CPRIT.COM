@@ -1970,3 +1970,33 @@ html[dir="rtl"] .director-card {
   }
 
 }
+
+/* CPRIT — CORRECTION DEFINITIVE DU FORMAT MOBILE */
+@media (max-width: 850px) {
+
+  /* Domaines d'apprentissage : une seule colonne */
+  .platform-section .platform-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Robot : occupe toute la largeur disponible */
+  .platform-section .platform-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* Immersion professionnelle : cartes équilibrées */
+  .formation-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .formation-card {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+}
