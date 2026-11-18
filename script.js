@@ -5,6 +5,12 @@
    Centre pédagogique régional de l'ICESCO au Tchad
 ===================================================== */
 
+"use strict";
+
+/* =====================================================
+   1. TRADUCTIONS PRINCIPALES
+===================================================== */
+
 const translations = {
 
   /* ================= FRANÇAIS ================= */
@@ -187,165 +193,7 @@ const translations = {
 
 
 /* =====================================================
-   GESTION DES LANGUES
-===================================================== */
-
-function setLanguage(lang) {
-
-  const selected = translations[lang] ? lang : "fr";
-  const dict = translations[selected];
-
-  document.documentElement.lang = selected;
-
-  document.documentElement.dir =
-    selected === "ar" ? "rtl" : "ltr";
-
-  document.body.dir =
-    selected === "ar" ? "rtl" : "ltr";
-
-  document.querySelectorAll("[data-i18n]").forEach(element => {
-
-    const key = element.getAttribute("data-i18n");
-
-    if (Object.prototype.hasOwnProperty.call(dict, key)) {
-      element.innerHTML = dict[key];
-    }
-
-  });
-
-  // Enregistrer la langue choisie
-  try {
-    localStorage.setItem("cprit_language", selected);
-  } catch (error) {
-    console.warn("Impossible d'enregistrer la langue.", error);
-  }
-
-  // Mettre à jour le sélecteur
-  const language =
-    document.getElementById("languageSelect") ||
-    document.getElementById("language");
-
-  if (language) {
-    language.value = selected;
-  }
-
-  // Titre de la page
-  if (selected === "ar") {
-    document.title = "CPRIT | المركز التربوي الإقليمي للإيسيسكو في تشاد";
-  } else if (selected === "en") {
-    document.title = "CPRIT | ICESCO Regional Pedagogical Centre in Chad";
-  } else {
-    document.title = "CPRIT | Centre pédagogique régional de l'ICESCO au Tchad";
-  }
-
-  // Informer les autres scripts
-  document.dispatchEvent(
-    new CustomEvent("cprit:languageChanged", {
-      detail: { language: selected }
-    })
-  );
-}
-
-
-/* =====================================================
-   INITIALISATION
-===================================================== */
-
-function initCPRITScript() {
-
-  const language =
-    document.getElementById("languageSelect") ||
-    document.getElementById("language");
-
-  const menuToggle = document.getElementById("menuToggle");
-  const mainNav = document.getElementById("mainNav");
-  const year = document.getElementById("year");
-
-  // Restaurer la langue enregistrée
-  let savedLanguage = "fr";
-
-  try {
-    const saved = localStorage.getItem("cprit_language");
-
-    if (translations[saved]) {
-      savedLanguage = saved;
-    }
-  } catch (error) {
-    console.warn("Impossible de récupérer la langue.", error);
-  }
-
-  // Appliquer la langue initiale
-  setLanguage(savedLanguage);
-
-  // Changement de langue
-  if (language) {
-    language.addEventListener("change", function () {
-      setLanguage(this.value);
-    });
-  }
-
-  // Menu mobile
-  if (menuToggle && mainNav) {
-    menuToggle.addEventListener("click", function () {
-      mainNav.classList.toggle("open");
-    });
-  }
-
-  // Fermer le menu après sélection
-  if (mainNav) {
-    mainNav.querySelectorAll("a").forEach(link => {
-      link.addEventListener("click", function () {
-        mainNav.classList.remove("open");
-      });
-    });
-  }
-
-  // Année automatique
-  if (year) {
-    year.textContent = new Date().getFullYear();
-  }
-
-}
-
-
-/* =====================================================
-   LANCEMENT DU SCRIPT
-===================================================== */
-
-if (document.readyState === "loading") {
-
-  document.addEventListener(
-    "DOMContentLoaded",
-    initCPRITScript
-  );
-
-} else {
-
-  initCPRITScript();
-
-}
-
-
-/* =====================================================
-   API DE LANGUE CPRIT
-===================================================== */
-
-window.CPRITLanguage = {
-  get: function () {
-    try {
-      return localStorage.getItem("cprit_language") || "fr";
-    } catch (error) {
-      return "fr";
-    }
-  },
-
-  set: function (language) {
-    setLanguage(language);
-  }
-};
-
-/* =====================================================
-   TRADUCTIONS COMPLÉMENTAIRES — CPRIT
+   2. TRADUCTIONS COMPLÉMENTAIRES — CONCOURS
 ===================================================== */
 
 Object.assign(translations.fr, {
@@ -387,70 +235,11 @@ Object.assign(translations.ar, {
   directorRole: "المدير العام للمركز"
 });
 
-/* إعادة تطبيق اللغة المختارة */
-const currentCPRITLanguage = window.CPRITLanguage.get();
-setLanguage(currentCPRITLanguage);
 
+/* =====================================================
+   3. TRADUCTIONS DE LA GALERIE
+===================================================== */
 
-/* CORRECTION AUTOMATIQUE DE L'ORDRE DES SECTIONS */
-(function () {
-  const formation = document.getElementById("formation");
-  const publications = document.getElementById("publications");
-  const annonces = document.getElementById("announcementsGrid");
-
-  if (formation) {
-    if (publications) {
-      formation.before(publications);
-    }
-
-    if (annonces) {
-      formation.before(annonces);
-    }
-  }
-})();
-
-
-/* CORRECTION FINALE CPRIT */
-(function () {
-  "use strict";
-
-  const langue = document.getElementById("languageSelect");
-  const centre = document.getElementById("centre");
-  const formation = document.getElementById("formation");
-  const annonces = document.getElementById("announcementsGrid");
-  const publications = document.getElementById("publications");
-
-  /* PLACEMENT : APRÈS LA PRÉSENTATION */
-  if (centre && annonces) {
-    centre.after(annonces);
-  }
-
-  /* PUBLICATIONS APRÈS LA PLATEFORME */
-  const plateforme = document.getElementById("espaces");
-  if (plateforme && publications) {
-    plateforme.after(publications);
-  }
-
-  /* TRADUCTION APRÈS LE CHARGEMENT */
-  function actualiserLangue(code) {
-    if (window.CPRITLanguage) {
-      window.CPRITLanguage.set(code);
-    }
-  }
-
-  if (langue) {
-    langue.addEventListener("change", function () {
-      actualiserLangue(langue.value);
-    });
-  }
-
-  const langueEnregistree =
-    localStorage.getItem("cprit_language") || "fr";
-
-  actualiserLangue(langueEnregistree);
-})();
-
-/* GALERIE CPRIT — TRADUCTIONS */
 Object.assign(translations.fr, {
   galleryTitle: "Le CPRIT en images",
   galleryCaption: "Notre établissement"
@@ -466,8 +255,209 @@ Object.assign(translations.ar, {
   galleryCaption: "مؤسستنا"
 });
 
-/* Actualiser la galerie dans la langue sélectionnée */
-setLanguage(window.CPRITLanguage.get());
+
+/* =====================================================
+   4. GESTION DES LANGUES
+===================================================== */
+
+function setLanguage(lang) {
+
+  const selected = translations[lang] ? lang : "fr";
+  const dict = translations[selected];
+
+  document.documentElement.lang = selected;
+
+  document.documentElement.dir =
+    selected === "ar" ? "rtl" : "ltr";
+
+  if (document.body) {
+    document.body.dir =
+      selected === "ar" ? "rtl" : "ltr";
+  }
+
+  document.querySelectorAll("[data-i18n]").forEach(function (element) {
+
+    const key = element.getAttribute("data-i18n");
+
+    if (Object.prototype.hasOwnProperty.call(dict, key)) {
+      element.innerHTML = dict[key];
+    }
+
+  });
+
+  /* ENREGISTRER LA LANGUE */
+  try {
+    localStorage.setItem("cprit_language", selected);
+  } catch (error) {
+    console.warn("Impossible d'enregistrer la langue.", error);
+  }
+
+  /* METTRE À JOUR LE SÉLECTEUR */
+  const languageSelect =
+    document.getElementById("languageSelect") ||
+    document.getElementById("language");
+
+  if (languageSelect) {
+    languageSelect.value = selected;
+  }
+
+  /* TITRE DE LA PAGE */
+  if (selected === "ar") {
+
+    document.title =
+      "CPRIT | المركز التربوي الإقليمي للإيسيسكو في تشاد";
+
+  } else if (selected === "en") {
+
+    document.title =
+      "CPRIT | ICESCO Regional Pedagogical Centre in Chad";
+
+  } else {
+
+    document.title =
+      "CPRIT | Centre pédagogique régional de l'ICESCO au Tchad";
+
+  }
+
+  /* INFORMER LES AUTRES SCRIPTS */
+  document.dispatchEvent(
+    new CustomEvent("cprit:languageChanged", {
+      detail: { language: selected }
+    })
+  );
+
+}
 
 
+/* =====================================================
+   5. API DE LANGUE CPRIT
+===================================================== */
 
+window.CPRITLanguage = {
+
+  get: function () {
+
+    try {
+      const saved = localStorage.getItem("cprit_language");
+
+      return translations[saved] ? saved : "fr";
+
+    } catch (error) {
+      return "fr";
+    }
+
+  },
+
+  set: function (language) {
+    setLanguage(language);
+  }
+
+};
+
+
+/* =====================================================
+   6. INITIALISATION DU SITE
+===================================================== */
+
+function initCPRITScript() {
+
+  const languageSelect =
+    document.getElementById("languageSelect") ||
+    document.getElementById("language");
+
+  const menuToggle = document.getElementById("menuToggle");
+  const mainNav = document.getElementById("mainNav");
+  const year = document.getElementById("year");
+
+
+  /* LANGUE ENREGISTRÉE */
+  let savedLanguage = "fr";
+
+  try {
+
+    const saved = localStorage.getItem("cprit_language");
+
+    if (translations[saved]) {
+      savedLanguage = saved;
+    }
+
+  } catch (error) {
+
+    console.warn("Impossible de récupérer la langue.", error);
+
+  }
+
+
+  /* APPLIQUER LA LANGUE UNE SEULE FOIS */
+  setLanguage(savedLanguage);
+
+
+  /* CHANGEMENT DE LANGUE */
+  if (languageSelect) {
+
+    languageSelect.addEventListener("change", function () {
+      setLanguage(this.value);
+    });
+
+  }
+
+
+  /* MENU MOBILE */
+  if (menuToggle && mainNav) {
+
+    menuToggle.addEventListener("click", function () {
+
+      const isOpen = mainNav.classList.toggle("open");
+
+      menuToggle.setAttribute(
+        "aria-expanded",
+        String(isOpen)
+      );
+
+    });
+
+
+    /* FERMER LE MENU APRÈS SÉLECTION */
+    mainNav.querySelectorAll("a").forEach(function (link) {
+
+      link.addEventListener("click", function () {
+
+        mainNav.classList.remove("open");
+
+        menuToggle.setAttribute(
+          "aria-expanded",
+          "false"
+        );
+
+      });
+
+    });
+
+  }
+
+
+  /* ANNÉE AUTOMATIQUE */
+  if (year) {
+    year.textContent = new Date().getFullYear();
+  }
+
+}
+
+
+/* =====================================================
+   7. LANCEMENT DU SCRIPT
+===================================================== */
+
+if (document.readyState === "loading") {
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    initCPRITScript,
+    { once: true }
+  );
+
+} else {
+
+  initCPRITScript();
+
+}
