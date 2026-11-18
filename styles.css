@@ -1874,3 +1874,47 @@ html[dir="rtl"] .director-card {
   }
 
 }
+/* CPRIT — RESTAURATION DE LA SECTION DOMAINES D'APPRENTISSAGE */
+
+.platform-section {
+  display: block;
+  width: 100%;
+  max-width: none;
+  overflow: visible;
+}
+
+.platform-section .section-heading {
+  width: 100%;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.platform-section .platform-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  width: 100%;
+  max-width: 1150px;
+  margin: 0 auto;
+  gap: 17px;
+  align-items: stretch;
+}
+
+.platform-section .platform-card {
+  min-width: 0;
+}
+
+/* TABLETTE */
+@media (max-width: 1100px) {
+  .platform-section .platform-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .platform-section .platform-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 17px;
+  }
+}
