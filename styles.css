@@ -1918,3 +1918,55 @@ html[dir="rtl"] .director-card {
     gap: 17px;
   }
 }
+
+/* ==========================================
+   CPRIT — CORRECTION ÉQUILIBRAGE MOBILE
+   Domaines d'apprentissage + immersion
+   ========================================== */
+
+@media (max-width: 700px) {
+
+  .platform-section {
+    width: 100% !important;
+    padding-left: 5% !important;
+    padding-right: 5% !important;
+    overflow: visible !important;
+  }
+
+  .platform-section .section-heading {
+    width: 100% !important;
+    max-width: 100% !important;
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .platform-section .platform-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: 20px !important;
+    margin: 0 auto !important;
+  }
+
+  .platform-section .platform-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+  }
+
+  .platform-section .platform-card img {
+    max-width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    object-fit: contain !important;
+  }
+
+  .platform-section h2 {
+    text-align: center !important;
+  }
+
+}
