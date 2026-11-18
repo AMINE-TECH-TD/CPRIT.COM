@@ -2000,3 +2000,38 @@ html[dir="rtl"] .director-card {
     min-width: 0 !important;
   }
 }
+
+
+/* CPRIT — CORRECTION CIBLÉE DE L'AFFICHAGE MOBILE */
+@media (max-width: 1100px) {
+
+  /* Formation : cartes empilées */
+  .formation-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .formation-grid .formation-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* Domaines : assistant sur toute la largeur */
+  .platform-section .platform-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .platform-section .platform-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+}
+
