@@ -17,7 +17,7 @@ a{text-decoration:none;color:inherit}img{max-width:100%;display:block}
 .menu-toggle{display:none;background:none;border:0;font-size:28px;color:var(--dark);cursor:pointer}
 .navigation{display:flex;justify-content:center;align-items:center;gap:6px;background:var(--dark);padding:0 3%}
 .navigation>a,.drop-btn{color:#fff;font:600 14px "Segoe UI",Arial,sans-serif;padding:13px 16px;background:none;border:0;cursor:pointer;display:block}
-.navigation>a:hover,.drop-btn:hover,.dropdown:hover .drop-btn{color:#F6D77C}
+.navigation>a:hover,.drop-btn:hover,.dropdown:hover .drop-btn,.dropdown.open .drop-btn{color:#F6D77C}
 .dropdown{position:relative}
 .drop-menu{display:none;position:absolute;top:100%;left:0;min-width:220px;background:#fff;border-radius:0 0 10px 10px;box-shadow:0 12px 28px rgba(0,0,0,.15);overflow:hidden}
 .drop-menu a{display:block;padding:12px 18px;color:var(--dark);font-size:14px;font-weight:600;border-bottom:1px solid var(--border)}
@@ -89,3 +89,22 @@ html[dir=rtl] .drop-menu{left:auto;right:0}
  .cta{display:none}.language-select{padding:6px;font-size:12px}
  .hero-inner{padding:50px 6%;min-height:400px}.strip{flex-direction:column;align-items:flex-start}
 }
+
+/* 7 onglets déroulants */
+html,body{overflow-x:hidden}
+.navigation{flex-wrap:wrap}
+.drop-btn::after{content:" ▾";font-size:11px}
+.navigation>a,.drop-btn{padding:13px 14px}
+.dropdown:nth-last-child(-n+2) .drop-menu{left:auto;right:0}
+html[dir=rtl] .dropdown:nth-last-child(-n+2) .drop-menu{right:auto;left:0}
+.drop-menu{z-index:200}
+/* Diaporama */
+.slider{position:relative;overflow:hidden;max-width:1150px;margin:0 auto 34px;border-radius:12px;height:clamp(210px,44vw,450px);direction:ltr;box-shadow:0 12px 35px rgba(18,59,37,.18);background:#dfeae3}
+.slides{display:flex;height:100%;transition:transform .8s ease}
+.slides img{min-width:100%;height:100%;object-fit:cover}
+.s-btn{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border:0;border-radius:50%;background:rgba(255,255,255,.85);color:var(--dark);font-size:26px;cursor:pointer;line-height:1}
+.s-btn:hover{background:#fff}.prev{left:12px}.next{right:12px}
+.dots{position:absolute;bottom:12px;left:0;right:0;display:flex;justify-content:center;gap:8px}
+.dots button{width:10px;height:10px;border-radius:50%;border:0;background:rgba(255,255,255,.6);cursor:pointer;padding:0}
+.dots button.on{background:var(--gold);width:26px;border-radius:6px}
+@media(max-width:850px){.navigation>a,.drop-btn{text-align:start}.dropdown:nth-last-child(-n+2) .drop-menu{right:auto}}

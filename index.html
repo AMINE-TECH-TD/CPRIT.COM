@@ -26,21 +26,20 @@
     </div>
   </div>
   <nav class="navigation" id="mainNav">
-    <a href="#accueil" data-i18n="navHome">Accueil</a>
-    <a href="#centre" data-i18n="navCenter">Le Centre</a>
-    <a href="#formation" data-i18n="navTraining">Formation</a>
-    <a href="#plateforme" data-i18n="navPlatform">Plateforme</a>
-    <a href="#actualites" data-i18n="navNews">Actualités</a>
-    <div class="dropdown">
-      <button type="button" class="drop-btn" data-i18n="navResources">Ressources ▾</button>
-      <div class="drop-menu">
-        <a href="#publications" data-i18n="navPublications">Publications</a>
-        <a href="rapport-activites.html" data-i18n="navReports">Rapports d'activités</a>
-        <a href="#galerie" data-i18n="navGallery">Galerie</a>
-        <a href="#partenariats" data-i18n="navPartners">Partenariats</a>
-      </div>
-    </div>
-    <a href="#contact" data-i18n="navContact">Contact</a>
+    <div class="dropdown"><button type="button" class="drop-btn" data-i18n="navHome">Accueil</button>
+      <div class="drop-menu"><a href="#accueil" data-i18n="subWelcome">Bienvenue</a><a href="#actualites" data-i18n="subLatest">Communiqué et message du DG</a></div></div>
+    <div class="dropdown"><button type="button" class="drop-btn" data-i18n="navCenter">Le Centre</button>
+      <div class="drop-menu"><a href="#centre" data-i18n="subPresentation">Présentation</a><a href="#partenariats" data-i18n="navPartners">Partenariats</a></div></div>
+    <div class="dropdown"><button type="button" class="drop-btn" data-i18n="navTraining">Formation</button>
+      <div class="drop-menu"><a href="#formation" data-i18n="subTrack">Parcours de formation</a><a href="#competences" data-i18n="subSkills">Compétences visées</a><a href="#admission" data-i18n="navAdmission">Admission</a></div></div>
+    <div class="dropdown"><button type="button" class="drop-btn" data-i18n="navPlatform">Plateforme</button>
+      <div class="drop-menu"><a href="#espace-formateurs" data-i18n="subTrainers">Espace formateurs</a><a href="#espace-etudiants" data-i18n="subStudents">Espace futurs enseignants</a><a href="#assistant-ia" data-i18n="navAI">Assistant IA</a></div></div>
+    <div class="dropdown"><button type="button" class="drop-btn" data-i18n="navNews">Actualités</button>
+      <div class="drop-menu"><a href="#actualites" data-i18n="subNewsTop">À la une</a><a href="#galerie" data-i18n="navGallery">Galerie</a></div></div>
+    <div class="dropdown"><button type="button" class="drop-btn" data-i18n="navResources">Ressources</button>
+      <div class="drop-menu"><a href="#publications" data-i18n="navPublications">Publications</a><a href="rapport-activites.html" data-i18n="navReports">Rapports d'activités</a></div></div>
+    <div class="dropdown"><button type="button" class="drop-btn" data-i18n="navContact">Contact</button>
+      <div class="drop-menu"><a href="#contact" data-i18n="subContactUs">Nous contacter</a><a href="inscription.html" data-i18n="subRegister">Inscription</a></div></div>
   </nav>
 </header>
 
@@ -63,7 +62,8 @@
   <div><strong>03</strong><span data-i18n="trust3">Apprentissage numérique</span></div>
 </div>
 
-<section class="section alt" id="actualites-une">
+<section class="section alt" id="actualites">
+  <div class="slider" id="slider" aria-label="Photos du CPRIT"><div class="slides"><img src="assets/images/cprit-principal.jpg" alt="CPRIT"><img src="assets/images/cprit-cour-1.jpg" alt="CPRIT"><img src="assets/images/cprit-cour-2.jpg" alt="CPRIT"><img src="assets/images/cprit-cour-3.jpg" alt="CPRIT"></div><button class="s-btn prev" aria-label="Précédent">‹</button><button class="s-btn next" aria-label="Suivant">›</button><div class="dots"></div></div>
   <div class="grid g2">
     <article class="card featured">
       <span class="tag" data-i18n="contestTag">COMMUNIQUÉ OFFICIEL</span>
@@ -97,7 +97,7 @@
     <article class="card"><div class="num">01</div><span class="tag" data-i18n="yearOne">PREMIÈRE ANNÉE</span><h3 data-i18n="yearOneTitle"></h3><p data-i18n="yearOneDescription"></p></article>
     <article class="card featured"><div class="num">02</div><span class="tag" data-i18n="yearTwo">DEUXIÈME ANNÉE</span><h3 data-i18n="yearTwoTitle"></h3><p data-i18n="yearTwoDescription"></p></article>
   </div>
-  <div class="heading center sub"><h2 data-i18n="skillsTitle">Les compétences à développer</h2></div>
+  <div class="heading center sub" id="competences"><h2 data-i18n="skillsTitle">Les compétences à développer</h2></div>
   <div class="grid g3">
     <article class="card sm"><div class="num">01</div><h3 data-i18n="skill1Title"></h3><p data-i18n="skill1Text"></p></article>
     <article class="card sm"><div class="num">02</div><h3 data-i18n="skill2Title"></h3><p data-i18n="skill2Text"></p></article>
@@ -112,8 +112,8 @@
 <section class="section" id="plateforme">
   <div class="heading center"><span class="label" data-i18n="platformLabel">ENVIRONNEMENT NUMÉRIQUE</span><h2 data-i18n="platformTitle"></h2><p data-i18n="platformIntro"></p></div>
   <div class="grid g4">
-    <article class="card sm"><div class="num">01</div><h3 data-i18n="trainerTitle"></h3><p data-i18n="trainerDescription"></p><span class="tag" data-i18n="trainerAccess"></span></article>
-    <article class="card sm"><div class="num">02</div><h3 data-i18n="studentTitle"></h3><p data-i18n="studentDescription"></p><a href="connexion.html" class="btn btn-solid small" data-i18n="studentLogin">Accéder à mon espace</a></article>
+    <article class="card sm" id="espace-formateurs"><div class="num">01</div><h3 data-i18n="trainerTitle"></h3><p data-i18n="trainerDescription"></p><span class="tag" data-i18n="trainerAccess"></span></article>
+    <article class="card sm" id="espace-etudiants"><div class="num">02</div><h3 data-i18n="studentTitle"></h3><p data-i18n="studentDescription"></p><a href="connexion.html" class="btn btn-solid small" data-i18n="studentLogin">Accéder à mon espace</a></article>
     <article class="card sm"><div class="num">03</div><h3 data-i18n="onlineTitle"></h3><p data-i18n="onlineDescription"></p><span class="tag" data-i18n="onlineAccess"></span></article>
     <article class="card sm ai" id="assistant-ia"><img src="assets/images/cprit-robot.png" alt="Assistant IA du CPRIT"><h3 data-i18n="aiTitle"></h3><p data-i18n="aiDescription"></p><a href="assistant-ia.html" class="btn btn-solid small" data-i18n="aiLink">Découvrir l'assistant →</a></article>
   </div>
