@@ -22,10 +22,12 @@ textarea{min-height:180px;resize:vertical}
 .body{white-space:pre-wrap;line-height:1.7;margin:16px 0;padding:14px;background:var(--bg);border-radius:8px}
 .picks{max-height:170px;overflow:auto;border:1px solid #C9DCD0;border-radius:8px;padding:6px 10px;margin:6px 0 12px}
 .picks label{display:flex;gap:8px;align-items:center;padding:4px 0;font-size:14px}.picks input{width:auto;margin:0}
-.pw{position:relative;margin:6px 0 12px}
-.pw input{margin:0;padding-right:46px}
-.pw .eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;background:none;cursor:pointer;font-size:20px;line-height:1;opacity:.75}
-.pw .eye:hover{opacity:1}
+.pw{display:flex;align-items:center;box-sizing:border-box;width:100%;background:#fff;border:1px solid #C9DCD0;border-radius:8px;transition:border-color .2s,box-shadow .2s}
+.pw:focus-within{border-color:#087A4B;box-shadow:0 0 0 3px rgba(8,122,75,.15)}
+.pw input{flex:1 1 auto;min-width:0;width:auto!important;margin:0!important;border:0!important;background:transparent!important;box-shadow:none!important;outline:none!important}
+.pw .eye{flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:46px;align-self:stretch;border:0;background:none;color:#4F6B5E;cursor:pointer;border-radius:0 8px 8px 0}
+.pw .eye:hover{color:#064B35}
+.pw .eye svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .err{color:#b00020;font-size:14px;min-height:20px}.hide{display:none}
 </style>
 </head>
@@ -62,14 +64,19 @@ textarea{min-height:180px;resize:vertical}
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 if (/VOTRE/.test(SUPABASE_URL + SUPABASE_ANON_KEY)) document.addEventListener("DOMContentLoaded", () => { $("lerr").textContent = "supabase-config.js n'est pas rempli."; });
 function addEye(input){
-  const w=document.createElement("div"); w.className="pw";
+  const OPEN='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+  const SHUT='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.94 17.94A10.9 10.9 0 0 1 12 19C5 19 1 12 1 12a18.5 18.5 0 0 1 5.06-5.94M9.9 4.24A10.9 10.9 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24"/><path d="M1 1l22 22"/></svg>';
+  const cs=getComputedStyle(input), w=document.createElement("div");
+  w.className="pw"; w.style.marginTop=cs.marginTop; w.style.marginBottom=cs.marginBottom;
+  if (cs.borderTopWidth!=="0px") { w.style.borderColor=cs.borderTopColor; w.style.borderRadius=cs.borderTopLeftRadius; }
+  if (cs.backgroundColor!=="rgba(0, 0, 0, 0)") w.style.background=cs.backgroundColor;
   input.parentNode.insertBefore(w,input); w.appendChild(input);
   const b=document.createElement("button"); b.type="button"; b.className="eye";
-  b.textContent="👁"; b.setAttribute("aria-label","Afficher le mot de passe"); b.setAttribute("aria-pressed","false");
-  b.onclick=()=>{const show=input.type==="password"; input.type=show?"text":"password";
-    b.textContent=show?"🙈":"👁"; b.setAttribute("aria-pressed",String(show));
-    b.setAttribute("aria-label",show?"Masquer le mot de passe":"Afficher le mot de passe");};
-  w.appendChild(b);
+  const set=show=>{ input.type=show?"text":"password"; b.innerHTML=show?OPEN:SHUT;
+    b.setAttribute("aria-pressed",String(show)); b.setAttribute("aria-label",show?"Masquer le mot de passe":"Afficher le mot de passe"); };
+  b.addEventListener("mousedown",e=>e.preventDefault());           // garde le clavier ouvert
+  b.addEventListener("click",()=>{ set(input.type==="password"); input.focus(); });
+  set(false); w.appendChild(b);
 }
 const $ = id => document.getElementById(id);
 let me, people = {}, view = "inbox";
