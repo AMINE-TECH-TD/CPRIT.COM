@@ -61,7 +61,8 @@ textarea{min-height:180px;resize:vertical}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="supabase-config.js"></script>
 <script>
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+/* Garde seulement l'adresse de base du projet (https://xxxx.supabase.co), même si un chemin a été collé en trop */
+let sb; try { sb = supabase.createClient(new URL(SUPABASE_URL.trim()).origin, SUPABASE_ANON_KEY.trim()); } catch (e) { console.error(e); }
 if (/VOTRE/.test(SUPABASE_URL + SUPABASE_ANON_KEY)) document.addEventListener("DOMContentLoaded", () => { $("lerr").textContent = "supabase-config.js n'est pas rempli."; });
 function addEye(input){
   const OPEN='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>';
