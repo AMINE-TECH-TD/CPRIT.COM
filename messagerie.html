@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Messagerie du personnel | CPRIT</title>
+<link rel="stylesheet" href="styles.css?v=5">
+<style>
+body{background:var(--bg)}
+.wrap{max-width:1000px;margin:30px auto;padding:0 4%}
+.box{background:#fff;border:1px solid var(--border);border-radius:12px;padding:22px;box-shadow:0 7px 24px rgba(6,75,53,.06)}
+.login{max-width:380px;margin:40px auto}
+input,select,textarea{width:100%;padding:11px;border:1px solid #C9DCD0;border-radius:8px;font:inherit;margin:6px 0 12px}
+textarea{min-height:180px;resize:vertical}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px}
+.bar .grow{flex:1;color:var(--muted);font-size:14px}
+.tab{background:#fff;border:1px solid var(--green);color:var(--dark);padding:8px 16px;border-radius:20px;font-weight:700;cursor:pointer}
+.tab.on{background:var(--green);color:#fff}
+.row{display:flex;justify-content:space-between;gap:10px;padding:12px;border-bottom:1px solid var(--border);cursor:pointer}
+.row:hover{background:var(--pale)}.row.unread{font-weight:700}.row small{color:var(--muted);white-space:nowrap}
+.body{white-space:pre-wrap;line-height:1.7;margin:16px 0;padding:14px;background:var(--bg);border-radius:8px}
+.picks{max-height:170px;overflow:auto;border:1px solid #C9DCD0;border-radius:8px;padding:6px 10px;margin:6px 0 12px}
+.picks label{display:flex;gap:8px;align-items:center;padding:4px 0;font-size:14px}.picks input{width:auto;margin:0}
+.err{color:#b00020;font-size:14px;min-height:20px}.hide{display:none}
+</style>
+</head>
+<body>
+<header class="header"><div class="header-top">
+  <a class="brand" href="index.html"><img src="assets/logo-cprit.png" alt="CPRIT"><span class="brand-text"><strong>CPRIT</strong><small>Messagerie du personnel</small></span></a>
+  <a href="index.html" class="cta">← Retour au site</a>
+</div></header>
+
+<div class="wrap">
+  <div id="login" class="box login">
+    <h3 style="font-family:Georgia,serif;color:var(--dark)">Connexion du personnel</h3>
+    <input id="email" type="email" placeholder="Adresse e-mail" autocomplete="username">
+    <input id="pass" type="password" placeholder="Mot de passe" autocomplete="current-password">
+    <button id="go" class="btn btn-solid" style="border:0;cursor:pointer">Se connecter</button>
+    <p id="lerr" class="err"></p>
+  </div>
+
+  <div id="app" class="hide">
+    <div class="bar">
+      <button class="tab on" data-v="inbox" id="tInbox">Réception</button>
+      <button class="tab" data-v="sent">Envoyés</button>
+      <button class="tab" data-v="new">✉ Écrire</button>
+      <span class="grow" id="who"></span>
+      <button class="tab" id="out">Déconnexion</button>
+    </div>
+    <div class="box" id="main"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="supabase-config.js"></script>
+<script>
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const $ = id => document.getElementById(id);
+let me, people = {}, view = "inbox";
+const name = id => (people[id] && people[id].full_name) || "Inconnu";
+const fmt = d => new Date(d).toLocaleString("fr-FR", {dateStyle:"short", timeStyle:"short"});
+function h(tag, text, cls){ const e = document.createElement(tag); if (text != null) e.textContent = text; if (cls) e.className = cls; return e; }
+
+async function start(){
+  const { data:{ session } } = await sb.auth.getSession();
+  if (!session) { $("login").classList.remove("hide"); $("app").classList.add("hide"); return; }
+  me = session.user;
+  const { data } = await sb.from("profiles").select("id,full_name,job_title");
+  (data || []).forEach(p => people[p.id] = p);
+  $("who").textContent = name(me.id);
+  $("login").classList.add("hide"); $("app").classList.remove("hide");
+  show("inbox");
+}
+$("go").onclick = async () => {
+  const { error } = await sb.auth.signInWithPassword({ email:$("email").value.trim(), password:$("pass").value });
+  if (error) $("lerr").textContent = "Identifiants incorrects."; else start();
+};
+$("out").onclick = async () => { await sb.auth.signOut(); people = {}; start(); };
+document.querySelectorAll("[data-v]").forEach(b => b.onclick = () => show(b.dataset.v));
+
+async function show(v, prefill){
+  view = v; const m = $("main"); m.replaceChildren();
+  document.querySelectorAll("[data-v]").forEach(b => b.classList.toggle("on", b.dataset.v === v));
+  if (v === "new") return compose(m, prefill);
+  const list = h("div"); m.append(list);
+  if (v === "inbox") {
+    const { data } = await sb.from("message_recipients").select("id,read_at,message:messages(id,subject,body,created_at,sender_id)").eq("recipient_id", me.id).is("deleted_at", null);
+    const rows = (data || []).filter(r => r.message).sort((a,b) => b.message.created_at.localeCompare(a.message.created_at));
+    const n = rows.filter(r => !r.read_at).length; $("tInbox").textContent = "Réception" + (n ? " (" + n + ")" : "");
+    if (!rows.length) list.append(h("p", "Aucun message.", "err"));
+    rows.forEach(r => { const row = h("div", null, "row" + (r.read_at ? "" : " unread"));
+      row.append(h("span", name(r.message.sender_id) + " — " + (r.message.subject || "(sans objet)")), h("small", fmt(r.message.created_at)));
+      row.onclick = () => open(r.message, r); list.append(row); });
+  } else {
+    const { data } = await sb.from("messages").select("id,subject,body,created_at,sender_id,message_recipients(recipient_id)").eq("sender_id", me.id).eq("sender_deleted", false).order("created_at", { ascending:false });
+    if (!(data || []).length) list.append(h("p", "Aucun message envoyé.", "err"));
+    (data || []).forEach(x => { const row = h("div", null, "row");
+      row.append(h("span", "À : " + x.message_recipients.map(r => name(r.recipient_id)).join(", ") + " — " + (x.subject || "(sans objet)")), h("small", fmt(x.created_at)));
+      row.onclick = () => open(x, null); list.append(row); });
+  }
+}
+
+async function open(msg, rec){
+  const m = $("main"); m.replaceChildren();
+  m.append(h("h3", msg.subject || "(sans objet)"), h("small", (rec ? "De : " + name(msg.sender_id) : "Envoyé") + " • " + fmt(msg.created_at)), h("div", msg.body, "body"));
+  const bar = h("div", null, "bar");
+  const back = h("button", "← Retour", "tab"); back.onclick = () => show(view);
+  const del = h("button", "Supprimer", "tab");
+  del.onclick = async () => { if (!confirm("Supprimer ce message ?")) return;
+    if (rec) await sb.from("message_recipients").update({ deleted_at:new Date().toISOString() }).eq("id", rec.id);
+    else await sb.from("messages").update({ sender_deleted:true }).eq("id", msg.id);
+    show(view); };
+  bar.append(back);
+  if (rec) { const rep = h("button", "Répondre", "tab on"); rep.onclick = () => show("new", { to:msg.sender_id, subject:"Re : " + (msg.subject || "") }); bar.append(rep);
+    if (!rec.read_at) { await sb.from("message_recipients").update({ read_at:new Date().toISOString() }).eq("id", rec.id); rec.read_at = 1; } }
+  bar.append(del); m.append(bar);
+}
+
+function compose(m, pre){
+  pre = pre || {};
+  m.append(h("h3", "Nouveau message"), h("label", "Destinataires"));
+  const picks = h("div", null, "picks");
+  Object.values(people).filter(p => p.id !== me.id).sort((a,b) => a.full_name.localeCompare(b.full_name)).forEach(p => {
+    const l = h("label"), c = document.createElement("input"); c.type = "checkbox"; c.value = p.id; c.checked = p.id === pre.to;
+    l.append(c, h("span", p.full_name + (p.job_title ? " — " + p.job_title : ""))); picks.append(l); });
+  const subj = document.createElement("input"); subj.placeholder = "Objet"; subj.maxLength = 200; subj.value = pre.subject || "";
+  const body = document.createElement("textarea"); body.placeholder = "Votre message…";
+  const err = h("p", "", "err"), send = h("button", "Envoyer", "btn btn-solid"); send.style.cssText = "border:0;cursor:pointer";
+  send.onclick = async () => {
+    const to = [...picks.querySelectorAll("input:checked")].map(c => c.value);
+    if (!to.length) return err.textContent = "Choisissez au moins un destinataire.";
+    if (!body.value.trim()) return err.textContent = "Le message est vide.";
+    send.disabled = true;
+    const { data, error } = await sb.from("messages").insert({ sender_id:me.id, subject:subj.value.trim(), body:body.value }).select("id").single();
+    if (error) { err.textContent = "Envoi impossible."; send.disabled = false; return; }
+    const r = await sb.from("message_recipients").insert(to.map(id => ({ message_id:data.id, recipient_id:id })));
+    if (r.error) { err.textContent = "Envoi impossible."; send.disabled = false; return; }
+    show("sent");
+  };
+  m.append(picks, subj, body, err, send);
+}
+start();
+</script>
+</body>
+</html>
