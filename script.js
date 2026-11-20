@@ -20,6 +20,9 @@ Object.keys(subs).forEach(l => Object.assign(T[l], subs[l]));
 
 Object.assign(T.en, { contestTag:"OFFICIAL ANNOUNCEMENT", contestTitle:"Entrance competition launch — Thursday, 19 November 2026", contestText:"CPRIT announces the launch of its entrance competition on Thursday, 19 November 2026.", reentryTitle:"Start of the academic year:", reentryText:"The academic year is scheduled to begin in December 2026. Practical information will be officially communicated by CPRIT.", directorTag:"MESSAGE FROM THE DIRECTOR GENERAL", directorTitle:"A message to future candidates", directorMessage:"On the occasion of the competition launch on Thursday, 19 November 2026, I extend my encouragement to all candidates. This is an important step in our commitment to training future primary school teachers. CPRIT is preparing to welcome the new class in December 2026. Together, let us make quality education a national priority.", directorName:"Mr Youssouf Hassane Taha", directorRole:"Director General of CPRIT" });
 Object.assign(T.ar, { contestTag:"إعلان رسمي", contestTitle:"إطلاق مسابقة القبول — الخميس 19 نوفمبر 2026", contestText:"يعلن المركز عن إطلاق مسابقة القبول يوم الخميس 19 نوفمبر 2026.", reentryTitle:"بداية السنة الدراسية:", reentryText:"من المقرر أن تبدأ السنة الدراسية في ديسمبر 2026. وسيعلن المركز رسمياً عن المعلومات العملية.", directorTag:"رسالة المدير العام", directorTitle:"رسالة إلى المترشحين", directorMessage:"بمناسبة إطلاق المسابقة يوم الخميس 19 نوفمبر 2026، أتقدم بالتشجيع إلى جميع المترشحات والمترشحين. وتمثل هذه الخطوة تقدماً مهماً في التزامنا بتكوين معلمي التعليم الابتدائي. ويستعد المركز لاستقبال الدفعة الجديدة في ديسمبر 2026. معاً، لنجعل جودة التعليم أولوية وطنية.", directorName:"السيد يوسف حسن طه", directorRole:"المدير العام للمركز" });
+Object.assign(T.fr, { newsPhotosTitle:"Le CPRIT en actualités", subNewsPhotos:"Actualités en images" });
+Object.assign(T.en, { newsPhotosTitle:"CPRIT in the news", subNewsPhotos:"News in pictures" });
+Object.assign(T.ar, { newsPhotosTitle:"المركز في الأخبار", subNewsPhotos:"الأخبار بالصور" });
 const titles = { fr: "CPRIT | Centre pédagogique régional de l'ICESCO au Tchad", en: "CPRIT | ICESCO Regional Pedagogical Centre in Chad", ar: "CPRIT | المركز التربوي الإقليمي للإيسيسكو في تشاد" };
 
 function setLanguage(lang) {
@@ -52,9 +55,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("click", e => { if (!e.target.closest(".dropdown")) drops.forEach(x => x.classList.remove("open")); });
   nav.querySelectorAll(".drop-menu a").forEach(a => a.addEventListener("click", () => { drops.forEach(x => x.classList.remove("open")); nav.classList.remove("open"); }));
 
-  /* DIAPORAMA AUTOMATIQUE */
-  const sl = document.getElementById("slider");
-  if (sl) {
+  /* DIAPORAMAS AUTOMATIQUES (tous les blocs .slider) */
+  document.querySelectorAll(".slider").forEach(sl => {
     const track = sl.querySelector(".slides"), n = track.children.length, dots = sl.querySelector(".dots");
     let i = 0, timer = null, x0 = null;
     const go = k => { i = (k + n) % n; track.style.transform = "translateX(-" + (i * 100) + "%)"; [...dots.children].forEach((d, j) => d.classList.toggle("on", j === i)); };
@@ -65,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
     sl.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; }, { passive: true });
     sl.addEventListener("touchend", e => { if (x0 === null) return; const d = e.changedTouches[0].clientX - x0; if (Math.abs(d) > 40) { go(i + (d < 0 ? 1 : -1)); restart(); } x0 = null; });
     go(0); restart();
-  }
+  });
 
   /* LANGUE (en dernier : une erreur ici ne bloque ni le menu ni le diaporama) */
   try {

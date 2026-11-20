@@ -108,3 +108,6 @@ html[dir=rtl] .dropdown:nth-last-child(-n+2) .drop-menu{right:auto;left:0}
 .dots button{width:10px;height:10px;border-radius:50%;border:0;background:rgba(255,255,255,.6);cursor:pointer;padding:0}
 .dots button.on{background:var(--gold);width:26px;border-radius:6px}
 @media(max-width:850px){.navigation>a,.drop-btn{text-align:start}.dropdown:nth-last-child(-n+2) .drop-menu{right:auto}}
+
+.slider.news{height:clamp(260px,56vw,520px)}
+.slider.news img{object-position:center 25%}
