@@ -6,6 +6,12 @@
   <meta name="theme-color" content="#064B35">
   <title>Administration institutionnelle – CPRIT</title>
   <link rel="stylesheet" href="admin.css?v=4">
+<style>
+.pw{position:relative;margin:6px 0 12px}
+.pw input{margin:0;padding-right:46px}
+.pw .eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;background:none;cursor:pointer;font-size:20px;line-height:1;opacity:.75}
+.pw .eye:hover{opacity:1}
+</style>
 </head>
 <body>
 
@@ -67,6 +73,19 @@
     </section>
   </main>
 
+  <script>
+function addEye(input){
+  const w=document.createElement("div"); w.className="pw";
+  input.parentNode.insertBefore(w,input); w.appendChild(input);
+  const b=document.createElement("button"); b.type="button"; b.className="eye";
+  b.textContent="👁"; b.setAttribute("aria-label","Afficher le mot de passe"); b.setAttribute("aria-pressed","false");
+  b.onclick=()=>{const show=input.type==="password"; input.type=show?"text":"password";
+    b.textContent=show?"🙈":"👁"; b.setAttribute("aria-pressed",String(show));
+    b.setAttribute("aria-label",show?"Masquer le mot de passe":"Afficher le mot de passe");};
+  w.appendChild(b);
+}
+addEye(document.getElementById("password"));
+</script>
   <script type="module" src="admin.js?v=4"></script>
 
 </body>

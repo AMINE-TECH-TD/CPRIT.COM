@@ -22,6 +22,10 @@ textarea{min-height:180px;resize:vertical}
 .body{white-space:pre-wrap;line-height:1.7;margin:16px 0;padding:14px;background:var(--bg);border-radius:8px}
 .picks{max-height:170px;overflow:auto;border:1px solid #C9DCD0;border-radius:8px;padding:6px 10px;margin:6px 0 12px}
 .picks label{display:flex;gap:8px;align-items:center;padding:4px 0;font-size:14px}.picks input{width:auto;margin:0}
+.pw{position:relative;margin:6px 0 12px}
+.pw input{margin:0;padding-right:46px}
+.pw .eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;background:none;cursor:pointer;font-size:20px;line-height:1;opacity:.75}
+.pw .eye:hover{opacity:1}
 .err{color:#b00020;font-size:14px;min-height:20px}.hide{display:none}
 </style>
 </head>
@@ -56,6 +60,17 @@ textarea{min-height:180px;resize:vertical}
 <script src="supabase-config.js"></script>
 <script>
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+if (/VOTRE/.test(SUPABASE_URL + SUPABASE_ANON_KEY)) document.addEventListener("DOMContentLoaded", () => { $("lerr").textContent = "supabase-config.js n'est pas rempli."; });
+function addEye(input){
+  const w=document.createElement("div"); w.className="pw";
+  input.parentNode.insertBefore(w,input); w.appendChild(input);
+  const b=document.createElement("button"); b.type="button"; b.className="eye";
+  b.textContent="👁"; b.setAttribute("aria-label","Afficher le mot de passe"); b.setAttribute("aria-pressed","false");
+  b.onclick=()=>{const show=input.type==="password"; input.type=show?"text":"password";
+    b.textContent=show?"🙈":"👁"; b.setAttribute("aria-pressed",String(show));
+    b.setAttribute("aria-label",show?"Masquer le mot de passe":"Afficher le mot de passe");};
+  w.appendChild(b);
+}
 const $ = id => document.getElementById(id);
 let me, people = {}, view = "inbox";
 const name = id => (people[id] && people[id].display_name) || "Inconnu";
@@ -73,8 +88,14 @@ async function start(){
   show("inbox");
 }
 $("go").onclick = async () => {
-  const { error } = await sb.auth.signInWithPassword({ email:$("email").value.trim(), password:$("pass").value });
-  if (error) $("lerr").textContent = "Identifiants incorrects."; else start();
+  $("lerr").textContent = "";
+  try {
+    const { error } = await sb.auth.signInWithPassword({ email:$("email").value.trim(), password:$("pass").value });
+    if (!error) return start();
+    $("lerr").textContent = /invalid login/i.test(error.message)
+      ? "E-mail ou mot de passe incorrect (ou compte introuvable)."
+      : "Connexion impossible : " + error.message;
+  } catch (e) { $("lerr").textContent = "Erreur : " + (e.message || e) + " — vérifiez supabase-config.js."; }
 };
 $("out").onclick = async () => { await sb.auth.signOut(); people = {}; start(); };
 document.querySelectorAll("[data-v]").forEach(b => b.onclick = () => show(b.dataset.v));
@@ -140,6 +161,7 @@ function compose(m, pre){
   };
   m.append(picks, subj, body, err, send);
 }
+addEye($("pass"));
 start();
 </script>
 </body>
