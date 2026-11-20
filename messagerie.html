@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>Messagerie du personnel | CPRIT</title>
-<link rel="stylesheet" href="styles.css?v=5">
+<link rel="stylesheet" href="styles.css?v=7">
 <style>
 body{background:var(--bg)}
 .wrap{max-width:1000px;margin:30px auto;padding:0 4%}
@@ -58,7 +58,7 @@ textarea{min-height:180px;resize:vertical}
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const $ = id => document.getElementById(id);
 let me, people = {}, view = "inbox";
-const name = id => (people[id] && people[id].full_name) || "Inconnu";
+const name = id => (people[id] && people[id].display_name) || "Inconnu";
 const fmt = d => new Date(d).toLocaleString("fr-FR", {dateStyle:"short", timeStyle:"short"});
 function h(tag, text, cls){ const e = document.createElement(tag); if (text != null) e.textContent = text; if (cls) e.className = cls; return e; }
 
@@ -66,7 +66,7 @@ async function start(){
   const { data:{ session } } = await sb.auth.getSession();
   if (!session) { $("login").classList.remove("hide"); $("app").classList.add("hide"); return; }
   me = session.user;
-  const { data } = await sb.from("profiles").select("id,full_name,job_title");
+  const { data } = await sb.from("mail_users").select("id,display_name,job_title");
   (data || []).forEach(p => people[p.id] = p);
   $("who").textContent = name(me.id);
   $("login").classList.add("hide"); $("app").classList.remove("hide");
@@ -85,7 +85,7 @@ async function show(v, prefill){
   if (v === "new") return compose(m, prefill);
   const list = h("div"); m.append(list);
   if (v === "inbox") {
-    const { data } = await sb.from("message_recipients").select("id,read_at,message:messages(id,subject,body,created_at,sender_id)").eq("recipient_id", me.id).is("deleted_at", null);
+    const { data } = await sb.from("mail_recipients").select("id,read_at,message:mail_messages(id,subject,body,created_at,sender_id)").eq("recipient_id", me.id).is("deleted_at", null);
     const rows = (data || []).filter(r => r.message).sort((a,b) => b.message.created_at.localeCompare(a.message.created_at));
     const n = rows.filter(r => !r.read_at).length; $("tInbox").textContent = "Réception" + (n ? " (" + n + ")" : "");
     if (!rows.length) list.append(h("p", "Aucun message.", "err"));
@@ -93,10 +93,10 @@ async function show(v, prefill){
       row.append(h("span", name(r.message.sender_id) + " — " + (r.message.subject || "(sans objet)")), h("small", fmt(r.message.created_at)));
       row.onclick = () => open(r.message, r); list.append(row); });
   } else {
-    const { data } = await sb.from("messages").select("id,subject,body,created_at,sender_id,message_recipients(recipient_id)").eq("sender_id", me.id).eq("sender_deleted", false).order("created_at", { ascending:false });
+    const { data } = await sb.from("mail_messages").select("id,subject,body,created_at,sender_id,mail_recipients(recipient_id)").eq("sender_id", me.id).eq("sender_deleted", false).order("created_at", { ascending:false });
     if (!(data || []).length) list.append(h("p", "Aucun message envoyé.", "err"));
     (data || []).forEach(x => { const row = h("div", null, "row");
-      row.append(h("span", "À : " + x.message_recipients.map(r => name(r.recipient_id)).join(", ") + " — " + (x.subject || "(sans objet)")), h("small", fmt(x.created_at)));
+      row.append(h("span", "À : " + x.mail_recipients.map(r => name(r.recipient_id)).join(", ") + " — " + (x.subject || "(sans objet)")), h("small", fmt(x.created_at)));
       row.onclick = () => open(x, null); list.append(row); });
   }
 }
@@ -108,12 +108,12 @@ async function open(msg, rec){
   const back = h("button", "← Retour", "tab"); back.onclick = () => show(view);
   const del = h("button", "Supprimer", "tab");
   del.onclick = async () => { if (!confirm("Supprimer ce message ?")) return;
-    if (rec) await sb.from("message_recipients").update({ deleted_at:new Date().toISOString() }).eq("id", rec.id);
-    else await sb.from("messages").update({ sender_deleted:true }).eq("id", msg.id);
+    if (rec) await sb.from("mail_recipients").update({ deleted_at:new Date().toISOString() }).eq("id", rec.id);
+    else await sb.from("mail_messages").update({ sender_deleted:true }).eq("id", msg.id);
     show(view); };
   bar.append(back);
   if (rec) { const rep = h("button", "Répondre", "tab on"); rep.onclick = () => show("new", { to:msg.sender_id, subject:"Re : " + (msg.subject || "") }); bar.append(rep);
-    if (!rec.read_at) { await sb.from("message_recipients").update({ read_at:new Date().toISOString() }).eq("id", rec.id); rec.read_at = 1; } }
+    if (!rec.read_at) { await sb.from("mail_recipients").update({ read_at:new Date().toISOString() }).eq("id", rec.id); rec.read_at = 1; } }
   bar.append(del); m.append(bar);
 }
 
@@ -121,9 +121,9 @@ function compose(m, pre){
   pre = pre || {};
   m.append(h("h3", "Nouveau message"), h("label", "Destinataires"));
   const picks = h("div", null, "picks");
-  Object.values(people).filter(p => p.id !== me.id).sort((a,b) => a.full_name.localeCompare(b.full_name)).forEach(p => {
+  Object.values(people).filter(p => p.id !== me.id).sort((a,b) => a.display_name.localeCompare(b.display_name)).forEach(p => {
     const l = h("label"), c = document.createElement("input"); c.type = "checkbox"; c.value = p.id; c.checked = p.id === pre.to;
-    l.append(c, h("span", p.full_name + (p.job_title ? " — " + p.job_title : ""))); picks.append(l); });
+    l.append(c, h("span", p.display_name + (p.job_title ? " — " + p.job_title : ""))); picks.append(l); });
   const subj = document.createElement("input"); subj.placeholder = "Objet"; subj.maxLength = 200; subj.value = pre.subject || "";
   const body = document.createElement("textarea"); body.placeholder = "Votre message…";
   const err = h("p", "", "err"), send = h("button", "Envoyer", "btn btn-solid"); send.style.cssText = "border:0;cursor:pointer";
@@ -132,9 +132,9 @@ function compose(m, pre){
     if (!to.length) return err.textContent = "Choisissez au moins un destinataire.";
     if (!body.value.trim()) return err.textContent = "Le message est vide.";
     send.disabled = true;
-    const { data, error } = await sb.from("messages").insert({ sender_id:me.id, subject:subj.value.trim(), body:body.value }).select("id").single();
+    const { data, error } = await sb.from("mail_messages").insert({ sender_id:me.id, subject:subj.value.trim(), body:body.value }).select("id").single();
     if (error) { err.textContent = "Envoi impossible."; send.disabled = false; return; }
-    const r = await sb.from("message_recipients").insert(to.map(id => ({ message_id:data.id, recipient_id:id })));
+    const r = await sb.from("mail_recipients").insert(to.map(id => ({ message_id:data.id, recipient_id:id })));
     if (r.error) { err.textContent = "Envoi impossible."; send.disabled = false; return; }
     show("sent");
   };
