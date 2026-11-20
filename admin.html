@@ -1,67 +1,73 @@
-  <form id="loginForm">
-    <input
-      id="email"
-      type="email"
-      placeholder="Adresse e-mail professionnelle"
-      required
-    >
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#064B35">
+  <title>Administration institutionnelle – CPRIT</title>
+  <link rel="stylesheet" href="admin.css?v=4">
+</head>
+<body>
 
-    <input
-      id="password"
-      type="password"
-      placeholder="Mot de passe"
-      required
-    >
+  <header>
+    <h1>CPRIT</h1>
+    <p>Direction générale et administration</p>
+  </header>
 
-    <button id="loginBtn" type="submit">
-      Se connecter
-    </button>
-  </form>
-</section>
+  <main>
+    <section id="loginSection">
+      <h2>Connexion institutionnelle</h2>
+      <p>Accès réservé au personnel autorisé du CPRIT.</p>
 
-<section id="dashboard" hidden>
+      <form id="loginForm">
+        <input id="email" type="email" placeholder="Adresse e-mail professionnelle" required>
+        <input id="password" type="password" placeholder="Mot de passe" required>
+        <button id="loginBtn" type="submit">Se connecter</button>
+      </form>
+    </section>
 
-  <div class="top">
-    <div>
-      <h2 id="welcomeTitle">Espace institutionnel</h2>
-      <p id="userRole"></p>
-      <p id="userName"></p>
-    </div>
+    <section id="dashboard" hidden>
 
-    <button id="logoutBtn" type="button">
-      Déconnexion
-    </button>
-  </div>
+      <div class="top">
+        <div>
+          <h2 id="welcomeTitle">Espace institutionnel</h2>
+          <p id="userRole"></p>
+          <p id="userName"></p>
+        </div>
 
-  <p id="message" role="status"></p>
+        <button id="logoutBtn" type="button">Déconnexion</button>
+      </div>
 
-  <section id="directorDashboard" hidden>
-    <h3>Direction générale</h3>
-    <p>
-      Pilotage général et contrôle de toutes les directions
-      et activités du CPRIT.
-    </p>
-    <div id="directorContent"></div>
-  </section>
+      <p id="message" role="status"></p>
 
-  <section id="deputyDashboard" hidden>
-    <div id="deputyContent"></div>
-  </section>
+      <p><a href="messagerie.html" style="font-weight:700">✉ Ouvrir la messagerie interne</a></p>
 
-  <section id="financeDashboard" hidden>
-    <h3>Direction administrative et financière</h3>
-    <p>
-      Suivi administratif, financier et budgétaire.
-    </p>
-    <div id="financeContent"></div>
-  </section>
+      <section id="directorDashboard" hidden>
+        <h3>Direction générale</h3>
+        <p>Pilotage général et contrôle de toutes les directions et activités du CPRIT.</p>
+        <div id="directorContent"></div>
+      </section>
 
-  <section id="secretariatDashboard" hidden>
-    <h3>Secrétariat général</h3>
-    <p>
-      Gestion du courrier, des dossiers et des documents administratifs.
-    </p>
-    <div id="secretariatContent"></div>
-  </section>
+      <section id="deputyDashboard" hidden>
+        <div id="deputyContent"></div>
+      </section>
 
-</section>
+      <section id="financeDashboard" hidden>
+        <h3>Direction administrative et financière</h3>
+        <p>Suivi administratif, financier et budgétaire.</p>
+        <div id="financeContent"></div>
+      </section>
+
+      <section id="secretariatDashboard" hidden>
+        <h3>Secrétariat général</h3>
+        <p>Gestion du courrier, des dossiers et des documents administratifs.</p>
+        <div id="secretariatContent"></div>
+      </section>
+
+    </section>
+  </main>
+
+  <script type="module" src="admin.js?v=4"></script>
+
+</body>
+</html>
