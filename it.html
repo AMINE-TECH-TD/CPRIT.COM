@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
+<title>Espace IT | CPRIT</title>
+<link rel="stylesheet" href="styles.css?v=9">
+<style>
+body{background:var(--bg)}.wrap{max-width:900px;margin:26px auto;padding:0 4%}
+.box{background:#fff;border:1px solid var(--border);border-radius:12px;padding:22px;box-shadow:0 7px 24px rgba(6,75,53,.06);margin-bottom:18px}
+.login{max-width:380px;margin:40px auto}
+input,textarea{width:100%;padding:11px;border:1px solid #C9DCD0;border-radius:8px;font:inherit;margin:6px 0 12px}
+textarea{min-height:170px;resize:vertical}label{font-weight:700;font-size:14px;color:var(--dark)}
+.chk{display:flex;gap:8px;align-items:center;margin-bottom:14px}.chk input{width:auto;margin:0}
+.err{color:#b00020;font-size:14px;min-height:20px}.ok{color:var(--green);font-size:14px}.hide{display:none}
+.post{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)}
+.post img{width:70px;height:56px;object-fit:cover;border-radius:6px;flex:none;background:#eee}
+.post .t{flex:1;min-width:0}.post .t b{display:block;overflow-wrap:anywhere}.post small{color:var(--muted)}
+.mini{border:1px solid var(--green);background:#fff;color:var(--dark);padding:6px 12px;border-radius:16px;font-weight:700;cursor:pointer;font-size:13px}
+.mini.red{border-color:#b00020;color:#b00020}
+#preview{max-width:100%;max-height:220px;border-radius:8px;margin-bottom:12px}
+.pw{display:flex;align-items:center;box-sizing:border-box;width:100%;background:#fff;border:1px solid #C9DCD0;border-radius:8px;transition:border-color .2s,box-shadow .2s}
+.pw:focus-within{border-color:#087A4B;box-shadow:0 0 0 3px rgba(8,122,75,.15)}
+.pw input{flex:1 1 auto;min-width:0;width:auto!important;margin:0!important;border:0!important;background:transparent!important;box-shadow:none!important;outline:none!important}
+.pw .eye{flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:46px;align-self:stretch;border:0;background:none;color:#4F6B5E;cursor:pointer;border-radius:0 8px 8px 0}
+.pw .eye:hover{color:#064B35}
+.pw .eye svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+</style></head><body>
+<header class="header"><div class="header-top">
+ <a class="brand" href="index.html"><img src="assets/logo-cprit.png" alt="CPRIT"><span class="brand-text"><strong>CPRIT</strong><small>Espace IT</small></span></a>
+ <a href="index.html" class="cta">← Retour au site</a></div></header>
+<div class="wrap">
+ <div id="login" class="box login"><h3 style="font-family:Georgia,serif;color:var(--dark)">Connexion équipe IT</h3>
+  <input id="email" type="email" placeholder="Adresse e-mail" autocomplete="username">
+  <input id="pass" type="password" placeholder="Mot de passe" autocomplete="current-password">
+  <button id="go" class="btn btn-solid" style="border:0;cursor:pointer">Se connecter</button><p id="lerr" class="err"></p></div>
+ <div id="app" class="hide">
+  <div class="box"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><h3 style="font-family:Georgia,serif;color:var(--dark)">Nouvelle publication</h3><button class="mini" id="out">Déconnexion</button></div>
+   <label>Titre</label><input id="title" maxlength="200" placeholder="Titre de la publication">
+   <label>Texte</label><textarea id="body" placeholder="Écrivez votre texte ici…"></textarea>
+   <label>Image (facultative, JPG/PNG/WebP)</label><input id="img" type="file" accept="image/jpeg,image/png,image/webp">
+   <img id="preview" class="hide" alt="">
+   <div class="chk"><input id="pub" type="checkbox" checked><label for="pub" style="font-weight:600">Publier tout de suite sur le site</label></div>
+   <button id="send" class="btn btn-solid" style="border:0;cursor:pointer">Publier</button><p id="msg" class="err"></p></div>
+  <div class="box"><h3 style="font-family:Georgia,serif;color:var(--dark)">Publications existantes</h3><div id="list"></div></div>
+ </div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="supabase-config.js"></script>
+<script>
+function addEye(input){
+  const OPEN='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+  const SHUT='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.94 17.94A10.9 10.9 0 0 1 12 19C5 19 1 12 1 12a18.5 18.5 0 0 1 5.06-5.94M9.9 4.24A10.9 10.9 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24"/><path d="M1 1l22 22"/></svg>';
+  const cs=getComputedStyle(input), w=document.createElement("div");
+  w.className="pw"; w.style.marginTop=cs.marginTop; w.style.marginBottom=cs.marginBottom;
+  if (cs.borderTopWidth!=="0px") { w.style.borderColor=cs.borderTopColor; w.style.borderRadius=cs.borderTopLeftRadius; }
+  if (cs.backgroundColor!=="rgba(0, 0, 0, 0)") w.style.background=cs.backgroundColor;
+  input.parentNode.insertBefore(w,input); w.appendChild(input);
+  const b=document.createElement("button"); b.type="button"; b.className="eye";
+  const set=show=>{ input.type=show?"text":"password"; b.innerHTML=show?OPEN:SHUT;
+    b.setAttribute("aria-pressed",String(show)); b.setAttribute("aria-label",show?"Masquer le mot de passe":"Afficher le mot de passe"); };
+  b.addEventListener("mousedown",e=>e.preventDefault());           // garde le clavier ouvert
+  b.addEventListener("click",()=>{ set(input.type==="password"); input.focus(); });
+  set(false); w.appendChild(b);
+}
+const $ = id => document.getElementById(id);
+const sb = supabase.createClient(new URL(SUPABASE_URL.trim()).origin, SUPABASE_ANON_KEY.trim());
+const B = "site-images";
+const h = (t, x, c) => { const e = document.createElement(t); if (x != null) e.textContent = x; if (c) e.className = c; return e; };
+const imgUrl = p => sb.storage.from(B).getPublicUrl(p).data.publicUrl;
+
+async function start(){
+  const { data:{ session } } = await sb.auth.getSession();
+  if (!session) { $("login").classList.remove("hide"); $("app").classList.add("hide"); return; }
+  const { data:ok } = await sb.rpc("is_it");
+  if (!ok) { await sb.auth.signOut(); $("login").classList.remove("hide"); $("app").classList.add("hide"); $("lerr").textContent = "Accès réservé à l'équipe IT."; return; }
+  $("login").classList.add("hide"); $("app").classList.remove("hide"); load();
+}
+$("go").onclick = async () => {
+  $("lerr").textContent = "";
+  const { error } = await sb.auth.signInWithPassword({ email:$("email").value.trim(), password:$("pass").value });
+  if (error) $("lerr").textContent = /invalid login/i.test(error.message) ? "E-mail ou mot de passe incorrect." : "Connexion impossible : " + error.message; else start();
+};
+$("out").onclick = async () => { await sb.auth.signOut(); start(); };
+
+$("img").onchange = e => { const f = e.target.files[0], p = $("preview");
+  if (!f) return p.classList.add("hide"); p.src = URL.createObjectURL(f); p.classList.remove("hide"); };
+
+function shrink(file){ return new Promise((res, rej) => {
+  const i = new Image(); i.onload = () => { const r = Math.min(1, 1600 / Math.max(i.width, i.height)), c = document.createElement("canvas");
+    c.width = Math.round(i.width * r); c.height = Math.round(i.height * r); c.getContext("2d").drawImage(i, 0, 0, c.width, c.height);
+    URL.revokeObjectURL(i.src); c.toBlob(b => b ? res(b) : rej(new Error("Image illisible")), "image/jpeg", 0.85); };
+  i.onerror = () => rej(new Error("Image illisible")); i.src = URL.createObjectURL(file); }); }
+
+$("send").onclick = async () => {
+  const msg = $("msg"), title = $("title").value.trim(), body = $("body").value.trim();
+  msg.className = "err"; msg.textContent = "";
+  if (!title || !body) return msg.textContent = "Le titre et le texte sont obligatoires.";
+  $("send").disabled = true; msg.className = "ok"; msg.textContent = "Publication en cours…";
+  try {
+    let path = null; const f = $("img").files[0];
+    if (f) { const blob = await shrink(f); path = Date.now() + "-" + Math.random().toString(36).slice(2, 8) + ".jpg";
+      const up = await sb.storage.from(B).upload(path, blob, { contentType:"image/jpeg" }); if (up.error) throw up.error; }
+    const { error } = await sb.from("site_posts").insert({ title, body, image_path:path, published:$("pub").checked });
+    if (error) throw error;
+    $("title").value = ""; $("body").value = ""; $("img").value = ""; $("preview").classList.add("hide");
+    msg.textContent = "Publication enregistrée."; load();
+  } catch (e) { msg.className = "err"; msg.textContent = "Échec : " + (e.message || e); }
+  $("send").disabled = false;
+};
+
+async function load(){
+  const L = $("list"); L.replaceChildren();
+  const { data, error } = await sb.from("site_posts").select("id,title,image_path,published,created_at").order("created_at", { ascending:false });
+  if (error) return L.append(h("p", "Erreur de chargement.", "err"));
+  if (!data.length) L.append(h("p", "Aucune publication."));
+  data.forEach(p => {
+    const row = h("div", null, "post"), t = h("div", null, "t");
+    const im = h("img"); if (p.image_path) im.src = imgUrl(p.image_path); else im.style.visibility = "hidden";
+    t.append(h("b", p.title), h("small", new Date(p.created_at).toLocaleDateString("fr-FR") + " • " + (p.published ? "Publié" : "Masqué")));
+    const tog = h("button", p.published ? "Masquer" : "Publier", "mini");
+    tog.onclick = async () => { await sb.from("site_posts").update({ published:!p.published }).eq("id", p.id); load(); };
+    const del = h("button", "Supprimer", "mini red");
+    del.onclick = async () => { if (!confirm("Supprimer définitivement cette publication ?")) return;
+      if (p.image_path) await sb.storage.from(B).remove([p.image_path]);
+      await sb.from("site_posts").delete().eq("id", p.id); load(); };
+    row.append(im, t, tog, del); L.append(row);
+  });
+}
+addEye($("pass")); start();
+</script></body></html>
