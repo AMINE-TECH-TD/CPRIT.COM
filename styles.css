@@ -111,3 +111,26 @@ html[dir=rtl] .dropdown:nth-last-child(-n+2) .drop-menu{right:auto;left:0}
 
 .slider.news{height:clamp(260px,56vw,520px)}
 .slider.news img{object-position:center 25%}
+
+/* Dates clés */
+.timeline{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;max-width:900px;margin:auto}
+.card.tl{border-left:5px solid var(--gold)}.tl-date{font:700 22px Georgia,serif;color:var(--green)}
+/* FAQ */
+.faq{max-width:850px;margin:auto;display:grid;gap:12px}
+.faq-item{background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 5px 18px rgba(6,75,53,.05)}
+.faq-item summary{cursor:pointer;list-style:none;padding:18px 20px;font-weight:700;color:var(--dark);display:flex;justify-content:space-between;gap:12px}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{content:"+";font-size:22px;color:var(--green)}
+.faq-item[open] summary::after{content:"−"}
+.faq-item p{padding:0 20px 18px;color:var(--muted);font-size:15px}
+/* Liens utiles */
+.link-card{text-decoration:none;color:inherit}
+.link-card h3{min-height:52px}.link-card .go{color:var(--green);font-weight:700;font-size:14px;margin-top:auto}.link-card .soon{color:var(--muted);font-size:13px;margin-top:auto}
+a.link-card:hover{border-color:var(--green)}
+/* Boutons flottants */
+.fab{position:fixed;right:16px;z-index:150;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:0;box-shadow:0 6px 18px rgba(0,0,0,.25);cursor:pointer}
+.fab svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fab.wa{bottom:16px;background:#25D366}
+.fab.top{bottom:78px;width:44px;height:44px;background:var(--dark);opacity:0;pointer-events:none;transition:opacity .25s}
+.fab.top.show{opacity:1;pointer-events:auto}
+@media(max-width:600px){.timeline{grid-template-columns:1fr}}

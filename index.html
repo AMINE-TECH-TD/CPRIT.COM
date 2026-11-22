@@ -6,7 +6,11 @@
 <meta name="theme-color" content="#064B35">
 <meta name="description" content="CPRIT — Centre pédagogique régional de l'ICESCO au Tchad.">
 <title>CPRIT | Centre pédagogique régional de l'ICESCO au Tchad</title>
-<link rel="stylesheet" href="styles.css?v=7">
+<link rel="icon" href="assets/logo-cprit.png">
+<meta property="og:title" content="CPRIT — Centre pédagogique régional de l'ICESCO au Tchad">
+<meta property="og:description" content="Formation des enseignants du primaire à N'Djamena, Tchad.">
+<meta property="og:image" content="assets/images/cprit-principal.jpg">
+<link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
 
@@ -31,13 +35,13 @@
     <div class="dropdown"><button type="button" class="drop-btn" data-i18n="navCenter">Le Centre</button>
       <div class="drop-menu"><a href="#centre" data-i18n="subPresentation">Présentation</a><a href="#partenariats" data-i18n="navPartners">Partenariats</a></div></div>
     <div class="dropdown"><button type="button" class="drop-btn" data-i18n="navTraining">Formation</button>
-      <div class="drop-menu"><a href="#formation" data-i18n="subTrack">Parcours de formation</a><a href="#competences" data-i18n="subSkills">Compétences visées</a><a href="#admission" data-i18n="navAdmission">Admission</a></div></div>
+      <div class="drop-menu"><a href="#formation" data-i18n="subTrack">Parcours de formation</a><a href="#competences" data-i18n="subSkills">Compétences visées</a><a href="#faq" data-i18n="subFaq">Questions fréquentes</a><a href="#admission" data-i18n="navAdmission">Admission</a></div></div>
     <div class="dropdown"><button type="button" class="drop-btn" data-i18n="navPlatform">Plateforme</button>
       <div class="drop-menu"><a href="#espace-formateurs" data-i18n="subTrainers">Espace formateurs</a><a href="#espace-etudiants" data-i18n="subStudents">Espace futurs enseignants</a><a href="#assistant-ia" data-i18n="navAI">Assistant IA</a><a href="messagerie.html" data-i18n="subMail">Messagerie du personnel</a><a href="admin.html" data-i18n="subAdmin">Espace administration</a></div></div>
     <div class="dropdown"><button type="button" class="drop-btn" data-i18n="navNews">Actualités</button>
-      <div class="drop-menu"><a href="#actualites" data-i18n="subNewsTop">À la une</a><a href="#slider" data-i18n="navGallery">Galerie</a><a href="#actualites-images" data-i18n="subNewsPhotos">Actualités en images</a></div></div>
+      <div class="drop-menu"><a href="#actualites" data-i18n="subNewsTop">À la une</a><a href="#slider" data-i18n="navGallery">Galerie</a><a href="#dates" data-i18n="subDates">Dates clés</a><a href="#actualites-images" data-i18n="subNewsPhotos">Actualités en images</a></div></div>
     <div class="dropdown"><button type="button" class="drop-btn" data-i18n="navResources">Ressources</button>
-      <div class="drop-menu"><a href="#publications" data-i18n="navPublications">Publications</a><a href="rapport-activites.html" data-i18n="navReports">Rapports d'activités</a></div></div>
+      <div class="drop-menu"><a href="#publications" data-i18n="navPublications">Publications</a><a href="rapport-activites.html" data-i18n="navReports">Rapports d'activités</a><a href="#liens" data-i18n="subLinks">Liens utiles</a></div></div>
     <div class="dropdown"><button type="button" class="drop-btn" data-i18n="navContact">Contact</button>
       <div class="drop-menu"><a href="#contact" data-i18n="subContactUs">Nous contacter</a><a href="inscription.html" data-i18n="subRegister">Inscription</a></div></div>
   </nav>
@@ -77,6 +81,14 @@
       <p data-i18n="directorMessage">À l'occasion du lancement du concours du jeudi 19 novembre 2026, j'adresse mes encouragements à toutes les candidates et à tous les candidats. Cette étape marque une avancée importante dans notre engagement en faveur de la formation des futurs enseignants du primaire. Le CPRIT se prépare à accueillir la nouvelle promotion pour une rentrée prévue en décembre 2026. J'invite chacun à suivre les communications officielles du Centre. Ensemble, faisons de la qualité de l'éducation une priorité nationale.</p>
       <div class="signature"><strong data-i18n="directorName">Monsieur Youssouf Hassane Taha</strong><span data-i18n="directorRole">Directeur général du CPRIT</span></div>
     </article>
+  </div>
+</section>
+
+<section class="section" id="dates">
+  <div class="heading center"><span class="label" data-i18n="datesLabel">DATES CLÉS</span><h2 data-i18n="datesTitle">Calendrier des admissions</h2></div>
+  <div class="timeline">
+    <article class="card tl"><span class="tl-date" data-i18n="date1">19 novembre 2026</span><h3 data-i18n="date1T">Lancement du concours d'entrée</h3></article>
+    <article class="card tl"><span class="tl-date" data-i18n="date2">Décembre 2026</span><h3 data-i18n="date2T">Rentrée de la formation</h3><p data-i18n="date2P">Les informations pratiques seront communiquées officiellement par le CPRIT.</p></article>
   </div>
 </section>
 
@@ -141,6 +153,22 @@
   </div>
 </section>
 
+<section class="section" id="liens">
+  <div class="heading center"><span class="label" data-i18n="linksLabel">LIENS UTILES</span><h2 data-i18n="linksTitle">Sites officiels</h2><p data-i18n="linksIntro">Accès rapide aux institutions liées à l'éducation au Tchad.</p></div>
+  <div class="grid g3" id="linksGrid"></div>
+</section>
+
+<section class="section alt" id="faq">
+  <div class="heading center"><span class="label" data-i18n="faqLabel">QUESTIONS FRÉQUENTES</span><h2 data-i18n="faqTitle">Vos questions sur le CPRIT</h2></div>
+  <div class="faq">
+    <details class="faq-item"><summary data-i18n="faq1q">Qui peut candidater ?</summary><p data-i18n="faq1a">Les titulaires du baccalauréat qui souhaitent devenir enseignants du primaire.</p></details>
+    <details class="faq-item"><summary data-i18n="faq2q">Combien de temps dure la formation ?</summary><p data-i18n="faq2a">Deux années : la première est consacrée aux langues (français, arabe et anglais), la seconde à la formation pédagogique et professionnelle.</p></details>
+    <details class="faq-item"><summary data-i18n="faq3q">Comment s'inscrire ?</summary><p data-i18n="faq3a">Grâce au formulaire d'inscription de ce site. Chaque demande est examinée et validée par le CPRIT.</p></details>
+    <details class="faq-item"><summary data-i18n="faq4q">Quand a lieu la rentrée ?</summary><p data-i18n="faq4a">Elle est prévue en décembre 2026. Les informations pratiques seront communiquées officiellement par le CPRIT.</p></details>
+    <details class="faq-item"><summary data-i18n="faq5q">Comment contacter le Centre ?</summary><p data-i18n="faq5a">Par téléphone ou WhatsApp au 00235 66 20 97 96, par e-mail à isescotchad@yahoo.com, ou à l'adresse : Rue de 30M, Quartier Repo IV, N'Djamena.</p></details>
+  </div>
+</section>
+
 <section class="admission" id="admission">
   <span class="label light" data-i18n="admissionLabel">ADMISSIONS</span>
   <h2 data-i18n="admissionTitle">Votre avenir dans l'enseignement commence ici.</h2>
@@ -157,6 +185,8 @@
       <p>Rue de 30M, Quartier Repo IV, N'Djamena, Tchad — B.P : 4150</p>
       <p>Tél / WhatsApp : <a href="tel:0023566209796">00235 66 20 97 96</a></p>
       <p>Email : <a href="mailto:isescotchad@yahoo.com">isescotchad@yahoo.com</a></p>
+      <div class="actions"><a class="btn btn-solid small" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Quartier+Repo+IV+N%27Djamena+Tchad" data-i18n="contactRoute">Itinéraire</a>
+      <a class="btn btn-outline small" target="_blank" rel="noopener" href="https://wa.me/23566209796">WhatsApp</a></div>
     </div>
   </div>
 </section>
@@ -170,7 +200,10 @@
   <div class="footer-bottom">© <span id="year"></span> CPRIT. <span data-i18n="rights">Tous droits réservés.</span></div>
 </footer>
 
-<script src="translations.js?v=7"></script>
-<script src="script.js?v=7"></script>
+<a class="fab wa" href="https://wa.me/23566209796" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
+<button class="fab top" id="toTop" type="button" aria-label="Retour en haut"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
+
+<script src="translations.js?v=8"></script>
+<script src="script.js?v=8"></script>
 </body>
 </html>

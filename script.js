@@ -26,6 +26,8 @@ Object.assign(T.ar, { newsPhotosTitle:"المركز في الأخبار", subNew
 Object.assign(T.fr, { subMail:"Messagerie du personnel", subAdmin:"Espace administration" });
 Object.assign(T.en, { subMail:"Staff mailbox", subAdmin:"Administration area" });
 Object.assign(T.ar, { subMail:"بريد الموظفين", subAdmin:"فضاء الإدارة" });
+Object.assign(T.en, {"subDates": "Key dates", "subFaq": "FAQ", "subLinks": "Useful links", "datesLabel": "KEY DATES", "datesTitle": "Admissions calendar", "date1": "19 November 2026", "date1T": "Launch of the entrance competition", "date2": "December 2026", "date2T": "Start of the training year", "date2P": "Practical information will be officially announced by CPRIT.", "faqLabel": "FAQ", "faqTitle": "Your questions about CPRIT", "faq1q": "Who can apply?", "faq1a": "Holders of the baccalaureate who wish to become primary school teachers.", "faq2q": "How long is the training?", "faq2a": "Two years: the first focuses on languages (French, Arabic and English), the second on pedagogical and professional training.", "faq3q": "How do I apply?", "faq3a": "Through the registration form on this website. Each application is reviewed and approved by CPRIT.", "faq4q": "When does the training year start?", "faq4a": "It is scheduled for December 2026. CPRIT will officially announce the practical details.", "faq5q": "How can I contact the Centre?", "faq5a": "By phone or WhatsApp on 00235 66 20 97 96, by email at isescotchad@yahoo.com, or at Rue de 30M, Quartier Repo IV, N'Djamena.", "linksLabel": "USEFUL LINKS", "linksTitle": "Official websites", "linksIntro": "Quick access to institutions linked to education in Chad.", "link1Name": "Ministry of National Education and Bilingualism", "link2Name": "Ministry of the Civil Service", "linkVisit": "Visit the website →", "linkSoon": "Link coming soon", "contactRoute": "Get directions"});
+Object.assign(T.ar, {"subDates": "تواريخ مهمة", "subFaq": "أسئلة شائعة", "subLinks": "روابط مفيدة", "datesLabel": "تواريخ مهمة", "datesTitle": "رزنامة القبول", "date1": "19 نوفمبر 2026", "date1T": "إطلاق مسابقة القبول", "date2": "ديسمبر 2026", "date2T": "بداية السنة التكوينية", "date2P": "سيعلن المركز رسمياً عن المعلومات العملية.", "faqLabel": "أسئلة شائعة", "faqTitle": "أسئلتكم حول المركز", "faq1q": "من يمكنه الترشح؟", "faq1a": "الحاصلون على شهادة البكالوريا الراغبون في أن يصبحوا معلمين في المرحلة الابتدائية.", "faq2q": "كم مدة التكوين؟", "faq2a": "سنتان: الأولى مخصصة للغات (الفرنسية والعربية والإنجليزية) والثانية للتكوين التربوي والمهني.", "faq3q": "كيف أسجل؟", "faq3a": "عبر استمارة التسجيل في هذا الموقع. يخضع كل طلب للدراسة والموافقة من قبل المركز.", "faq4q": "متى تبدأ السنة التكوينية؟", "faq4a": "من المقرر أن تبدأ في ديسمبر 2026. وسيعلن المركز رسمياً عن التفاصيل العملية.", "faq5q": "كيف أتصل بالمركز؟", "faq5a": "عبر الهاتف أو واتساب على 00235 66 20 97 96، أو بالبريد الإلكتروني isescotchad@yahoo.com، أو في العنوان: شارع 30M، حي ريبو 4، نجامينا.", "linksLabel": "روابط مفيدة", "linksTitle": "المواقع الرسمية", "linksIntro": "وصول سريع إلى المؤسسات المرتبطة بالتعليم في تشاد.", "link1Name": "وزارة التربية الوطنية والثنائية اللغوية", "link2Name": "وزارة الوظيفة العمومية", "linkVisit": "زيارة الموقع ←", "linkSoon": "الرابط قريباً", "contactRoute": "الاتجاهات"});
 const titles = { fr: "CPRIT | Centre pédagogique régional de l'ICESCO au Tchad", en: "CPRIT | ICESCO Regional Pedagogical Centre in Chad", ar: "CPRIT | المركز التربوي الإقليمي للإيسيسكو في تشاد" };
 
 function setLanguage(lang) {
@@ -71,6 +73,31 @@ document.addEventListener("DOMContentLoaded", () => {
     sl.addEventListener("touchend", e => { if (x0 === null) return; const d = e.changedTouches[0].clientX - x0; if (Math.abs(d) > 40) { go(i + (d < 0 ? 1 : -1)); restart(); } x0 = null; });
     go(0); restart();
   });
+
+  /* LIENS UTILES : ajoutez ici les sites (url) ; sans url, la carte affiche « Lien bientôt disponible » */
+  const LIENS = [
+    { key: "link1Name", fr: "Ministère de l'Éducation nationale et du Bilinguisme", url: "" },
+    { key: "link2Name", fr: "Ministère de la Fonction publique", url: "" }
+  ];
+  const lg = document.getElementById("linksGrid");
+  if (lg) {
+    LIENS.forEach(l => {
+      const ok = /^https:\/\//.test(l.url), c = document.createElement(ok ? "a" : "div");
+      c.className = "card sm link-card";
+      if (ok) { c.href = l.url; c.target = "_blank"; c.rel = "noopener"; }
+      const t = document.createElement("h3"); t.dataset.i18n = l.key; t.textContent = l.fr;
+      const g = document.createElement("span"); g.className = ok ? "go" : "soon";
+      g.dataset.i18n = ok ? "linkVisit" : "linkSoon"; g.textContent = ok ? "Visiter le site →" : "Lien bientôt disponible";
+      c.append(t, g); lg.appendChild(c);
+    });
+  }
+
+  /* BOUTON RETOUR EN HAUT */
+  const up = document.getElementById("toTop");
+  if (up) {
+    window.addEventListener("scroll", () => up.classList.toggle("show", window.scrollY > 600), { passive: true });
+    up.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+  }
 
   /* LANGUE (en dernier : une erreur ici ne bloque ni le menu ni le diaporama) */
   try {
